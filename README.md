@@ -1,32 +1,3 @@
-## 页面展示
-![展示图](/readme/images/1.png)
-![展示图](/readme/images/2.png)
-![展示图](/readme/images/3.png)
-![展示图](/readme/images/4.png)
-![展示图](/readme/images/5.png)
-![展示图](/readme/images/合成.mp4)
-![展示图](/readme/images/6.png)
-![展示图](/readme/images/合成2.mp4)
-![展示图](/readme/images/7.png)
-![展示图](/readme/images/8.png)
-![展示图](/readme/images/9.png)
-![展示图](/readme/images/10.png)
-![展示图](/readme/images/11.png)
-![展示图](/readme/images/12.png)
-![展示图](/readme/images/13.png)
-
-# Leadshop微商城
-
-## 论坛交流
-地址:https://forum.leadshop.vip/
-
-## 体验后台
-地址:https://demo.leadshop.vip
-
-账号:18888888888
-
-密码:123456
-
 ## 运行环境
 
 Linux+Nginx+PHP7.4+MySQL(5.6|5.7)
@@ -79,6 +50,36 @@ Leadshop 开源系统，基于Yii2开发，支持composer，优化核心，减�
 
 
 接口文档：http://www.leadshop.vip/api.html
+
+## 页面展示
+![展示图](/readme/images/1.png)
+![展示图](/readme/images/2.png)
+![展示图](/readme/images/3.png)
+![展示图](/readme/images/4.png)
+![展示图](/readme/images/5.png)
+![展示图](/readme/images/合成.mp4)
+![展示图](/readme/images/6.png)
+![展示图](/readme/images/合成2.mp4)
+![展示图](/readme/images/7.png)
+![展示图](/readme/images/8.png)
+![展示图](/readme/images/9.png)
+![展示图](/readme/images/10.png)
+![展示图](/readme/images/11.png)
+![展示图](/readme/images/12.png)
+![展示图](/readme/images/13.png)
+
+# Leadshop微商城
+
+## 论坛交流
+地址:https://forum.leadshop.vip/
+
+## 体验后台
+地址:https://demo.leadshop.vip
+
+账号:18888888888
+
+密码:123456
+
 
 
 ## 安装
