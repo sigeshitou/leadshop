@@ -3,6 +3,7 @@
 
 qq交流群号：849894135
 
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0416/143640_aa669bf7_7426632.png "kaiyuanqun.png")
 ## 运行环境
 
 Linux+Nginx+PHP7.4+MySQL(5.6|5.7)
