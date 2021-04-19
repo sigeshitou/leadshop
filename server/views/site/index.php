@@ -19,6 +19,8 @@
     <script language="javascript">
     console.clear();
     var $_W = {
+        AppWEB: "<?=Yii::$app->request->hostInfo?>/h5",
+        Copyright: "Powered By Leadshop © 2021",
         AppURL: "<?=Yii::$app->request->hostInfo?>",
         AppID: "98c08c25f8136d590c",
         AppName: "leadmall",
