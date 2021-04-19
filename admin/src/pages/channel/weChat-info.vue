@@ -13,14 +13,18 @@
         </div>
         <template v-if="(bind && !isBind) || toBind">
             <div class="le-card">
-                <div class="flex flex-direction align-center">
-                    <div class="le-steps">
+                <div class="flex flex-direction">
+                    <!--                     <div class="le-steps">
                         <el-steps :active="step" align-center>
                             <el-step title="填写公众号信息"></el-step>
                             <el-step title="公众号设置"></el-step>
                         </el-steps>
-                    </div>
-                    <el-form v-show="step === 1" label-width="100px" class="le-form" ref="form" :model="form" :rules="rules">
+                    </div> -->
+                    <el-form label-width="100px" class="le-form" ref="form" :model="form" :rules="rules">
+                        <div class="le-form__header flex align-center">
+                            <span class="le-tip"></span>
+                            <span class="le-text">填写小程序信息</span>
+                        </div>
                         <el-form-item label="公众号名称" prop="name">
                             <el-input v-model="form.name" placeholder="请输入公众号名称"></el-input>
                         </el-form-item>
@@ -45,7 +49,7 @@
                             <el-button class="le-view-guidelines" module="channel" title="验证文件下载指引" type="text" width="720" :hide_close="true" height="676" v-popup.uploadGuide sure_btn="我知道了">查看指引</el-button>
                         </el-form-item>
                     </el-form>
-                    <div class="le-deploy" v-show="step === 2">
+                    <!--                     <div class="le-deploy" v-show="step === 2">
                         <div class="le-deploy-1">服务器配置</div>
                         <div class="le-deploy-2 flex">
                             <span class="le-deploy-1-text">请将以下信息填入微信公众号，并启用服务器配置。完成操作后，再保存此页面。</span>
@@ -66,16 +70,17 @@
                             <span class="le-item__value" id="key">{{form.encodingAesKey}}</span>
                             <el-button type="text" class="le-view-guidelines" @click="copy('key')">复制</el-button>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <div class="le-cardpin">
                 <el-button @click="bind=false;toBind=false;">取消</el-button>
-                <el-button type="primary" v-if="step === 1" @click="setStep(2, 'form')">下一步</el-button>
+                <el-button type="primary" @click="save('form')">保存</el-button>
+                <!--                 <el-button type="primary" v-if="step === 1" @click="setStep(2, 'form')">下一步</el-button>
                 <template v-if="step === 2">
                     <el-button @click="setStep(1, 'form')">上一步</el-button>
                     <el-button type="primary" @click="save('form')">保存</el-button>
-                </template>
+                </template> -->
             </div>
         </template>
         <template v-if="isBind && !toBind">
@@ -100,12 +105,12 @@
                             <div class="le-item-tip">下载公众号二维码，用于推广与分享公众号</div>
                         </div>
                     </div>
-                    <div class="le-item flex">
+                    <!--                     <div class="le-item flex">
                         <div class="le-item__label">服务器配置</div>
                         <div class="le-item__value">
                             <div class="le-item--download" @click="router('/channel/Wechat-deploy')">查看配置</div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="le-info le-card">
                     <div class="le-info__header flex align-center">
@@ -155,7 +160,7 @@ export default {
                     { required: true, message: '请输入AppSecret', trigger: 'blur' },
                 ],
                 file_name: [
-                    { required: true, message: '请上传验证文件', trigger: 'change' },
+                    { required: false, message: '请上传验证文件', trigger: 'change' },
                 ]
             },
             load: false,
@@ -250,8 +255,7 @@ export default {
         upload(param) {
             var formData = new FormData();
             formData.append('file', param.file);
-            this.$heshop.file(formData, { behavior: 'upload' }).then(() => {
-            }).catch(err => {
+            this.$heshop.file(formData, { behavior: 'upload' }).then(() => {}).catch(err => {
                 console.error("数据出出力", err)
             })
         },
@@ -365,7 +369,7 @@ export default {
 .le-card {
     background-color: #ffffff;
     border-radius: 16px;
-    padding: 80px;
+    padding: 0 0 20px 20px;
 }
 
 
@@ -379,7 +383,26 @@ export default {
 }
 
 .le-form {
-    margin-top: 50px;
+    margin-top: 20px;
+
+        .le-form__header {
+        margin-bottom: 38px;
+        .le-tip {
+            width: 4px;
+            height: 16px;
+            background: #623CEB;
+            margin-right: 12px;
+        }
+        .le-text {
+            font-size: 16px;
+            font-family: Microsoft YaHei;
+            font-weight: 400;
+            color: #262626;
+        }
+        .el-input {
+            width: 380px;
+        }
+    }
 
     /deep/.el-input {
         width: 360px;

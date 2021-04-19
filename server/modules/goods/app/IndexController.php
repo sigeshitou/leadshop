@@ -7,6 +7,7 @@
 
 namespace goods\app;
 
+use app\forms\video\Video;
 use framework\common\BasicController;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -60,10 +61,9 @@ class IndexController extends BasicController
                 'goods as goods',
             ])
             ->where(['and', ['>', 'order.status', 200], ['order.is_recycle' => 0, 'order.AppID' => $AppID, 'goods.goods_id' => $goods_id]])
-            ->select('order.id,order.UID,order.order_sn,order.pay_time')
-            ->orderBy(['order.id' => SORT_DESC])
+            ->select('order.id,order.UID,order.order_sn,order.pay_time,order.created_time')
+            ->orderBy(['order.created_time' => SORT_DESC])
             ->limit(20)
-            ->distinct()
             ->asArray()
             ->all();
 
@@ -91,7 +91,7 @@ class IndexController extends BasicController
 
         $data = M()::find()
             ->where($where)
-            ->orderBy(['id' => SORT_DESC])
+            ->orderBy(['created_time' => SORT_DESC])
             ->asArray()
             ->all();
 
@@ -274,6 +274,11 @@ class IndexController extends BasicController
         }
 
         $result['video'] = to_array($result['video']);
+        if (is_array($result['video'])) {
+            if (isset($result['video']['type']) && $result['video']['type'] === 2) {
+                $result['video']['url'] = Video::getUrl($result['video']['url']);
+            }
+        }
         //浏览记录
         $this->module->event->visit_goods_info = ['goods_id' => $result['id'], 'AppID' => $result['AppID'], 'merchant_id' => $result['merchant_id'], 'UID' => $UID];
         $this->module->trigger('visit_goods');
@@ -339,10 +344,10 @@ class IndexController extends BasicController
         return $result;
     }
 
-    public static function add_sales($event)
+    public static function addSales($event)
     {
 
-        $list = M('order', 'OrderGoods')::find()->where(['order_sn' => $event->order_info['order_sn']])->select('order_sn,goods_id,goods_number,pay_amount')->asArray()->all();
+        $list = M('order', 'OrderGoods')::find()->where(['order_sn' => $event->pay_order_sn])->select('order_sn,goods_id,goods_number,pay_amount')->asArray()->all();
         foreach ($list as $value) {
             M()::updateAllCounters(['sales_amount' => $value['pay_amount'], 'sales' => $value['goods_number']], ['id' => $value['goods_id']]);
         }
@@ -354,7 +359,7 @@ class IndexController extends BasicController
      * @param  [type] $event [description]
      * @return [type]        [description]
      */
-    public static function reduce_stocks($event)
+    public static function reduceStocks($event)
     {
         foreach ($event->order_goods as $value) {
             M('goods', 'GoodsData')::updateAllCounters(['stocks' => (0 - $value['goods_number'])], ['goods_id' => $value['goods_id'], 'param_value' => $value['goods_param']]);
@@ -367,7 +372,7 @@ class IndexController extends BasicController
      * @param  [type] $event [description]
      * @return [type]        [description]
      */
-    public static function add_stocks($event)
+    public static function addStocks($event)
     {
         foreach ($event->order_goods as $value) {
             M('goods', 'GoodsData')::updateAllCounters(['stocks' => $value['goods_number']], ['goods_id' => $value['goods_id'], 'param_value' => $value['goods_param']]);

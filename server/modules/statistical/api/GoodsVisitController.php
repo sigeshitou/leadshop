@@ -16,7 +16,7 @@ class GoodsVisitController extends BasicController
      * @param  [type] $event [description]
      * @return [type]        [description]
      */
-    public static function save_log($event)
+    public static function saveLog($event)
     {
         $data = $event->visit_goods_info;
         $model = M('statistical', 'GoodsVisitLog', true);

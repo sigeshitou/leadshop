@@ -33,8 +33,8 @@ class AppconfigController extends BasicsModules implements Map
             $json                                     = file_get_contents($url);
             $arr                                      = to_array($json);
             $arr['apply']['wechat']['url']            = Yii::$app->request->hostInfo;
-            $arr['apply']['wechat']['token']          = $arr['apply']['wechat']['token'] ?? get_random(6);
-            $arr['apply']['wechat']['encodingAesKey'] = $arr['apply']['wechat']['encodingAesKey'] ?? get_random(43);
+            $arr['apply']['wechat']['token']          = $arr['apply']['wechat']['token'] ? $arr['apply']['wechat']['token'] : get_random(6);
+            $arr['apply']['wechat']['encodingAesKey'] = $arr['apply']['wechat']['encodingAesKey'] ? $arr['apply']['wechat']['token'] : get_random(43);
             return $arr;
         } else {
             Error('文件不存在');
@@ -53,7 +53,7 @@ class AppconfigController extends BasicsModules implements Map
                 return $this->save();
                 break;
             default:
-                return 111;
+                return 111222;
                 break;
         }
 
@@ -62,7 +62,7 @@ class AppconfigController extends BasicsModules implements Map
     public function save()
     {
         $post = Yii::$app->request->post();
-        $key = Yii::$app->request->get('key', '');
+        $key  = Yii::$app->request->get('key', '');
         if (empty($post)) {
             Error('数据为空');
         }
@@ -70,14 +70,14 @@ class AppconfigController extends BasicsModules implements Map
         if (file_exists($url)) {
             $json = file_get_contents($url);
             $data = to_array($json);
-            $key = explode('_', $key);
+            $key  = explode('_', $key);
             if (isset($data[$key[0]][$key[1]])) {
                 $data[$key[0]][$key[1]] = $post;
             } else {
                 Error('配置不存在');
             }
             $data = to_json($data);
-            return to_mkdir($url,$data,true,true);
+            return to_mkdir($url, $data, true, true);
         } else {
             Error('文件不存在');
         }

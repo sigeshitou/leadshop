@@ -3,9 +3,9 @@
         <view class="he-box he-goods flex">
             <image class="he-goods__image" :src="goods.goods_image"></image>
             <view class="he-goods__content">
-                <view class="he-goods__name he-line-1">{{goods.goods_name}}</view>
-                <view class="he-goods__attr">{{goods.show_goods_param}}</view>
-                <view class="he-goods__number">x{{goods.goods_number}}</view>
+                <view class="he-goods__name he-line-1">{{ goods.goods_name }}</view>
+                <view class="he-goods__attr">{{ goods.show_goods_param }}</view>
+                <view class="he-goods__number">x{{ goods.goods_number }}</view>
             </view>
         </view>
         <apply-detail-operating v-model="data" :goods="goods"></apply-detail-operating>
@@ -22,7 +22,7 @@ import applyDetailUploadCertificate from "./components/applyDetail-upload-certif
 export default {
     name: "apply-after-sales-detail",
     computed: {
-        isSubmit: function() {
+        isSubmit: function () {
             return this.data.type !== 2 && !this.data.return_reason;
         }
     },
@@ -34,10 +34,10 @@ export default {
     data() {
         return {
             goods: {
-                goods_name:'',
-                goods_image:'',
-                goods_number:1,
-                show_goods_param:''
+                goods_name: '',
+                goods_image: '',
+                goods_number: 1,
+                show_goods_param: ''
             },
             data: {
                 order_goods_id: 0,
@@ -63,12 +63,13 @@ export default {
         }
     },
     methods: {
-        submit: function() {
-            this.$heshop.orderafter('post', this.data).then(function() {
+        submit: function () {
+            let _this = this;
+            this.$heshop.orderafter('post', this.data).then(function () {
                 uni.redirectTo({url: '/pages/order/after-sales-records'});
-            }).catch(function(err) {
+            }).catch(function (err) {
                 console.error(err);
-                this.$toError();
+                _this.$toError();
             });
         }
     }
@@ -132,6 +133,7 @@ export default {
     color: #FFFFFF;
     margin: 80px 0 44px 0;
 }
+
 .he-submit-btn[disabled] {
     background: #cccccc !important;
     color: #FFFFFF;

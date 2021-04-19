@@ -9,7 +9,7 @@
             <div class="tabbar-phone-body">
                 <div class="tabbar-phone-tabbar">
                     <div class="tabbar-phone-opacity"></div>
-                    <iframe frameborder=0 scrolling=no class="tabbar-phone-iframe" :src="origin" alt="" width="375px" height="700px"></iframe>
+                    <iframe frameborder=0 scrolling=no class="tabbar-phone-iframe"  :src="origin"  width="375px" height="700px"></iframe>
                     <Tabbar :tabbarDes="tabbarDes.data" :type="tabbarDes.tabbarStyle" :color="tabbarDes.inactive_color" :background="tabbarDes.background_color"></Tabbar>
                 </div>
             </div>
@@ -41,7 +41,7 @@ export default {
                 data: []
             },
             fullHeight: document.documentElement.clientHeight,
-            origin: $_W.AppURL + '/h5/'
+            origin: $_W.AppWEB
         };
     },
     computed: {

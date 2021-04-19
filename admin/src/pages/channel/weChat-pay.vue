@@ -3,7 +3,7 @@
         <el-form class="le-form" :rules="rules" ref="bind" :model="form" label-width="190px">
             <div class="le-form__header flex align-center">
                 <span class="le-tip"></span>
-                <span class="le-text">支付配置</span>
+                <span class="le-text">公众号支付配置</span>
             </div>
             <el-form-item label="支付方式">
                 <span class="le-text">微信支付</span>

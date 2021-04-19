@@ -4,7 +4,6 @@
  * @Last Modified by:   qinuoyun
  * @Last Modified time: 2021-03-10 16:20:12
  */
-import Vue from 'vue';
 
 /**
  * <p  v-popup.role="description" data-value="description" action="">新建</p>
@@ -28,15 +27,15 @@ let directives = {
      * @type {Object}
      */
     upload: {
-        bind: function(el, binding, vnode) {
+        bind: function (el, binding, vnode) {
 
         },
-        inserted: function(el, binding, vnode) {
-           
+        inserted: function (el, binding, vnode) {
+
 
         },
-        update: function(el, binding, vnode) {
-          
+        update: function (el, binding, vnode) {
+
         }
     }
 

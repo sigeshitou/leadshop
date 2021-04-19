@@ -16,7 +16,7 @@
         <view class="pointer-text" v-if="type==3" :style="{
             textAlign:align
         }">
-            <span>{{current+1}}/{{number}}</span>
+            <span>{{ current + 1 }}/{{ number }}</span>
         </view>
     </view>
 </template>
@@ -47,39 +47,6 @@ export default {
             type: [String, Number, Boolean],
             default: '#f44'
         }
-    },
-    data() {
-        return {
-
-        };
-    },
-    /**
-     * 计算属性
-     * @type {Object}
-     */
-    computed: {
-
-    },
-    /**
-     * 页面渲染前
-     * @return {[type]} [description]
-     */
-    created() {
-
-    },
-    /**
-     * 数据监听
-     * @type {Object}
-     */
-    watch: {
-
-    },
-    /**
-     * 页面加载执行
-     * @return {[type]} [description]
-     */
-    async mounted() {
-
     },
     methods: {
         activeColor(index) {

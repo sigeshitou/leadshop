@@ -9,10 +9,11 @@ const { mapActions } = createNamespacedHelpers('setting');
 export default {
     name: 'App',
     methods: {
-        ...mapActions(['getSettingInfo'])
+        ...mapActions(['getSettingInfo', 'getVersion'])
     },
     mounted() {
         this.getSettingInfo();
+        this.getVersion();
     }
 }
 </script>

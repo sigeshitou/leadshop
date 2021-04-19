@@ -134,7 +134,9 @@ export default {
                 },
                 pfr_id: null,
                 video_cover: '',
-                video: '',
+                video: {
+                    type: 1
+                },
                 status: null,
                 is_sale: 0,
                 is_video: 0,
@@ -142,7 +144,7 @@ export default {
                 services: [],
                 ft_type: 1,
                 limit_buy_type: "day",
-                unit: '件'
+                unit: '件',
             },
             loading: false
         }
@@ -243,6 +245,10 @@ export default {
                         _this.$message.error("视频封面不能为空");
                         return;
                     }
+                    if (is_video === 1 && video.url.length > 100) {
+                        _this.$message.error("网络图片地址最多允许100字符");
+                        return;
+                    }
                     switch (_this.activeName) {
                         case "first": {
                             let newGroup = _this.$heshop.utils.deepClone(group);
@@ -259,7 +265,8 @@ export default {
                                 is_video,
                                 video: newVideo ? {
                                     url: newVideo.url,
-                                    cover: newVideo.cover
+                                    cover: newVideo.cover,
+                                    type: newVideo.type
                                 } : '',
                                 video_cover
                             }
@@ -435,7 +442,9 @@ export default {
                         }]
                     }
                 }
-                res.video = res.video ? res.video : {}
+                res.video = res.video ? res.video : {
+                    type: 1
+                }
                 this.form = res;
                 this.loading = false;
             }).catch(err => {

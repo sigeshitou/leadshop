@@ -172,9 +172,9 @@ class Payment extends Component
                 $res = true;
             }
             if ($res) {
-                $callback();
+                $res = $callback();
                 $t->commit();
-                return true;
+                return $res;
             } else {
                 Error($pay->errMsg);
             }

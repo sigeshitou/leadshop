@@ -3,8 +3,8 @@
 /**
  * @Author: qinuoyun
  * @Date:   2020-09-09 15:12:15
- * @Last Modified by:   wiki
- * @Last Modified time: 2021-03-11 10:43:56
+ * @Last Modified by:   qinuoyun
+ * @Last Modified time: 2021-04-16 10:47:56
  */
 
 if (!function_exists('import')) {
@@ -16,6 +16,274 @@ if (!function_exists('import')) {
     function import($value = '')
     {
         P("加载");
+    }
+}
+
+if (!function_exists('createPoster')) {
+    /**
+     * 生成宣传海报
+     * @param array  参数,包括图片和文字
+     * @param string  $filename 生成海报文件名,不传此参数则不生成文件,直接输出图片
+     * @return [type] [description]
+     */
+    function createPoster($config = array(), $filename = "")
+    {
+        //如果要看报什么错，可以先注释调这个header
+        if (empty($filename)) {
+            header("content-type: image/png");
+        }
+        $imageDefault = array(
+            'left'    => 0,
+            'top'     => 0,
+            'right'   => 0,
+            'bottom'  => 0,
+            'width'   => 100,
+            'height'  => 100,
+            'opacity' => 100,
+        );
+        $textDefault = array(
+            'text'      => '',
+            'left'      => 0,
+            'top'       => 0,
+            'fontSize'  => 32, //字号
+            'fontColor' => '255,255,255', //字体颜色
+            'angle'     => 0,
+        );
+        $background = $config['background']; //海报最底层得背景
+        //背景方法
+        $backgroundInfo   = getimagesize($background);
+        $backgroundFun    = 'imagecreatefrom' . image_type_to_extension($backgroundInfo[2], false);
+        $background       = $backgroundFun($background);
+        $backgroundWidth  = imagesx($background); //背景宽度
+        $backgroundHeight = imagesy($background); //背景高度
+        $imageRes         = imageCreatetruecolor($backgroundWidth, $backgroundHeight);
+        $color            = imagecolorallocate($imageRes, 0, 0, 0);
+        imagefill($imageRes, 0, 0, $color);
+        // imageColorTransparent($imageRes, $color);  //颜色透明
+        imagecopyresampled($imageRes, $background, 0, 0, 0, 0, imagesx($background), imagesy($background), imagesx($background), imagesy($background));
+        //处理了图片
+        if (!empty($config['image'])) {
+            foreach ($config['image'] as $key => $val) {
+                $val = array_merge($imageDefault, $val);
+
+                if ($val['stream']) {
+                    //如果传的是字符串图像流
+                    $info     = getimagesizefromstring($val['url']);
+                    $function = 'imagecreatefromstring';
+                } else {
+                    $info     = getimagesize($val['url']);
+                    $function = 'imagecreatefrom' . image_type_to_extension($info[2], false);
+                }
+                $res = $function($val['url']);
+                //根据尺寸居中裁剪 获取图形信息
+                $target_w = $val['width'];
+                $target_h = $val['height'];
+                $source_w = imagesx($res);
+                $source_h = imagesy($res);
+
+                /* 计算裁剪宽度和高度 */
+                $judge    = (($source_w / $source_h) > ($target_w / $target_h));
+                $resize_w = $judge ? ($source_w * $target_h) / $source_h : $target_w;
+                $resize_h = !$judge ? ($source_h * $target_w) / $source_w : $target_h;
+                $start_x  = $judge ? ($resize_w - $target_w) / 2 : 0;
+                $start_y  = !$judge ? ($resize_h - $target_h) / 2 : 0;
+                /* 绘制居中缩放图像 */
+                $canvas = imagecreatetruecolor($resize_w, $resize_h);
+                imagecopyresampled($canvas, $res, 0, 0, 0, 0, $resize_w, $resize_h, $source_w, $source_h);
+                $target_img = imagecreatetruecolor($target_w, $target_h);
+                imagecopy($target_img, $canvas, 0, 0, $start_x, $start_y, $resize_w, $resize_h);
+
+                //处理图片圆角问题
+                $canvas = radius_img($canvas, $val['width'], $val['height'], $val['radius'], $val['color']);
+
+                //关键函数，参数（目标资源，源，目标资源的开始坐标x,y, 源资源的开始坐标x,y,目标资源的宽高w,h,源资源的宽高w,h）
+                $val['left'] = $val['left'] < 0 ? $backgroundWidth - abs($val['left']) - $val['width'] : $val['left'];
+                $val['top']  = $val['top'] < 0 ? $backgroundHeight - abs($val['top']) - $val['height'] : $val['top'];
+                //放置图像
+                imagecopymerge($imageRes, $canvas, $val['left'], $val['top'], $val['right'], $val['bottom'], $val['width'], $val['height'], $val['opacity']); //左，上，右，下，宽度，高度，透明度
+            }
+        }
+        //处理文字
+        if (!empty($config['text'])) {
+            foreach ($config['text'] as $key => $val) {
+                $val             = array_merge($textDefault, $val);
+                list($R, $G, $B) = explode(',', $val['fontColor']);
+                $fontColor       = imagecolorallocate($imageRes, $R, $G, $B);
+                $val['left']     = $val['left'] < 0 ? $backgroundWidth - abs($val['left']) : $val['left'];
+                $val['top']      = $val['top'] < 0 ? $backgroundHeight - abs($val['top']) : $val['top'];
+                imagettftext($imageRes, $val['fontSize'], $val['angle'], $val['left'], $val['top'], $fontColor, $val['fontPath'], $val['text']);
+                if ($val['lineation']) {
+                    $lineation_w = (strlen($val['text']) * $val['fontSize']) * 0.6;
+                    $lineation_h = $val['fontSize'];
+                    imageline($imageRes, 0 + $val['left'], $val['top'] - ($lineation_h / 2), $lineation_w + $val['left'], $val['top'] - ($lineation_h / 2), $fontColor);
+                }
+            }
+        }
+        imagepng($imageRes); //在浏览器上显示
+        // imgzip($imageRes, $backgroundWidth / 2, $backgroundHeight / 2);
+        imagedestroy($imageRes);
+    }
+
+}
+if (!function_exists('radius_img')) {
+    /**
+     * 处理图片圆角问题
+     * @param  [type]  $src_img [description]
+     * @param  [type]  $width   [description]
+     * @param  [type]  $height  [description]
+     * @param  integer $radius  [description]
+     * @return [type]           [description]
+     */
+    function radius_img($src_img, $width, $height, $radius = 15, $color = "0,0,0")
+    {
+
+        $w = &$width;
+        $h = &$height;
+        // $radius = $radius == 0 ? (min($w, $h) / 2) : $radius;
+        $img = imagecreatetruecolor($w, $h);
+        //这一句一定要有
+        imagesavealpha($img, true);
+        list($R, $G, $B) = explode(',', $color);
+        //拾取一个完全透明的颜色,最后一个参数127为全透明
+        $bg = imagecolorallocatealpha($img, $R, $G, $B, 127);
+        imagefill($img, 0, 0, $bg);
+        $r = $radius; //圆 角半径
+        for ($x = 0; $x < $w; $x++) {
+            for ($y = 0; $y < $h; $y++) {
+                $rgbColor = imagecolorat($src_img, $x, $y);
+                if (($x >= $radius && $x <= ($w - $radius)) || ($y >= $radius && $y <= ($h - $radius))) {
+                    //不在四角的范围内,直接画
+                    imagesetpixel($img, $x, $y, $rgbColor);
+                } else {
+                    //在四角的范围内选择画
+                    //上左
+                    $y_x = $r; //圆心X坐标
+                    $y_y = $r; //圆心Y坐标
+                    if (((($x - $y_x) * ($x - $y_x) + ($y - $y_y) * ($y - $y_y)) <= ($r * $r))) {
+                        imagesetpixel($img, $x, $y, $rgbColor);
+                    }
+                    //上右
+                    $y_x = $w - $r; //圆心X坐标
+                    $y_y = $r; //圆心Y坐标
+                    if (((($x - $y_x) * ($x - $y_x) + ($y - $y_y) * ($y - $y_y)) <= ($r * $r))) {
+                        imagesetpixel($img, $x, $y, $rgbColor);
+                    }
+                    //下左
+                    $y_x = $r; //圆心X坐标
+                    $y_y = $h - $r; //圆心Y坐标
+                    if (((($x - $y_x) * ($x - $y_x) + ($y - $y_y) * ($y - $y_y)) <= ($r * $r))) {
+                        imagesetpixel($img, $x, $y, $rgbColor);
+                    }
+                    //下右
+                    $y_x = $w - $r; //圆心X坐标
+                    $y_y = $h - $r; //圆心Y坐标
+                    if (((($x - $y_x) * ($x - $y_x) + ($y - $y_y) * ($y - $y_y)) <= ($r * $r))) {
+                        imagesetpixel($img, $x, $y, $rgbColor);
+                    }
+                }
+            }
+        }
+        return $img;
+    }
+}
+
+if (!function_exists('image_center_crop')) {
+/**
+ * 居中裁剪图片
+ * @param string $source [原图路径]
+ * @param int $width [设置宽度]
+ * @param int $height [设置高度]
+ * @param string $target [目标路径]
+ * @return bool [裁剪结果]
+ */
+    function image_center_crop($source, $width, $height, $target)
+    {
+        if (!file_exists($source)) {
+            return false;
+        }
+
+        /* 根据类型载入图像 */
+        switch (exif_imagetype($source)) {
+            case IMAGETYPE_JPEG:
+                $image = imagecreatefromjpeg($source);
+                break;
+            case IMAGETYPE_PNG:
+                $image = imagecreatefrompng($source);
+                break;
+            case IMAGETYPE_GIF:
+                $image = imagecreatefromgif($source);
+                break;
+        }
+        if (!isset($image)) {
+            return false;
+        }
+
+        /* 获取图像尺寸信息 */
+        $target_w = $width;
+        $target_h = $height;
+        $source_w = imagesx($image);
+        $source_h = imagesy($image);
+        /* 计算裁剪宽度和高度 */
+        $judge    = (($source_w / $source_h) > ($target_w / $target_h));
+        $resize_w = $judge ? ($source_w * $target_h) / $source_h : $target_w;
+        $resize_h = !$judge ? ($source_h * $target_w) / $source_w : $target_h;
+        $start_x  = $judge ? ($resize_w - $target_w) / 2 : 0;
+        $start_y  = !$judge ? ($resize_h - $target_h) / 2 : 0;
+        /* 绘制居中缩放图像 */
+        $resize_img = imagecreatetruecolor($resize_w, $resize_h);
+        imagecopyresampled($resize_img, $image, 0, 0, 0, 0, $resize_w, $resize_h, $source_w, $source_h);
+        $target_img = imagecreatetruecolor($target_w, $target_h);
+        imagecopy($target_img, $resize_img, 0, 0, $start_x, $start_y, $resize_w, $resize_h);
+        /* 将图片保存至文件 */
+        if (!file_exists(dirname($target))) {
+            mkdir(dirname($target), 0777, true);
+        }
+
+        switch (exif_imagetype($source)) {
+            case IMAGETYPE_JPEG:
+                imagejpeg($target_img, $target);
+                break;
+            case IMAGETYPE_PNG:
+                imagepng($target_img, $target);
+                break;
+            case IMAGETYPE_GIF:
+                imagegif($target_img, $target);
+                break;
+        }
+        return boolval(file_exists($target));
+    }
+}
+
+if (!function_exists('imgzip')) {
+    /**
+     * 等比例缩放图片
+     * @param  [type] $src    [description]
+     * @param  [type] $newwid [description]
+     * @param  [type] $newhei [description]
+     * @return [type]         [description]
+     */
+    function imgzip($src, $newwid, $newhei)
+    {
+        //方便配置长度宽度、高度，设置框为变量wid,高度为hei
+        $wid = $imgInfo[0];
+        $hei = $imgInfo[1];
+        //判断长度和宽度，以方便等比缩放,规格按照500, 320
+        if ($wid > $hei) {
+            $wid = $newwid;
+            $hei = $newwid / ($wid / $hei);
+        } else {
+            $wid = $newhei * ($wid / $hei);
+            $hei = $newhei;
+        }
+        //在内存中建立一张图片
+        $images2 = imagecreatetruecolor($newwid, $newhei); //建立一个500*320的图片
+        imagecopyresampled($images2, $image, 0, 0, 0, 0, $wid, $hei, $imgInfo[0], $imgInfo[1]);
+        //销毁原始图片
+        imagedestroy($image);
+        //直接输出图片文件
+        imagejpeg($images2);
+        //销毁
+        imagedestroy($images2);
     }
 }
 
@@ -358,7 +626,7 @@ if (!function_exists('to_array')) {
      */
     function to_array($json = '')
     {
-        return $json?json_decode($json, true):null;
+        return $json ? json_decode($json, true) : null;
     }
 }
 
@@ -546,10 +814,10 @@ if (!function_exists('mb_rtrim')) {
     function mb_rtrim($string, $trim, $encoding = 'utf8')
     {
 
-        $mask = [];
+        $mask       = [];
         $trimLength = mb_strlen($trim, $encoding);
         for ($i = 0; $i < $trimLength; $i++) {
-            $item = mb_substr($trim, $i, 1, $encoding);
+            $item   = mb_substr($trim, $i, 1, $encoding);
             $mask[] = $item;
         }
 
@@ -598,5 +866,30 @@ if (!function_exists('remove_dir')) {
         } else {
             return false;
         }
+    }
+}
+
+if (!function_exists('app_version')) {
+    /**
+     * @return string
+     */
+    function app_version()
+    {
+        if (!class_exists('\Yii')) {
+            return '0.0.0';
+        }
+        $versionFile = Yii::$app->basePath . '/web/version.json';
+        if (!file_exists($versionFile)) {
+            return '0.0.0';
+        }
+        $versionContent = file_get_contents($versionFile);
+        if (!$versionContent) {
+            return '0.0.0';
+        }
+        $versionData = json_decode($versionContent, true);
+        if (!$versionData) {
+            return '0.0.0';
+        }
+        return isset($versionData['version']) ? $versionData['version'] : '0.0.0';
     }
 }

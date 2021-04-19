@@ -58,7 +58,7 @@ class SiteController extends Controller
                 ];
                 $temp = Yii::$app->basePath . '/web/h5/static/images/icon';
                 if (!is_dir($temp)) {
-                    mkdir($temp);
+                    make_dir($temp);
                 }
                 foreach ($tabBar["data"] as $k => $item) {
                     if ($tabBar['tabbarStyle'] == 2) {

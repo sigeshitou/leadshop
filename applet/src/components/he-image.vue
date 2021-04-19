@@ -1,7 +1,8 @@
 <template>
     <view :style="[setStyle]" class="he-image-index" @click="onClick">
         <!--#ifndef H5-->
-        <image :src="src" v-if="(!error)" :mode="mode" :lazy-load="lazyLoad" @load="onImageLoad" @error="onImageError" class="he-image__img"></image>
+        <image :src="src" v-if="(!error)" :mode="mode" :lazy-load="lazyLoad" @load="onImageLoad" @error="onImageError"
+               class="he-image__img"></image>
         <!--#endif-->
         <!--#ifdef H5-->
         <img v-lazy="src" v-if="(!error)" @load="onImageLoad" @error="onImageError" class="he-image__img"/>
@@ -30,19 +31,19 @@ export default {
         },
         lazyLoad: {
             type: Boolean,
-            default: function() {
+            default: function () {
                 return true;
             }
         },
         showLoading: {
             type: Boolean,
-            default: function() {
+            default: function () {
                 return true;
             }
         },
         showError: {
             type: Boolean,
-            default: function() {
+            default: function () {
                 return true;
             }
         },
@@ -57,7 +58,7 @@ export default {
         }
     },
     computed: {
-        setStyle: function() {
+        setStyle: function () {
             let style = {
                 width: this.$h.addUnit(this.width),
                 height: this.$h.addUnit(this.height),
@@ -65,7 +66,7 @@ export default {
             Object.assign(style, this.imageStyle);
             return style;
         },
-        iconFont: function() {
+        iconFont: function () {
             return {
                 fontSize: this.$h.addUnit(this.width * .35)
             }
@@ -100,21 +101,23 @@ export default {
     position: relative;
     overflow: hidden;
 }
+
 .loading-class, .error-class {
     background: #ECEDF1;
     position: absolute;
     top: 0;
     z-index: 1;
 }
+
 .iconfont {
     position: absolute;
-    top:50%;
-    left:50%;
+    top: 50%;
+    left: 50%;
     color: #DFE0E6;
     transform: translate(-50%, -50%);
 }
 
-.he-image__img ,.he-image__loading, .he-image__error {
+.he-image__img, .he-image__loading, .he-image__error {
     display: block;
     width: 100%;
     height: 100%;

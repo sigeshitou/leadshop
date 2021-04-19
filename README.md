@@ -6,6 +6,20 @@ qq交流群号：849894135
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0416/143640_aa669bf7_7426632.png "kaiyuanqun.png")
 ## 运行环境
 
+# Leadshop微商城
+
+## 论坛交流
+地址:https://forum.leadshop.vip/
+
+## 体验后台
+地址:https://demo.leadshop.vip
+
+账号:18888888888
+
+密码:123456
+
+## 运行环境
+
 Linux+Nginx+PHP7.4+MySQL(5.6|5.7)
 
 ## 项目介绍
@@ -57,6 +71,7 @@ Leadshop 开源系统，基于Yii2开发，支持composer，优化核心，减�
 
 接口文档：http://www.leadshop.vip/api.html
 
+
 ## 页面展示
 ![展示图](/readme/images/1.png)
 ![展示图](/readme/images/2.png)
@@ -74,32 +89,39 @@ Leadshop 开源系统，基于Yii2开发，支持composer，优化核心，减�
 ![展示图](/readme/images/12.png)
 ![展示图](/readme/images/13.png)
 
-# Leadshop微商城
-
-## 论坛交流
-地址:https://forum.leadshop.vip/
-
-## 体验后台
-地址:https://demo.leadshop.vip
-
-账号:18888888888
-
-密码:123456
-
-
 
 ## 安装
 
 ### 一键安装
-上传你的代码，执行目录为/server/web在浏览器中输入你的域名或IP
+1.上传你的代码
+
+2.项目目录设置755权限
+
+3.设置伪静态规则(nginx 推荐使用)
+```
+location / {
+    try_files $uri $uri/ /index.php$is_args$args;
+}
+```
+
+注:如果使用Apache环境 需要在.htaccess 中添加
+```
+ SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+```
+否则会导致OAuth登录模式获取不到Authorization
+
+4.设置代码执行目录为/server/web
+
+5.在浏览器中输入你的域名或IP
 
 ( 例如：www.yourdomain.com/install )，安装程序会自动执行安装。期间系统会提醒你输入数据库信息以完成安装。
 
+6.检查php禁用函数列表,symlink函数不能被禁用，否则后台页面无法访问。
 
-后台访问地址：
+7.后台访问地址：
 域名/leadshop/panel/index
 
-公众号首页访问地址：
+8.公众号首页访问地址：
 域名/h5
 
 ### 重新安装

@@ -170,7 +170,7 @@ class AfterexportController extends BasicController
                 'order as order',
             ])
             ->where($where)
-            ->distinct()
+            ->groupBy(['after.id'])
             ->all();
 
         $tHeader     = [];

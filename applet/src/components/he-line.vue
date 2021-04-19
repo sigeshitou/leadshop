@@ -1,7 +1,5 @@
 <template>
-    <view class="he-line" :style="[lineStyle]">
-
-    </view>
+    <view class="he-line" :style="[lineStyle]"></view>
 </template>
 
 <script>
@@ -44,18 +42,18 @@ export default {
             let style = {};
             style.margin = this.margin;
             // 如果是水平线条，边框高度为1px，再通过transform缩小一半，就是0.5px了
-            if(this.direction == 'row') {
+            if (this.direction == 'row') {
                 // 此处采用兼容分开写，兼容nvue的写法
                 style.borderBottomWidth = '1px';
                 style.borderBottomStyle = this.borderStyle;
                 style.width = this.$h.addUnit(this.length);
-                if(this.hairLine) style.transform = 'scaleY(0.5)';
+                if (this.hairLine) style.transform = 'scaleY(0.5)';
             } else {
                 // 如果是竖向线条，边框宽度为1px，再通过transform缩小一半，就是0.5px了
                 style.borderLeftWidth = '1px';
                 style.borderLeftStyle = this.borderStyle;
                 style.height = this.$h.addUnit(this.length);
-                if(this.hairLine) style.transform = 'scaleX(0.5)';
+                if (this.hairLine) style.transform = 'scaleX(0.5)';
             }
             style.borderColor = this.color;
             return style;

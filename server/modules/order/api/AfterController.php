@@ -141,7 +141,7 @@ class AfterController extends BasicController
                     'user as user',
                 ])
                 ->where($w)
-                ->distinct()
+                ->groupBy(['after.id'])
                 ->count();
         }
 
@@ -279,8 +279,8 @@ class AfterController extends BasicController
                         'user as user',
                     ])
                     ->where($where)
+                    ->groupBy(['after.id'])
                     ->orderBy($orderBy)
-                    ->distinct()
                     ->asArray(),
                 'pagination' => ['pageSize' => $pageSize, 'validatePage' => false],
             ]
@@ -324,6 +324,7 @@ class AfterController extends BasicController
         if ($result) {
             $result['images']                = to_array($result['images']);
             $result['process']               = to_array($result['process']);
+            $result['return_address']        = to_array($result['return_address']);
             $result['user_freight_info']     = to_array($result['user_freight_info']);
             $result['merchant_freight_info'] = to_array($result['merchant_freight_info']);
             $result                          = str2url($result);
@@ -384,24 +385,23 @@ class AfterController extends BasicController
             $model->status      = 101;
             $model->refuse_time = $time;
             array_unshift($process, ['label' => '卖家', 'content' => '拒绝售后 ' . date('Y-m-d H:i:s', $time)]);
+            if (isset($post['refuse_reason'])) {
+                $model->refuse_reason = $post['refuse_reason'];
+            }
         } elseif ($model->status === 102) {
             //二次拒绝后转完成
             $model->status      = 201;
             $model->finish_time = $time;
             array_unshift($process, ['label' => '结束', 'content' => '已完成(已拒绝) ' . date('Y-m-d H:i:s', $time)]);
+            if (isset($post['refuse_reason'])) {
+                $model->second_refuse_reason = $post['refuse_reason'];
+            }
         } else {
             Error('非法操作');
         }
         $model->process = to_json($process);
 
-        if (isset($post['refuse_reason'])) {
-            $model->refuse_reason = $post['refuse_reason'];
-        }
-
         if ($model->save()) {
-            // $order_after_info                      = ['order_goods_id' => $model->order_goods_id, 'status' => $model->status];
-            // $this->module->event->order_after_info = $order_after_info;
-            // $this->module->trigger('statistical_order_after');
             return ['status' => $model->status];
         } else {
             Error('操作失败');
@@ -449,9 +449,6 @@ class AfterController extends BasicController
         $model->process = to_json($process);
 
         if ($model->save()) {
-            // $order_after_info                      = ['order_goods_id' => $model->order_goods_id, 'status' => $model->status];
-            // $this->module->event->order_after_info = $order_after_info;
-            // $this->module->trigger('statistical_order_after');
             return ['status' => $model->status];
         } else {
             Error('操作失败');
@@ -510,9 +507,6 @@ class AfterController extends BasicController
                     }
                     $order_model->save();
                 }
-                // $order_after_info                      = ['order_goods_id' => $model->order_goods_id, 'status' => $model->status, 'actual_refund' => $model->actual_refund];
-                // $this->module->event->order_after_info = $order_after_info;
-                // $this->module->trigger('statistical_order_after');
                 $this->orderFinishCheck($model->order_sn);
                 return ['status' => $model->status];
             } else {
@@ -537,9 +531,6 @@ class AfterController extends BasicController
 
         if ($model->save()) {
             M('order', 'Order')::updateAll(['after_sales' => 1, 'finish_time' => $time], ['order_sn' => $model->order_sn]);
-            // $order_after_info                      = ['order_goods_id' => $model->order_goods_id, 'status' => $model->status, 'actual_refund' => $model->actual_refund];
-            // $this->module->event->order_after_info = $order_after_info;
-            // $this->module->trigger('statistical_order_after');
             $this->orderFinishCheck($model->order_sn);
             return ['status' => $model->status];
         } else {
@@ -599,9 +590,6 @@ class AfterController extends BasicController
                     }
                     $order_model->save();
                 }
-                // $order_after_info                      = ['order_goods_id' => $model->order_goods_id, 'status' => $model->status, 'actual_refund' => $model->actual_refund];
-                // $this->module->event->order_after_info = $order_after_info;
-                // $this->module->trigger('statistical_order_after');
                 $this->orderFinishCheck($model->order_sn);
                 return ['status' => $model->status];
             } else {
@@ -651,9 +639,6 @@ class AfterController extends BasicController
                 }
                 $order_model->save();
             }
-            // $order_after_info                      = ['order_goods_id' => $model->order_goods_id, 'status' => $model->status];
-            // $this->module->event->order_after_info = $order_after_info;
-            // $this->module->trigger('statistical_order_after');
             $this->orderFinishCheck($model->order_sn);
             return ['status' => $model->status];
         } else {

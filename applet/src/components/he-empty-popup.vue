@@ -1,7 +1,7 @@
 <template>
     <he-popup mode="center" :border-radius="16" v-model="showModal" :zoom="false">
         <view class="he-empty-popup flex flex-direction" :data-theme="theme">
-            <view class="he-top" :style="[style]">{{title}}</view>
+            <view class="he-top" :style="[style]">{{ title }}</view>
             <view class="he-bottom flex justify-between align-end">
                 <button class="cu-btn" @click="cancel">取消</button>
                 <view class="he-line"></view>
@@ -27,14 +27,14 @@ export default {
     },
     computed: {
         showModal: {
-            get: function() {
+            get: function () {
                 return this.value;
             },
-            set: function(val) {
+            set: function (val) {
                 this.$emit('input', val);
             }
         },
-        style: function() {
+        style: function () {
             return this.emptyStyle;
         }
     },
@@ -54,13 +54,11 @@ export default {
 <style scoped lang="scss">
 .he-empty-popup {
     width: 510px;
-    //height: 235px;
     background: #FFFFFF;
     overflow: hidden;
 }
+
 .he-top {
-    //height: 146px;
-    //line-height: 146px;
     font-size: 28px;
     font-family: PingFang SC;
     font-weight: 500;
@@ -68,10 +66,12 @@ export default {
     text-align: center;
     border-bottom: 1px solid #E5E5E5;
 }
+
 .he-bottom {
     height: 90px;
     position: relative;
 }
+
 .he-line {
     width: 1px;
     height: 88px;
@@ -80,6 +80,7 @@ export default {
     top: 0;
     left: 50%;
 }
+
 .cu-btn {
     width: 254.5px;
     height: 87px;
@@ -89,9 +90,11 @@ export default {
     font-weight: 500;
     border-radius: 0;
 }
+
 .cu-btn:first-child {
     color: #666666;
 }
+
 .cu-btn:last-child {
     @include font_color('font_color');
 }

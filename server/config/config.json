@@ -3,12 +3,13 @@
     "senderEmail": "noreply@example.com",
     "senderName": "Example.com mailer",
     "serialNumber": "F00BCF-50E396-C5AC18-737ABD-426F79-1586RR",
-    "username": "admin",
+    "username": "qinuoyun",
     "regtime": "2020-11-06",
     "siteid": "",
     "admin": "qm73x0exg9nwb1hogg",
     "accessWhitelist": [
         "leadmall/api/install/index",
+        "leadmall/app/poster/index",
         "leadmall/api/install/create",
         "leadmall/api/login/create",
         "leadmall/app/fitment/create",
@@ -28,6 +29,11 @@
         "leadmall/app/login/index",
         "leadmall/app/login/view",
         "leadmall/app/jssdk/index",
-        "leadmall/api/demo/index"
+        "leadmall/api/demo/index",
+        "leadmall/api/plugin/index",
+        "leadmall/api/plugin/view",
+        "leadmall/api/plugin/create",
+        "leadmall/api/plugin/delete",
+        "leadmall/api/plugin/update"
     ]
 }

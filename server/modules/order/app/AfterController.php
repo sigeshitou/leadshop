@@ -48,8 +48,8 @@ class AfterController extends BasicController
                         'goods as goods',
                     ])
                     ->where($where)
+                    ->groupBy(['after.id'])
                     ->orderBy($orderBy)
-                    ->distinct()
                     ->asArray(),
                 'pagination' => ['pageSize' => $pageSize, 'validatePage' => false],
             ]
@@ -186,10 +186,6 @@ class AfterController extends BasicController
                 $o_g_info->after_sales = 1;
                 $o_g_res               = $o_g_info->save();
                 if ($o_g_res) {
-                    $order_after_info                      = $model->attributes;
-                    $order_after_info['status']            = 100;
-                    // $this->module->event->order_after_info = $order_after_info;
-                    // $this->module->trigger('statistical_order_after');
                     $transaction->commit(); //事务执行
                     $status = $model->status ? $model->status : 100;
                     return ['status' => $status];
@@ -263,9 +259,6 @@ class AfterController extends BasicController
         $model->process = to_json($process);
 
         if ($model->save()) {
-            // $order_after_info                      = ['order_goods_id' => $model->order_goods_id, 'status' => $model->status];
-            // $this->module->event->order_after_info = $order_after_info;
-            // $this->module->trigger('statistical_order_after');
             return ['status' => $model->status];
         } else {
             Error('操作失败');
@@ -294,9 +287,6 @@ class AfterController extends BasicController
         $model->process = to_json($process);
 
         if ($model->save()) {
-            // $order_after_info                      = ['order_goods_id' => $model->order_goods_id, 'status' => $model->status];
-            // $this->module->event->order_after_info = $model->toArray();
-            // $this->module->trigger('statistical_order_after');
             return ['status' => $model->status];
         } else {
             Error('操作失败');
@@ -317,7 +307,7 @@ class AfterController extends BasicController
 
         //可取消的所属状态
         if (!in_array($model->status, [100, 101, 102, 111, 121, 131])) {
-            Error('非法操作');
+            Error('此售后订单不可取消');
         }
 
         $transaction = Yii::$app->db->beginTransaction(); //启动数据库事务
@@ -330,12 +320,9 @@ class AfterController extends BasicController
         //     $res1 = M('order', 'Order')::updateAll(['after_sales' => 0], ['order_sn' => $model->order_sn]);
         // }
         $res2             = M('order', 'OrderGoods')::updateAll(['after_sales' => 0], ['id' => $model->order_goods_id]);
-        // $order_after_info = ['order_goods_id' => $model->order_goods_id, 'is_deleted' => 1, 'deleted_time' => time()];
         $res              = $model->delete();
         if ($res && $res2) {
             $transaction->commit();
-            // $this->module->event->order_after_info = $order_after_info;
-            // $this->module->trigger('statistical_order_after');
             return true;
         } else {
             $transaction->rollBack();

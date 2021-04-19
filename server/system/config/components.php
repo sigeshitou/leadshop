@@ -37,21 +37,21 @@ $components = [
             'showScriptName'      => false,
             'enableStrictParsing' => true,
             'rules'               => [
-                'GET <controller:[\w-]+>'                            => '<controller>/index',
-                'GET <controller:[\w-]+>/<id:\d+>'                   => '<controller>/view',
+                'GET <controller:[\w-]+>'                             => '<controller>/index',
+                'GET <controller:[\w-]+>/<id:\d+>'                    => '<controller>/view',
 
-                'POST <controller:[\w-]+>'                           => '<controller>/create',
-                'PUT <controller:[\w-]+>'                            => '<controller>/update',
-                'PUT <controller:[\w-]+>/<id:\d+>'                   => '<controller>/update',
-                'PUT <controller:[\w-]+>/<id:(\d+,)*\d+$>'           => '<controller>/update',
+                'POST <controller:[\w-]+>'                            => '<controller>/create',
+                'PUT <controller:[\w-]+>'                             => '<controller>/update',
+                'PUT <controller:[\w-]+>/<id:\d+>'                    => '<controller>/update',
+                'PUT <controller:[\w-]+>/<id:(\d+,)*\d+$>'            => '<controller>/update',
 
-                'DELETE <controller:[\w-]+>/<id:(\d+,)*\d+$>'        => '<controller>/delete',
-                'OPTIONS <module>/<controller:\w+>'                  => '<controller>/options',
-                'OPTIONS <module>/<controller:\w+>/<id:(\d+,)*\d+$>' => '<controller>/options',
+                'DELETE <controller:[\w-]+>/<id:(\d+,)*\d+$>'         => '<controller>/delete',
+                'OPTIONS <module>/<controller:\w+>'                   => '<controller>/options',
+                'OPTIONS <module>/<controller:\w+>/<id:(\d+,)*\d+$>'  => '<controller>/options',
 
-                'GET <controller:[\w-]+>/<action>'                   => '<controller>/<action>',
-                'GET <controller:\w+>/<action>'                      => '<controller>/<action>',
-                'POST <controller:[\w-]+>/<action>'                  => '<controller>/<action>',
+                'GET <controller:[\w-]+>/<action>'                    => '<controller>/<action>',
+                'GET <controller:\w+>/<action>'                       => '<controller>/<action>',
+                'POST <controller:[\w-]+>/<action>'                   => '<controller>/<action>',
             ],
         ],
         'errorHandler' => [
@@ -66,6 +66,12 @@ $components = [
         'sms'          => [
             'class' => \app\components\Sms::class,
         ],
+        'express'      => [
+            'class' => \app\components\Express::class,
+        ],
+        'cloud'        => [
+            'class' => \app\components\cloud\Cloud::class,
+        ]
     ],
 ];
 

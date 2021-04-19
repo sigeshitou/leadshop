@@ -3,35 +3,40 @@
         <view class="he-item" v-for="(item, index) in list" :key="index">
             <view class="he-item__top flex justify-between align-center">
                 <view class="he-status__sign">
-                    <view class="iconfont he-sign" :class="item.type === 0 ? 'iconaftersalesdetails-refund' : item.type === 1 ? 'iconaftersalesdetails-returngoods' : item.type === 2 ? 'iconaftersalesdetails-exchangegoods' : null"></view>
-                    <view class="he-text">{{item.type | getType}}</view>
+                    <view class="iconfont he-sign"
+                          :class="item.type === 0 ? 'iconaftersalesdetails-refund' : item.type === 1 ? 'iconaftersalesdetails-returngoods' : item.type === 2 ? 'iconaftersalesdetails-exchangegoods' : null"></view>
+                    <view class="he-text">{{ item.type | getType }}</view>
                 </view>
-                <text class="he-status">{{item.status | getStatus}}</text>
+                <text class="he-status">{{ item.status | getStatus }}</text>
             </view>
             <view class="he-item__body flex">
-                <he-image :src="item.goods.goods_image" class="he-item__image" :image-style="{borderRadius: '8rpx'}" :width="160" :height="160"></he-image>
+                <he-image :src="item.goods.goods_image" class="he-item__image" :image-style="{borderRadius: '8rpx'}"
+                          :width="160" :height="160"></he-image>
                 <view class="he-item__content">
-                    <view class="he-item__name he-line-1">{{item.goods.goods_name}}</view>
-                    <view class="he-item__attr ">{{item.goods.show_goods_param}}</view>
+                    <view class="he-item__name he-line-1">{{ item.goods.goods_name }}</view>
+                    <view class="he-item__attr ">{{ item.goods.show_goods_param }}</view>
                     <view class="he-item__number-price">
-                        <text class="he-item__number">x{{item.return_number}}</text>
-                        <text class="he-item__price" v-if="item.type !== 2">退款：¥{{item.return_amount}}</text>
+                        <text class="he-item__number">x{{ item.return_number }}</text>
+                        <text class="he-item__price" v-if="item.type !== 2">退款：¥{{ item.return_amount }}</text>
                     </view>
                 </view>
             </view>
-            <view class="he-item__footer flex align-center" :class="item.type !== 2 && item.status === 200 ? 'justify-between' : 'justify-end'">
+            <view class="he-item__footer flex align-center"
+                  :class="item.type !== 2 && item.status === 200 ? 'justify-between' : 'justify-end'">
                 <view v-if="item.type !== 2 && item.status === 200">
                     <text class="he-item__text">成功退款：</text>
-                    <text class="he-item__price">¥{{item.actual_refund}}</text>
+                    <text class="he-item__price">¥{{ item.actual_refund }}</text>
                 </view>
-                <view class="he-item__btn">
+                <view>
                     <button class="cu-btn" v-if="item.status >= 200" @click="setClose(item)">删除记录</button>
                     <button class="cu-btn" @click="navigateTo(item.id)">查看详情</button>
                 </view>
             </view>
         </view>
-        <he-no-content-yet v-if="isNothing" text="暂无相关记录" :image="ipAddress + '/order-background-empty.png'"></he-no-content-yet>
-        <he-empty-popup :empty-style="{height: '146rpx', lineHeight: '146rpx'}" title="确认要删除这条售后记录？" v-model="isDel" :item="setItem" @confirm="deleteConfirm"></he-empty-popup>
+        <he-no-content-yet v-if="isNothing" text="暂无相关记录"
+                           :image="ipAddress + '/order-background-empty.png'"></he-no-content-yet>
+        <he-empty-popup :empty-style="{height: '146rpx', lineHeight: '146rpx'}" title="确认要删除这条售后记录？" v-model="isDel"
+                        :item="setItem" @confirm="deleteConfirm"></he-empty-popup>
         <he-load-more v-if="list.length > 0" :status="loadStatus"></he-load-more>
         <view class="safe-area-inset-bottom"></view>
     </view>
@@ -63,7 +68,7 @@ export default {
         }
     },
     filters: {
-        getStatus: function(status) {
+        getStatus: function (status) {
             switch (status) {
                 case 100:
                 case 102:
@@ -87,7 +92,7 @@ export default {
                     return "已完成(已拒绝)";
             }
         },
-        getType: function(type) {
+        getType: function (type) {
             if (type === 0) {
                 return "仅退款";
             } else if (type === 1) {
@@ -98,14 +103,14 @@ export default {
         }
     },
     methods: {
-        navigateTo: function(id) {
-            uni.navigateTo({ url: '/pages/order/after-sales-details?id=' + id });
+        navigateTo: function (id) {
+            uni.navigateTo({url: '/pages/order/after-sales-details?id=' + id});
         },
-        getList: function() {
+        getList: function () {
             let _this = this;
-            return new Promise(function(resolve) {
-                _this.$heshop.orderafter('get').page(_this.page.current, _this.page.size).then(function(res) {
-                    let { data, headers } = res;
+            return new Promise(function (resolve) {
+                _this.$heshop.orderafter('get').page(_this.page.current, _this.page.size).then(function (res) {
+                    let {data, headers} = res;
                     resolve(data);
                     // #ifdef MP-WEIXIN
                     _this.page = {
@@ -121,28 +126,28 @@ export default {
                         size: +headers['x-pagination-per-page']
                     }
                     // #endif
-                }).catch(function(err) {
+                }).catch(function (err) {
                     console.error(err);
                     _this.$toError();
                 });
             })
 
         },
-        setClose: function(item) {
+        setClose: function (item) {
             this.isDel = true;
             this.setItem = item;
         },
-        deleteConfirm: function(data) {
+        deleteConfirm: function (data) {
             let _this = this;
-            this.$heshop.orderafter("delete", data.id).then(function() {
+            this.$heshop.orderafter("delete", data.id).then(function () {
                 //撤回售后相当于删除,撤回后返回列表
-                _this.list.forEach(function(item, index) {
+                _this.list.forEach(function (item, index) {
                     if (item.id === data.id) {
                         _this.$delete(_this.list, index);
                     }
                 });
                 _this.$h.toast("删除订单成功");
-            }).catch(function(err) {
+            }).catch(function (err) {
                 console.error(err);
                 _this.$toError();
             });
@@ -150,7 +155,7 @@ export default {
     },
     onLoad() {
         let _this = this;
-        this.getList().then(function(res) {
+        this.getList().then(function (res) {
             _this.list = res;
             _this.isNothing = _this.list.length === 0;
             _this.loadStatus = _this.list.length < _this.page.size ? 'nomore' : 'loadmore';
@@ -161,7 +166,7 @@ export default {
         if (this.page.count > this.page.current) {
             this.page.current++;
             this.loadStatus = "loading";
-            this.getList().then(function(res) {
+            this.getList().then(function (res) {
                 _this.list.push(...res);
                 _this.loadStatus = "loadmore";
             });
@@ -221,22 +226,22 @@ export default {
 
 .he-item__top .he-sign {
     display: inline-block;
-    font-size: 26rpx;
-    height: 26rpx;
-    width: 26rpx;
-    line-height: 48rpx;
+    font-size: 26px;
+    height: 26px;
+    width: 26px;
+    line-height: 48px;
     margin-right: 8px;
     @include font_color('font_color');
 }
 
 .he-item__top .he-text {
     display: inline-block;
-    font-size: 26rpx;
-    line-height: 48rpx;
+    font-size: 26px;
+    line-height: 48px;
     font-family: PingFang SC;
     font-weight: 500;
     color: #222222;
-    width: 200rpx;
+    width: 200px;
 }
 
 .he-item__body {
@@ -288,8 +293,6 @@ export default {
     height: 80px;
     padding: 12px;
 }
-
-.he-item__btn {}
 
 .cu-btn {
     height: 56px;

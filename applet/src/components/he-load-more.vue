@@ -9,10 +9,13 @@
         <!-- 加载中和没有更多的状态才显示两边的横线 -->
         <view :class="status == 'loadmore' || status == 'nomore' ? 'he-more' : ''" class="he-load-more-inner">
             <view class="he-loadmore-icon-wrap">
-                <he-loading class="he-loadmore-icon" :color="iconColor" :mode="iconType == 'circle' ? 'circle' : 'flower'" :show="status == 'loading' && icon"></he-loading>
+                <he-loading class="he-loadmore-icon" :color="iconColor"
+                            :mode="iconType == 'circle' ? 'circle' : 'flower'"
+                            :show="status == 'loading' && icon"></he-loading>
             </view>
             <!-- 如果没有更多的状态下，显示内容为dot（粗点），加载特定样式 -->
-            <view class="he-line-1 he-load-text" :style="[loadTextStyle]" :class="[(status == 'nomore' && isDot == true) ? 'he-dot-text' : 'he-more-text']" @tap="loadMore">
+            <view class="he-line-1 he-load-text" :style="[loadTextStyle]"
+                  :class="[(status == 'nomore' && isDot == true) ? 'he-dot-text' : 'he-more-text']" @tap="loadMore">
                 {{ showText }}
             </view>
         </view>
@@ -64,7 +67,7 @@ export default {
         // 显示的文字
         loadText: {
             type: Object,
-            default () {
+            default() {
                 return {
                     loadmore: '加载更多',
                     loading: '加载中..',
@@ -125,15 +128,14 @@ export default {
         // 加载中花朵动画形式
         // 动画由base64图片生成，暂不支持修改
         flowerStyle() {
-            return {
-            }
+            return {}
         },
         // 显示的提示文字
         showText() {
             let text = '';
-            if(this.status == 'loadmore') text = this.loadText.loadmore;
-            else if(this.status == 'loading') text = this.loadText.loading;
-            else if(this.status == 'nomore' && this.isDot) text = this.dotText;
+            if (this.status == 'loadmore') text = this.loadText.loadmore;
+            else if (this.status == 'loading') text = this.loadText.loading;
+            else if (this.status == 'nomore' && this.isDot) text = this.dotText;
             else text = this.loadText.nomore;
             return text;
         }
@@ -141,7 +143,7 @@ export default {
     methods: {
         loadMore() {
             // 只有在“加载更多”的状态下才发送点击事件，内容不满一屏时无法触发底部上拉事件，所以需要点击来触发
-            if(this.status == 'loadmore') this.$emit('loadmore');
+            if (this.status == 'loadmore') this.$emit('loadmore');
         }
     }
 }
@@ -153,6 +155,7 @@ export default {
 u-line {
     flex: none;
 }
+
 /* #endif */
 
 .he-load-more-wrap {
@@ -188,6 +191,7 @@ u-line {
     align-items: center;
     justify-content: center;
 }
+
 .he-load-text {
     font-family: PingFang SC;
     font-weight: 500;

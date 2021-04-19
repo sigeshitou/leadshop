@@ -18,7 +18,7 @@ module.exports = {
         isLogin: function () {
             return this.$store.state.apply.is_login;
         },
-        themeColor: function() {
+        themeColor: function () {
             let theme = {
                 red_theme: '#E60B30',
                 purple_theme: '#8F2DF3',
@@ -29,7 +29,7 @@ module.exports = {
             }
             return theme[this.theme];
         },
-        isBarGoods: function() {
+        isBarGoods: function () {
             if (!this.tabBar) return;
             for (let i = 0; i < this.tabBar.length; i++) {
                 if (this.tabBar[i].link.path === '/pages/goods/list') {
@@ -49,8 +49,7 @@ module.exports = {
         // 解决办法为在组件根部再套一个没有任何作用的view元素
         $hGetRect(selector, all) {
             return new Promise(resolve => {
-                uni.createSelectorQuery().
-                in(this)[all ? 'selectAll' : 'select'](selector)
+                uni.createSelectorQuery().in(this)[all ? 'selectAll' : 'select'](selector)
                     .boundingClientRect(rect => {
                         if (all && Array.isArray(rect) && rect.length) {
                             resolve(rect)
@@ -63,10 +62,10 @@ module.exports = {
             });
         },
         // 报错跳转页面
-        $toError: function() {
+        $toError: function () {
             uni.redirectTo({url: "/pages/other/error"});
         },
-        $shareAppMessage: function(args) {
+        $shareAppMessage: function (args) {
             args = args || {
                 title: this.storeSetting.name,
                 path: '/pages/index/index',
@@ -74,20 +73,20 @@ module.exports = {
             }
             return args;
         },
-        uniCopy: function({content, success, error}) {
-            if(!content) return error('the content can not be blank');
+        uniCopy: function ({content, success, error}) {
+            if (!content) return error('the content can not be blank');
             content = typeof content === 'string' ? content : content.toString();
             // #ifndef H5
             uni.setClipboardData({
                 data: content,
-                success: function() {
+                success: function () {
                     success && success("Copy successfully");
                     uni.showToast({
                         title: '内容已复制',
                         icon: 'none'
                     });
                 },
-                fail:function(){
+                fail: function () {
                     error && error("Copy failed");
                 }
             });
@@ -104,28 +103,28 @@ module.exports = {
             textarea.select();
             textarea.setSelectionRange(0, content.length);
             let result = document.execCommand("copy");
-            if(result) {
+            if (result) {
                 uni.showToast({
                     title: '内容已复制',
                     icon: 'none'
                 });
-                success&&success("Copy successfully");
+                success && success("Copy successfully");
             } else {
-                error&&error("Copy failed");
+                error && error("Copy failed");
             }
             textarea.remove();
             // #endif
         },
         // 设置缓存
-        setStorageSync: function(key, data) {
+        setStorageSync: function (key, data) {
             try {
-                uni.setStorageSync(key,data);
+                uni.setStorageSync(key, data);
             } catch (e) {
                 console.error(e);
             }
         },
         // 获取缓存
-        getStorageSync: function(key) {
+        getStorageSync: function (key) {
             try {
                 return uni.getStorageSync(key);
             } catch (e) {

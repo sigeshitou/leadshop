@@ -3,11 +3,10 @@
  * @Author: qinuoyun
  * @Date:   2020-08-20 13:46:09
  * @Last Modified by:   qinuoyun
- * @Last Modified time: 2021-03-18 16:08:25
+ * @Last Modified time: 2021-04-16 11:36:51
  */
 namespace framework\common;
 
-use linslin\yii2\curl\Curl;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\auth\CompositeAuth;
@@ -93,7 +92,6 @@ class BasicController extends StoreController
                 $optional,
             ],
         ];
-
         return $behaviors;
     }
 
@@ -108,8 +106,8 @@ class BasicController extends StoreController
         header("Access-Control-Allow-Origin: {$url}");
         header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
         header('Access-Control-Allow-Credentials: true');
-        header('Access-Control-Expose-Headers: Authorization,QM-APP-TYPE,QM-APP-ID,QM-APP-SECRET,X-Pagination-Current-Page,X-Pagination-Page-Count,X-Pagination-Per-Page,X-Pagination-Total-Count');
-        header("Access-Control-Allow-Headers: Authorization,QM-APP-TYPE,QM-APP-ID,QM-APP-SECRET,Content-Type,Accept,Origin,X-Pagination-Per-Page");
+        header('Access-Control-Expose-Headers: Authorization,token,QM-APP-TYPE,QM-APP-ID,QM-APP-SECRET,X-Pagination-Current-Page,X-Pagination-Page-Count,X-Pagination-Per-Page,X-Pagination-Total-Count');
+        header("Access-Control-Allow-Headers: Authorization,token,QM-APP-TYPE,QM-APP-ID,QM-APP-SECRET,Content-Type,Accept,Origin,X-Pagination-Per-Page");
         //判断是否为预请求接口
         if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
             Yii::$app->response->setStatusCode(204);
@@ -254,63 +252,11 @@ class BasicController extends StoreController
     }
 
     /**
-     * 授权绑定接口
-     * @param string $value [description]
-     */
-    final public function Binding($value = '')
-    {
-        $curl   = new Curl();
-        $params = [
-            "mac"  => (new MachineCode(PHP_OS))->mac_addr,
-            "host" => Yii::$app->request->hostInfo,
-            "name" => "qinuoyun",
-            "date" => "2020-11-06",
-        ];
-        $response = $curl->setRequestBody(json_encode($params))
-            ->setHeaders([
-                'Content-Type'   => 'application/json',
-                'Content-Length' => strlen(json_encode($params)),
-            ])
-            ->post("http://qinuoyun.myqnapcloud.cn:9001/authorization.php");
-    }
-
-    /**
-     * 用于版本检测
-     * Inspection [n. 视察，检查]
-     * @param string $value [description]
-     */
-    final public function Inspection($value = '')
-    {
-        //获取当前模型类
-        $moduleClass = get_parent_class(get_class($this));
-        //根据类反查继承类
-        $reflector = new \ReflectionClass($moduleClass);
-        $classFile = $reflector->getFileName();
-        //获取对应模型路口
-        $modulePath = str_replace(Yii::$app->basePath, "", $classFile);
-        //获取对应模型陆家
-        $moduleFile = trim($modulePath, DIRECTORY_SEPARATOR);
-        //模型转数组取信息
-        $moduleArray = explode(DIRECTORY_SEPARATOR, $moduleFile);
-        //以下内容为验证
-        $code = new CodeAuthorization();
-        //根据参数获取验证信息
-        $code->UpdateCheck([
-            "md5"          => md5_file($classFile),
-            "type"         => $moduleArray[2],
-            "version"      => $moduleArray[2],
-            "serialNumber" => Yii::$app->params['serialNumber'],
-        ], static::__MAPS__, $moduleFile);
-    }
-
-    /**
      * 授权验证接口
      * @param string $value [description]
      */
     final public function Authorization()
     {
-        //以下内容为验证
-        $code = new CodeAuthorization();
-        $code->IsAuthorization();
+
     }
 }

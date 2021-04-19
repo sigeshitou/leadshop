@@ -70,7 +70,7 @@ class PagesController extends BasicController
 
         $data = new ActiveDataProvider(
             [
-                'query'      => $this->modelClass::find()->where(['is_deleted' => 0, 'AppID' => $AppID])->select('id,title,name,goods_number,status,visit_number,created_time')->orderBy(['status' => SORT_DESC, 'id' => SORT_DESC])->asArray(),
+                'query'      => $this->modelClass::find()->where(['is_deleted' => 0, 'AppID' => $AppID])->select('id,title,name,goods_number,status,visit_number,created_time')->orderBy(['status' => SORT_DESC, 'created_time' => SORT_DESC])->asArray(),
                 'pagination' => ['pageSize' => $pageSize, 'validatePage' => false],
             ]
         );

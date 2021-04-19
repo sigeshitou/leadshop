@@ -109,12 +109,13 @@ import goodsAll from "./components/goodsAll.vue";
 import popconfirm from "@/components/popconfirm.vue";
 import heloading from "@/components/heloading.vue";
 import floatNum from "@/lib/function/floatNum";
-
+import goodsTable from "./components/goodsTable/goodsTable.vue";
 export default {
     components: {
         goodsAll,
         popconfirm,
-        heloading
+        heloading,
+        goodsTable
     },
     data() {
         return {

@@ -21,6 +21,10 @@ export default {
             type: [String, Number, Boolean, Object, Array],
             default: ''
         },
+        original: {
+            type: [String, Number, Boolean, Object, Array],
+            default: ''
+        },
         /**
          * [visible description]
          * @type {Object}
@@ -45,6 +49,18 @@ export default {
             type: Array,
             default () {
                 return []
+            }
+        }
+    },
+    /**
+     * 数据监听
+     * @type {Object}
+     */
+    watch: {
+        original(value) {
+            if (value) {
+                console.log("value", value)
+                this.selectData = JSON.parse(JSON.stringify(this.original));
             }
         }
     },

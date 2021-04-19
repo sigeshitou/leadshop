@@ -3,18 +3,28 @@
         <vuedraggable class="wrapper" v-model="page">
             <transition-group>
                 <div v-for="(item,index) in page" :key="index+1">
-                    <covermask v-if="dragActive(index,'top')" />
-                    <component v-if="item.name == 'title'" is="titles" :facade="item.facade" :content="item.content" :data-index="index"></component>
-                    <component v-if="item.name == 'navigation'" is="navigation" :facade="item.facade" :content="item.content" :data-index="index"></component>
-                    <component v-if="item.name == 'video'" is="videos" :facade="item.facade" :content="item.content" :data-index="index"></component>
-                    <component v-if="item.name == 'banner'" is="banner" :facade="item.facade" :content="item.content" :data-index="index"></component>
-                    <component v-if="item.name == 'search'" is="search" :facade="item.facade" :content="item.content" :data-index="index"></component>
-                    <component v-if="item.name == 'goods'" is="goods" :facade="item.facade" :content="item.content" :data-index="index"></component>
-                    <component v-if="item.name == 'advertising'" is="advertising" :facade="item.facade" :content="item.content" :data-index="index"></component>
-                    <component v-if="item.name == 'blank'" is="blank" :facade="item.facade" :content="item.content" :data-index="index"></component>
-                    <component v-if="item.name == 'tabs'" is="tabs" :facade="item.facade" :content="item.content" :data-index="index"></component>
-                    <component v-if="item.name == 'wechat'" is="wechat" :facade="item.facade" :content="item.content" :data-index="index"></component>
-                    <covermask v-if="dragActive(index,'down')" />
+                    <covermask v-if="dragActive(index,'top')"/>
+                    <component v-if="item.name === 'title'" is="titles" :facade="item.facade" :content="item.content"
+                               :data-index="index"></component>
+                    <component v-if="item.name === 'navigation'" is="navigation" :facade="item.facade"
+                               :content="item.content" :data-index="index"></component>
+                    <component v-if="item.name === 'video'" is="videos" :facade="item.facade" :content="item.content"
+                               :data-index="index"></component>
+                    <component v-if="item.name === 'banner'" is="banner" :facade="item.facade" :content="item.content"
+                               :data-index="index"></component>
+                    <component v-if="item.name === 'search'" is="search" :facade="item.facade" :content="item.content"
+                               :data-index="index"></component>
+                    <component v-if="item.name === 'goods'" is="goods" :facade="item.facade" :content="item.content"
+                               :data-index="index"></component>
+                    <component v-if="item.name === 'advertising'" is="advertising" :facade="item.facade"
+                               :content="item.content" :data-index="index"></component>
+                    <component v-if="item.name === 'blank'" is="blank" :facade="item.facade" :content="item.content"
+                               :data-index="index"></component>
+                    <component v-if="item.name === 'tabs'" is="tabs" :facade="item.facade" :content="item.content"
+                               :data-index="index"></component>
+                    <component v-if="item.name === 'wechat'" is="wechat" :facade="item.facade" :content="item.content"
+                               :data-index="index"></component>
+                    <covermask v-if="dragActive(index,'down')"/>
                 </div>
             </transition-group>
         </vuedraggable>
@@ -25,20 +35,19 @@
 </template>
 <script type="text/javascript">
 //组件列表
-import titles from '../title/index.vue';
-import navigation from '../navigation/index.vue';
-import videos from '../video/index.vue';
-import blank from '../blank/index.vue';
-import banner from '../banner/index.vue';
-import search from '../search/index.vue';
-import goods from '../goods/index.vue';
-import advertising from '../advertising/index.vue';
-import tabs from '../tabs/index.vue';
-import wechat from '../wechat/index.vue';
+import titles from "../title/title.vue";
+import navigation from "../navigation/navigation.vue";
+import videos from "../video/video.vue";
+import blank from "../blank/blank.vue";
+import banner from "../banner/banner.vue";
+import search from "../search/search.vue";
+import goods from "../goods/goods.vue";
+import advertising from "../advertising/advertising.vue";
+import tabs from "../tabs/tabs.vue";
+import wechat from "../wechat/wechat.vue";
+import vuedraggable from "./vuedraggable.js";
+import covermask from "./covermask.vue";
 
-
-import vuedraggable from './vuedraggable.js'
-import covermask from './covermask.vue'
 export default {
     components: {
         videos,
@@ -51,14 +60,8 @@ export default {
         titles,
         tabs,
         wechat,
-
         vuedraggable,
         covermask
-    },
-    data() {
-        return {
-
-        };
     },
     /**
      * 计算属性
@@ -91,28 +94,7 @@ export default {
             set(value) {
                 this.$store.commit('pages/setDragPosition', value);
             }
-        },
-        IframeHeight() {
-            return this.$store.state.pages.iframeHeight;
         }
-
-    },
-    watch: {
-        coms(value) {
-        },
-        page: {
-            deep: true,
-            handler(newV, oldV) {
-                //this.getIframeHeight();
-            }
-        }
-    },
-    /**
-     * 页面加载执行
-     * @return {[type]} [description]
-     */
-    mounted() {
-
     },
     methods: {
         /**
@@ -122,11 +104,7 @@ export default {
          * @return {[type]}          [description]
          */
         dragActive(index, position) {
-            if ((this.dragIndex === index) && (this.position == position) && this.coms) {
-                return true;
-            } else {
-                return false;
-            }
+            return this.dragIndex === index && this.position == position && this.coms;
         },
         /**
          * 拖拽过程事件
@@ -138,9 +116,9 @@ export default {
             if (index || index === 0) {
                 this.dragIndex = index;
                 //判断是否为拖拽元素
-                if ($event.type == "dragover" && $event.target.dataset) {
+                if ($event.type === "dragover" && $event.target.dataset) {
                     //判断是否是拖拽区域
-                    if ($event.target.dataset.type == "widget") {
+                    if ($event.target.dataset.type === "widget") {
                         //获取Y轴移动值
                         let y = parseFloat($event.offsetY);
                         //由于缩小50%，需要除去双倍
@@ -168,11 +146,11 @@ export default {
 
 .fm-mobile-body {
     padding: 4px 187.5px;
-    min-height: 100rpx;
+    min-height: 100px;
 }
 
 .fm-mobile-empty {
-    min-height: 800rpx;
+    min-height: 800px;
     width: 100%;
 }
 </style>

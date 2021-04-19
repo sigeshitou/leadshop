@@ -9,7 +9,7 @@
                       :disable-default-padding="true"
                       :hold-keyboard="true"
                       placeholder-style="font-size:26rpx;font-family: PingFang SC;font-weight: 500; color: #999999; line-height:1.1;"></textarea>
-            <view class="he-area__num">{{value.length}}/50</view>
+            <view class="he-area__num">{{ value.length }}/50</view>
         </view>
         <button class="cu-btn he-sure__btn" @click="navigateBack">确定</button>
     </view>
@@ -24,7 +24,7 @@ export default {
         }
     },
     methods: {
-        changeText: function(e) {
+        changeText: function (e) {
             let str = e.detail.value;
             if (str.length > 50) {
                 str = str.substring(0, 50);
@@ -49,6 +49,7 @@ export default {
     background-color: #FFFFFF;
     padding: 24px 20px 0 20px;
 }
+
 .he-area {
     width: 710px;
     height: 324px;
@@ -56,6 +57,7 @@ export default {
     border-radius: 16px;
     padding: 32px 32px 24px 32px;
 }
+
 .he-textarea {
     width: 646px;
     height: 238px;
@@ -65,6 +67,7 @@ export default {
     color: #222222;
     line-height: 1.1;
 }
+
 .he-area__num {
     font-size: 24px;
     font-family: PingFang SC;
@@ -73,6 +76,7 @@ export default {
     line-height: 1.1;
     text-align: right;
 }
+
 .he-sure__btn {
     width: 710px;
     height: 80px;

@@ -14,10 +14,10 @@
         </el-form-item>
         <template v-if="form.type === 1">
             <el-form-item label="物流公司" prop="logistics_company">
-                <el-input maxlength="15" placeholder="请输入物流公司名称" v-model="form.logistics_company"></el-input>
+                <el-input maxlength="10" placeholder="请输入物流公司名称" v-model="form.logistics_company"></el-input>
             </el-form-item>
             <el-form-item label="快递单号" prop="freight_sn">
-                <el-input maxlength="20" placeholder="请输入快递单号" v-model="form.freight_sn"></el-input>
+                <el-input maxlength="20" placeholder="请输入快递单号" onkeyup="value=value.replace(/[\u4e00-\u9fa5]/ig,'')" v-model="form.freight_sn"></el-input>
             </el-form-item>
         </template>
     </el-form>

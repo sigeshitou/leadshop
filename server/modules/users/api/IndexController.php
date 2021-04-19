@@ -273,8 +273,8 @@ class IndexController extends BasicController
                         'oauth as oauth',
                     ])
                     ->where($where)
+                    ->groupBy(['user.id'])
                     ->orderBy($orderBy)
-                    ->distinct()
                     ->asArray(),
                 'pagination' => ['pageSize' => $pageSize, 'validatePage' => false],
             ]
@@ -314,7 +314,7 @@ class IndexController extends BasicController
         $result['after_number']  = ['all' => 0, 'wxapp' => 0, 'wechat' => 0];
         $result['return_amount'] = ['all' => 0, 'wxapp' => 0, 'wechat' => 0];
 
-        $order = M('statistical', 'OrderLog')::find()->where(['and', ['>', 'status', 200], ['UID' => $id]])->asArray()->all();
+        $order = M('order', 'Order')::find()->where(['and', ['>', 'status', 200], ['UID' => $id]])->asArray()->all();
         foreach ($order as $o_v) {
             $result['pay_number']['all']++;
             $result['pay_amount']['all'] = round(($result['pay_amount']['all'] + $o_v['pay_amount']), 2);
@@ -327,7 +327,7 @@ class IndexController extends BasicController
             }
 
         }
-        $order_after = M('statistical', 'OrderAfterLog')::find()->where(['UID' => $id, 'is_deleted' => 0])->asArray()->all();
+        $order_after = M('order', 'OrderAfter')::find()->where(['UID' => $id, 'is_deleted' => 0])->asArray()->all();
         foreach ($order_after as $o_a_v) {
             $result['after_number']['all']++;
             $result['return_amount']['all'] = round(($result['return_amount']['all'] + $o_a_v['actual_refund']), 2);

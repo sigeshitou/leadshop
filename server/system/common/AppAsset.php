@@ -3,7 +3,7 @@
  * @Author: qinuoyun
  * @Date:   2020-08-20 13:46:09
  * @Last Modified by:   qinuoyun
- * @Last Modified time: 2021-03-19 17:11:20
+ * @Last Modified time: 2021-04-16 11:38:10
  */
 namespace framework\common;
 
@@ -33,7 +33,6 @@ class AppAsset extends AssetBundle
 
     public function init()
     {
-
         if ($this->type == 'uni') {
             $this->getUniInit();
         }

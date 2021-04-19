@@ -54,8 +54,12 @@ class QrcodeController extends BasicsModules implements Map
         $type        = getimagesizefromstring($weapp_img)['mime']; //获取二进制流图片格式
         $weapp_image = 'data:' . $type . ';base64,' . chunk_split(base64_encode($weapp_img));
 
-        $host       = Yii::$app->request->hostInfo;
-        $wechat_url = $host . '/h5/' . $url;
+        $host = Yii::$app->request->hostInfo;
+        if (SHOP_ENVIRONMENT == 'we7') {
+            $wechat_url = WE7_URL . '#/' . $url;
+        } else {
+            $wechat_url = $host . '/h5/' . $url;
+        }
         \QRcode::png($wechat_url, false, QR_ECLEVEL_L, 4);
         $wechat_img = ob_get_contents(); //获取缓冲区内容
         ob_end_clean(); //清除缓冲区内容

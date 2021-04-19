@@ -7,16 +7,18 @@
 const path = require('path')
 const CopyWebpackPlugin = require('copy-webpack-plugin') //最新版本copy-webpack-plugin插件暂不兼容，推荐v5.0.0
 
-let externals = process.env.UNI_PLATFORM === 'h5' ? { 'siteInfo': 'siteInfo' } : { 'siteInfo': 'commonjs2 ../siteinfo.js'};
-let copy = process.env.UNI_PLATFORM !== 'h5' ? [{from: path.join(__dirname, 'src/siteinfo.js'), to: 'siteinfo.js'}] : [];
+let externals = process.env.UNI_PLATFORM === 'h5' ? {'siteInfo': 'siteInfo'} : {'siteInfo': 'commonjs2 ../siteinfo.js'};
+let copy = process.env.UNI_PLATFORM !== 'h5' ? [{
+    from: path.join(__dirname, 'src/siteinfo.js'),
+    to: 'siteinfo.js'
+}, {from: path.join(__dirname, 'src/version.js'), to: 'version.js'}] : [];
 copy.push.apply(copy, [{from: path.join(__dirname, 'we7'), to: 'we7', toType: "dir"}]);
 
 module.exports = {
     css: {
         loaderOptions: {
             // 给 less-loader 传递 Less.js 相关选项
-            less: {
-            }
+            less: {}
         }
     },
     pluginOptions: {

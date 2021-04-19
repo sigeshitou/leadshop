@@ -22,7 +22,7 @@ export default {
     watch: {
         goodsId: {
             handler(val) {
-                val&&this.shopping(val);
+                val && this.shopping(val);
             }
         },
         isShopping: function (val) {
@@ -30,14 +30,14 @@ export default {
         }
     },
     methods: {
-        shopping: function(id) {
+        shopping: function (id) {
             let _this = this;
-            this.$heshop.goods('get', id).then(function(res) {
+            this.$heshop.goods('get', id).then(function (res) {
                 if (!res.hasOwnProperty('empty_status')) {
                     _this.goods = res;
                     _this.isShopping = true;
                 }
-            }).catch(function(err) {
+            }).catch(function (err) {
                 console.error(err);
                 _this.$toError();
             });

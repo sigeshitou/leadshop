@@ -1,6 +1,7 @@
 <template>
     <view class="he-clear-storage">
-        <he-empty-popup v-model="showModal"  title="清除缓存可能需要一些时间，清除过程中请耐心等待" @confirm="confirm" :empty-style="emptyStyle"></he-empty-popup>
+        <he-empty-popup v-model="showModal" title="清除缓存可能需要一些时间，清除过程中请耐心等待" @confirm="confirm"
+                        :empty-style="emptyStyle"></he-empty-popup>
         <he-toast v-model="showClear">
             <view class="he-clear-toast flex flex-direction align-center">
                 <template v-if="loading">
@@ -18,7 +19,8 @@
 
 <script>
 import heToast from "./he-toast.vue";
-import heEmptyPopup from "@/components/he-empty-popup.vue";
+import heEmptyPopup from "./he-empty-popup.vue";
+
 export default {
     name: "he-clear-storage",
     props: {
@@ -52,7 +54,7 @@ export default {
         }
     },
     methods: {
-        open: function() {
+        open: function () {
             let _this = this;
             for (let key in this.$storageKey) {
                 uni.removeStorageSync(key);
@@ -61,15 +63,15 @@ export default {
             _this.$store.dispatch('goods/emptyShareGoods');
             _this.$store.dispatch('setting/getTheme');
             _this.$store.dispatch('setting/getTabBar');
-            setTimeout(function() {
+            setTimeout(function () {
                 _this.loading = false;
-                setTimeout(function() {
+                setTimeout(function () {
                     _this.showClear = false;
                     _this.loading = true;
                 }, 1000);
             }, 3000);
         },
-        confirm: function() {
+        confirm: function () {
             this.showClear = true;
             this.open();
         }
@@ -82,11 +84,13 @@ export default {
     width: 100%;
     height: 100%;
 }
+
 .he-loading {
     width: 96px;
     height: 96px;
     margin-top: 52px;
 }
+
 .he-text {
     font-size: 28px;
     font-family: PingFang SC;
@@ -95,9 +99,11 @@ export default {
     line-height: 1.3;
     margin-top: 43px;
 }
+
 .he-text__margin {
     margin-top: 50px;
 }
+
 .iconbtn_select {
     width: 68px;
     height: 68px;

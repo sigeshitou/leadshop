@@ -8,7 +8,7 @@
                     <el-radio :label="2">选择分类</el-radio>
                 </el-radio-group>
                 <div class="empty"></div>
-                <goodsSelet v-if="content.type==1" v-model="content.goods" :number="5" :limit="5-content.goods.length" @confirm="handleGoodsConfirm"></goodsSelet>
+                <goodsSelet v-if="content.type==1" v-model="content.goods" :number="50" :limit="50-content.goods.length" @confirm="handleGoodsConfirm"></goodsSelet>
                 <classifySelect v-if="content.type==2" v-model="content.group"></classifySelect>
                 <el-divider></el-divider>
                 <div class="control-item-title">商品内容</div>

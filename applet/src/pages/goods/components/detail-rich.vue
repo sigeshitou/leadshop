@@ -1,8 +1,13 @@
 <template>
-    <view class="detail-rich">
+    <view class="detail-rich" id="detail-rich">
         <view class="he-top">- 商品详情 -</view>
         <view class="he-content">
+           <!--  #ifdef H5 -->
+            <div v-if="content" v-html="content"></div>
+            <!-- #endif -->
+            <!-- #ifndef H5 -->
             <he-rich v-if="content" :content="content" :lazy-load="true"></he-rich>
+            <!-- #endif -->
             <view v-else class="he-empty">暂无内容</view>
         </view>
     </view>

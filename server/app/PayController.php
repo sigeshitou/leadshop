@@ -1,6 +1,6 @@
 <?php
 /**
- * 商品管理
+ * 支付
  * @link http://www.heshop.com/
  * @copyright Copyright (c) 2020 HeShop Software LLC
  * @license http://www.heshop.com/license/
@@ -101,7 +101,7 @@ class PayController extends BasicsModules implements Map
             $model->pay_type   = 'wechat';
             $model->pay_time   = time();
             if ($model->save()) {
-                $this->module->event->order_info = $model->toArray();
+                $this->module->event->pay_order_sn = $order_sn;
                 $this->module->trigger('pay_order');
                 // $this->module->trigger('statistical_order');
                 $this->module->event->user_statistical = ['UID' => $model->UID, 'buy_number' => 1, 'buy_amount' => $model->pay_amount, 'last_buy_time' => time()];

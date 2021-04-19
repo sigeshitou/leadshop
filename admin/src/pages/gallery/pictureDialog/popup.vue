@@ -1,6 +1,5 @@
 <script type="text/javascript">
 import Detail from './detail.vue'
-import { createNamespacedHelpers } from 'vuex'
 
 export default {
     components: {
@@ -29,6 +28,10 @@ export default {
          * @type {Object}
          */
         limit: {
+            type: Number,
+            default: 1
+        },
+        max: {
             type: Number,
             default: 1
         }
@@ -65,7 +68,7 @@ export default {
             this.dialogVisible = false;
             let selectPicture = "";
             if (this.$refs['detail'].checkedData) {
-                if (this.limit > 1) {
+                if (this.max > 1) {
                     selectPicture = [];
                     let _array = this.$refs['detail'].checkedData;
                     for (let index in _array) {
@@ -84,7 +87,7 @@ export default {
             this.$emit('confirm', selectPicture);
         }
     },
-    render(h) {
+    render() {
         let { dialogVisible, handleClick, handleClose, handleConfirm } = this;
         //判断插槽是否存在DOM结构，如果存在则获取后放入upload目录
         const trigger = this.$slots.trigger || this.$slots.default;
@@ -109,7 +112,8 @@ export default {
 
         const DetailData = {
             props: {
-                limit: this.limit
+                limit: this.limit,
+                max: this.max
             },
             ref: "detail"
         }

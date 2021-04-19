@@ -3,28 +3,17 @@
         <image class="he-image" :src="ipAddress + '/cart-background-empty.png'"></image>
         <view class="he-text">购物车空空如也~</view>
         <button class="cu-btn he-go__buy" @click="navigateTo">去逛逛</button>
-        <he-products-featured v-if="goodsSetting.recommend_showpage.cart.value"></he-products-featured>
     </view>
 </template>
 
 <script>
-import heProductsFeatured from "../../../components/he-products-featured.vue";
-import {mapGetters} from "vuex";
 
 export default {
     name: "cart-empty",
-    components: {
-        heProductsFeatured,
-    },
     methods: {
         navigateTo: function () {
             uni.switchTab({url: '/pages/index/index'});
         }
-    },
-    computed: {
-        ...mapGetters('setting', {
-            goodsSetting: 'goodsSetting'
-        }),
     }
 }
 </script>

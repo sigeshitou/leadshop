@@ -1,6 +1,6 @@
 <template>
     <div class="dragrank">
-        <draggable v-model="tabArray" handle=".dragrank-item-move" class="dragrank-content" chosenClass="chosen" forceFallback="true" group="people" @start="onStart" animation="1000" @end="onEnd">
+        <draggable v-model="tabArray" handle=".dragrank-item" class="dragrank-content" chosenClass="chosen" forceFallback="true" group="people" @start="onStart" animation="1000" @end="onEnd">
             <transition-group>
                 <label class="dragrank-item" v-for="(element,index) in tabArray" :key="'kd'+index">
                     <input class="dragrank-item-radio" type="radio" :value="index" v-model="select">
@@ -8,7 +8,6 @@
                         <span>{{element.title}}</span>
                         <i class="le-icon le-icon-trash dragrank-item-del" @click.stop="handleDelete(index)"></i>
                     </div>
-                    <i class="le-icon le-icon-tuoye dragrank-item-move" @click.stop="onStart"></i>
                 </label>
             </transition-group>
         </draggable>

@@ -31,12 +31,12 @@ class leadmall
                 );
                 //读取路由
                 $pathinfo = $this->getPathInfo();
-                if (!file_exists( '../install.lock') && $pathinfo['action'] != 'install') {
-                    header("Location: " . $_SERVER['HTTP_REFERER'] . '/install'); exit;
+                if (!file_exists('../install.lock') && $pathinfo['action'] != 'install') {
+                    header("Location: " . $_SERVER['HTTP_REFERER'] . '/install');exit;
                 }
                 //默认跳转至后台
                 if ($pathinfo['type'] === null && $pathinfo['name'] === null && $pathinfo['action'] === null) {
-                    header("Location: " . $_SERVER['HTTP_REFERER'] . '/leadshop/panel/index'); exit;
+                    header("Location: " . $_SERVER['HTTP_REFERER'] . '/leadshop/panel/index');exit;
                 }
                 if ($pathinfo['type'] && in_array($pathinfo['type'], ['app', 'api']) && $pathinfo['name'] && $pathinfo['action']) {
                     //处理路由兼容性
@@ -61,10 +61,10 @@ class leadmall
             }
             if (YII_ENV_DEV) {
                 // Yii2 Debug模块
-                $config['bootstrap'][] = 'debug';
+                $config['bootstrap'][]      = 'debug';
                 $config['modules']['debug'] = [
-                    'class' => 'yii\debug\Module',
-                    'panels' => [
+                    'class'      => 'yii\debug\Module',
+                    'panels'     => [
 //                        'queue' => \yii\queue\debug\Panel::class,
                     ],
                     // uncomment the following to add your IP if you are not connecting from localhost.
@@ -167,19 +167,19 @@ class leadmall
             'enableStrictParsing' => true,
             'rules'               => [
                 //模块化API路由
-                'GET ' . $type . '/<module>/<controller:\w+>/'                       => '<module>/' . $type . '/<controller>/index',
-                'GET ' . $type . '/<module>/<controller:\w+>/<id:\d+>'               => '<module>/' . $type . '/<controller>/view',
-                'POST ' . $type . '/<module>/<controller:[\w-]+>'                    => '<module>/' . $type . '/<controller>/create',
-                'POST ' . $type . '/<module>/<controller:[\w-]+>/<appid:(\w+)*>/<apptype:(\w+)*>'    => '<module>/' . $type . '/<controller>/create',
-                'PUT ' . $type . '/<module>/<controller:[\w-]+>'                     => '<module>/' . $type . '/<controller>/update',
-                'PUT ' . $type . '/<module>/<controller:[\w-]+>/<id:\d+>'            => '<module>/' . $type . '/<controller>/update',
-                'PUT ' . $type . '/<module>/<controller:[\w-]+>/<id:(\d+,)*\d+$>'    => '<module>/' . $type . '/<controller>/update',
-                'DELETE ' . $type . '/<module>/<controller:[\w-]+>/<id:(\d+,)*\d+$>' => '<module>/' . $type . '/<controller>/delete',
-                'OPTIONS ' . $type . '/<module>/<controller:\w+>'                    => '<module>/' . $type . '/<controller>/options',
-                'OPTIONS ' . $type . '/<module>/<controller:\w+>/<id:(\d+,)*\d+$>'   => '<module>/' . $type . '/<controller>/options',
-                $type . '/<module>/<controller:\w+>/<action:\w+>/<id:(\d+,)*\d+$>'   => '<module>/' . $type . '/<controller>/<action>',
-                $type . '/<module>/<controller:\w+>/<action:\w+>'                    => '<module>/' . $type . '/<controller>/<action>',
-                'OPTIONS ' . $type . '/<module>/<controller>/<action>'               => '<module>/' . $type . '/<controller>/<action>',
+                'GET ' . $type . '/<module>/<controller:\w+>/'                                    => '<module>/' . $type . '/<controller>/index',
+                'GET ' . $type . '/<module>/<controller:\w+>/<id:\d+>'                            => '<module>/' . $type . '/<controller>/view',
+                'POST ' . $type . '/<module>/<controller:[\w-]+>'                                 => '<module>/' . $type . '/<controller>/create',
+                'POST ' . $type . '/<module>/<controller:[\w-]+>/<appid:(\w+)*>/<apptype:(\w+)*>' => '<module>/' . $type . '/<controller>/create',
+                'PUT ' . $type . '/<module>/<controller:[\w-]+>'                                  => '<module>/' . $type . '/<controller>/update',
+                'PUT ' . $type . '/<module>/<controller:[\w-]+>/<id:\d+>'                         => '<module>/' . $type . '/<controller>/update',
+                'PUT ' . $type . '/<module>/<controller:[\w-]+>/<id:(\d+,)*\d+$>'                 => '<module>/' . $type . '/<controller>/update',
+                'DELETE ' . $type . '/<module>/<controller:[\w-]+>/<id:(\d+,)*\d+$>'              => '<module>/' . $type . '/<controller>/delete',
+                'OPTIONS ' . $type . '/<module>/<controller:\w+>'                                 => '<module>/' . $type . '/<controller>/options',
+                'OPTIONS ' . $type . '/<module>/<controller:\w+>/<id:(\d+,)*\d+$>'                => '<module>/' . $type . '/<controller>/options',
+                $type . '/<module>/<controller:\w+>/<action:\w+>/<id:(\d+,)*\d+$>'                => '<module>/' . $type . '/<controller>/<action>',
+                $type . '/<module>/<controller:\w+>/<action:\w+>'                                 => '<module>/' . $type . '/<controller>/<action>',
+                'OPTIONS ' . $type . '/<module>/<controller>/<action>'                            => '<module>/' . $type . '/<controller>/<action>',
             ],
         ];
         return $manager;

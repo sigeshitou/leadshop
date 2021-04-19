@@ -1,8 +1,9 @@
 <template>
     <div class="goods-selet" :style="[goodsStyle]">
-        <popup ref="popup" v-model="selectData" type="checkbox" @confirm="handleConfirm">
-            <el-button v-if="!$slots.default" :disabled="selectData.length==number">选择商品</el-button><span class="goods-selet-tips" v-if="isTips">最多添加{{number}}件商品</span>
+        <popup ref="popup" v-model="selectData" type="checkbox" @confirm="handleConfirm" :limit="number">
+            <el-button v-if="!$slots.default" :disabled="selectData.length>=number">选择商品</el-button>
         </popup>
+        <span class="goods-selet-tips" v-if="isTips">最多添加{{number}}件商品</span>
         <ul class="goods-selet-list">
             <draggable v-model="selectData" chosenClass="chosen" forceFallback="true" @start="onStart" animation="1000" @end="onEnd">
                 <transition-group>

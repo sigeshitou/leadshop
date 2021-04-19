@@ -1,5 +1,6 @@
 <template>
     <div class="layout">
+        <guide ref="guide"></guide>
         <el-container>
             <el-header height="64px">
                 <div class="layout-logo">
@@ -20,30 +21,24 @@
                     </ul>
                 </div>
                 <div class="layout-event">
+                    <el-button type="primary" size="medium" @click="handlePageSave" style="margin: 0 10px">保存</el-button>
                     <templateSelect v-model="pageInfo" :open="handleTplOpen">
-                        <el-button type="primary" style="margin: 0 10px">选择模板</el-button>
+                        <el-button type="text" style="margin: 0 10px">选择模板</el-button>
                     </templateSelect>
                     <el-popover ref="popover" placement="bottom" width="148" trigger="click">
                         <div class="layout-event-qrcode" style="text-align: center;">
-                            <img :src="qrcode.wechat.image" width="100" height="100"/>
+                            <img :src="qrcode.wechat.image" width="100" height="100" />
                             <p style="font-size: 12px">手机扫描二维码预览</p>
                         </div>
                     </el-popover>
                     <el-button type="text" v-popover:popover style="margin: 0 10px">预览</el-button>
                     <el-button type="text" @click="handlePageSetting" style="margin: 0 10px">设为首页</el-button>
-                    <el-button type="text" @click="handlePageSave" style="margin: 0 10px">保存</el-button>
-                    <el-button
-                        module="goods"
-                        style="margin: 0 10px"
-                        title="推广"
-                        :hide_footer="true"
-                        type="text"
-                        v-popup.promote="{
+                    <el-button module="goods" style="margin: 0 10px" title="推广" :hide_footer="true" type="text" v-popup.promote="{
                             data: pageInfo,
                             promoteType: 'index'
-                        }"
-                        width="791">推广
+                        }" width="791">推广
                     </el-button>
+                    <el-button @click="handleGuide" type="text" style="margin: 0 10px"><i class="le-icon le-icon-zhiyin" style="margin-right: 4px"></i>新手引导</el-button>
                 </div>
             </el-header>
             <el-main>
@@ -57,9 +52,7 @@
                                     <span>{{ mounted.title }}</span>
                                 </template>
                                 <ul class="fm-collapse-tool">
-                                    <li class="widget" v-for="(item,index) in mounted.children" :key="index"
-                                        :draggable="true" @dragstart="dragStart(item)" @dragend="dragEnd"
-                                        data-type="module">
+                                    <li class="widget" v-for="(item,index) in mounted.children" :key="index" :draggable="true" @dragstart="dragStart(item)" @dragend="dragEnd" data-type="module" :id=" (item.title == '视频'? 'guide001': '')">
                                         <img class="widget-icon" :src="item.icon">
                                         <span>{{ item.title }}</span>
                                     </li>
@@ -77,10 +70,9 @@
                                 <div class="layout-phone-title">
                                     {{ pageInfo.name || '微页面' }}
                                 </div>
-                                <div class="layout-phone-header-active" v-if="index==-1"></div>
                             </div>
-                            <div class="layout-phone-body">
-                                <router-view/>
+                            <div class="layout-phone-body" :style="{background: pageInfo.background}" id="guide002">
+                                <router-view />
                             </div>
                         </div>
                     </el-scrollbar>
@@ -91,13 +83,17 @@
                         <i class="le-icon le-icon-container"></i>
                         组件管理
                     </div>
+                    <div class="layout-setpage" :class="{'active':index==-1}" @click="handlePageName">
+                        <i class="le-icon le-icon-setup"></i>
+                        页面设置
+                    </div>
                 </div>
-                <div class="layout-attribute" v-if="!is_lock">
+                <div class="layout-attribute" v-if="!is_lock" id="guide004">
                     <el-scrollbar :style="scrollHeight" v-if="index>=0">
                         <component :is="modules[attribute].attribute" v-if="modules[attribute]"></component>
                     </el-scrollbar>
                     <el-scrollbar :style="scrollHeight" v-if="index==-1">
-                        <pageAttribute v-model="pageInfo.name"></pageAttribute>
+                        <pageAttribute v-model="pageInfo"></pageAttribute>
                     </el-scrollbar>
                     <el-scrollbar :style="scrollHeight" v-if="index==-2">
                         <packageAttribute></packageAttribute>
@@ -117,15 +113,22 @@ import templateSelect from '@/components/templateSelect'
 import pageAttribute from '@/pages/package/modules/page/attribute'
 import packageAttribute from '@/pages/package/modules/package/attribute'
 
+import guide from '@/components/guide'
 
 export default {
+    provide() {
+        return {
+            self: this
+        };
+    },
     components: {
         popconfirm,
         promotion,
         pagetitle,
         pageAttribute,
         packageAttribute,
-        templateSelect
+        templateSelect,
+        guide
     },
     data() {
         return {
@@ -143,6 +146,7 @@ export default {
      * @return {[type]} [description]
      */
     mounted() {
+
         let id = this.$heshop.utils.getQueryVariable('id');
         let that = this;
         //监听页面大小
@@ -218,6 +222,15 @@ export default {
             this.scrollbar.$el.firstChild.scrollTop = 0;
         },
         /**
+         * 处理返回顶部
+         * @return {[type]} [description]
+         */
+        handleGuide() {
+            window.localStorage.setItem('is_guide', 0)
+            this.$refs.guide.is_close = false;
+            this.$refs.guide.onSetPage();
+        },
+        /**
          * 处理名称
          * @param  {[type]} value [description]
          * @return {[type]}       [description]
@@ -265,6 +278,7 @@ export default {
                     type: 'success'
                 });
             }).catch(error => {
+                loading.close();
                 console.error("错误信息", error);
             })
         },
@@ -274,9 +288,35 @@ export default {
          */
         actionPageSave() {
             let _this = this;
-            return new Promise(function (resolve, reject) {
+            return new Promise(function(resolve, reject) {
+                let content = _this.$store.state.finish.pages;
+                let total = 0;
+                for (let index in content) {
+                    let item = content[index];
+                    if (item.name == "search") {
+                        total++
+                    }
+                    if (total > 1) {
+                        _this.$message({
+                            message: '微页面仅允许添加一个搜索框组件，请删减！',
+                            type: 'error'
+                        });
+                        reject(false);
+                        return;
+                    }
+                }
+                if (total > 1) {
+                    _this.$message({
+                        message: '微页面仅允许添加一个搜索框组件，请删减！',
+                        type: 'error'
+                    });
+                    reject(false);
+                    return;
+                }
+
+
                 _this.pageInfo.content = JSON.stringify(_this.$store.state.finish.pages);
-                _this.$heshop.pages("put", _this.pageInfo).then(function () {
+                _this.$heshop.pages("put", _this.pageInfo).then(function() {
                     resolve(true);
                 }).catch(() => {
                     reject(false);
@@ -284,7 +324,7 @@ export default {
             });
         },
         downloadFile(content, fileName) { //下载base64图片
-            let base64ToBlob = function (code) {
+            let base64ToBlob = function(code) {
                 let parts = code.split(';base64,');
                 let contentType = parts[0].split(':')[1];
                 let raw = window.atob(parts[1]);
@@ -318,7 +358,7 @@ export default {
                 center: true
             }).then(() => {
                 let id = this.$route.query.id;
-                this.$heshop.pages("put", {id: id, behavior: 'setting'}, this.page).then(data => {
+                this.$heshop.pages("put", { id: id, behavior: 'setting' }, this.page).then(data => {
                     this.$message({
                         title: '设置成功',
                         message: '成功设置该微页面为首页',
@@ -491,7 +531,7 @@ export default {
                 color: rgba(0, 0, 0, .85);
             }
 
-            .el-button + .el-button {
+            .el-button+.el-button {
                 margin-left: 32px;
             }
 
@@ -514,7 +554,7 @@ export default {
             .layout-package {
                 position: fixed;
                 right: 424px;
-                top: 142px;
+                top: 190px;
                 width: 94px;
                 height: 32px;
                 background: #FFFFFF;
@@ -527,6 +567,26 @@ export default {
             }
 
             .layout-package.active {
+                background: #623CEB;
+                color: #FFFFFF;
+            }
+
+            .layout-setpage {
+                position: fixed;
+                right: 424px;
+                top: 142px;
+                width: 94px;
+                height: 32px;
+                background: #FFFFFF;
+                color: #595959;
+                box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.05);
+                border-radius: 4px;
+                text-align: center;
+                line-height: 32px;
+                cursor: pointer;
+            }
+
+            .layout-setpage.active {
                 background: #623CEB;
                 color: #FFFFFF;
             }

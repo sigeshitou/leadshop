@@ -3,25 +3,27 @@
         <view class="he-box">
             <view class="he-item flex align-center">
                 <view class="he-item__label">物流公司</view>
-                <input type="text" class="he-item__input flex-sub" v-model="user_freight_info.logistics_company" placeholder-class="he-placeholder" placeholder="请填写物流公司">
+                <input type="text" class="he-item__input flex-sub" maxlength="10"  v-model="user_freight_info.logistics_company"
+                       placeholder-class="he-placeholder" placeholder="请填写物流公司">
             </view>
             <view class="he-item flex align-center">
                 <view class="he-item__label">物流单号</view>
-                <input type="text" class="he-item__input flex-sub" v-model="user_freight_info.freight_sn" placeholder-class="he-placeholder" placeholder="请填写物流单号">
+                <input type="text" class="he-item__input flex-sub" onkeyup="user_freight_info.freight_sn=user_freight_info.freight_sn.replace(/[^\d]/g,'')" maxlength="20" v-model="user_freight_info.freight_sn"
+                       placeholder-class="he-placeholder" placeholder="请填写物流单号">
             </view>
         </view>
         <!--上传凭证-->
         <view class="he-upload-certificate">
             <view class="he-top">
                 <text class="he-text">上传凭证</text>
-                <text class="he-help">({{user_freight_info.images.length}}/4)</text>
+                <text class="he-help">({{ user_freight_info.images.length }}/4)</text>
                 <text class="he-help he-desc">选填</text>
             </view>
             <view class="he-bottom">
                 <he-upload-image @on-uploaded="uploaded" @on-remove="removeImage" :max-count="4"></he-upload-image>
             </view>
         </view>
-        <button class="cu-btn he-submit-btn" :disabled="isSubmit" @click="onSave">提交</button>
+        <button class="cu-btn he-submit-btn" :disabled="isSubmit" @click="submit">提交</button>
     </view>
 </template>
 <script>
@@ -52,19 +54,29 @@ export default {
         this.id = option.id;
     },
     methods: {
-        uploaded: function(v) {
-            this.user_freight_info.images = v.map(function(item) {
+        uploaded: function (v) {
+            this.user_freight_info.images = v.map(function (item) {
                 return item.response;
             });
         },
-        removeImage: function(v) {
+        removeImage: function (v) {
             this.user_freight_info.images.slice(v, 1);
         },
-        onSave: function() {
+        submit: function () {
             let _this = this;
-            this.$heshop.orderafter('put', { id: this.id, behavior: 'salesexchange' }, { user_freight_info: this.user_freight_info }).then(function() {
-                uni.navigateTo({url: '/pages/order/after-sales-details?id='+_this.id});
-            }).catch(function(err) {
+            this.$heshop.orderafter('put', {
+                id: this.id,
+                behavior: 'salesexchange'
+            }, {user_freight_info: this.user_freight_info}).then(function () {
+                _this.$store.commit('order/setShip', {
+                    bool: true,
+                    id: _this.id
+                });
+                uni.navigateBack({
+                    delta: 1
+                });
+                // uni.navigateTo({url: '/pages/order/after-sales-details?id=' + _this.id});
+            }).catch(function (err) {
                 console.error(err);
                 _this.$toError();
             })
@@ -157,6 +169,7 @@ export default {
     color: #FFFFFF;
     margin-top: 80px;
 }
+
 .he-submit-btn[disabled] {
     background: #cccccc !important;
     color: #FFFFFF;

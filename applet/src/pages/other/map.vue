@@ -9,7 +9,7 @@ export default {
         this.createMap();
     },
     methods: {
-        createMap: function() {
+        createMap: function () {
             uni.createMapContext('map', this);
         }
     }

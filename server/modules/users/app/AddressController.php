@@ -40,7 +40,7 @@ class AddressController extends BasicController
 
         $UID = Yii::$app->user->identity->id;
 
-        return $this->modelClass::find()->where(['is_deleted' => 0, 'UID' => $UID])->select('id,name,mobile,province,city,district,address,status')->orderBy(['id' => SORT_DESC])->asArray()->all();
+        return $this->modelClass::find()->where(['is_deleted' => 0, 'UID' => $UID])->select('id,name,mobile,province,city,district,address,status,created_time')->orderBy(['created_time' => SORT_DESC])->asArray()->all();
 
     }
 

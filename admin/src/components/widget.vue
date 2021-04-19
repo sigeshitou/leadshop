@@ -6,7 +6,7 @@
                 <input type="radio" class="widget-input" v-model="select" :value="index" name="widget" :id="`widget${index}`">
                 <!-- active 表示激活 -->
                 <div class="widget-mask" :data-index="index" data-type="widget">
-                    <div class="widget-handle">
+                    <div class="widget-handle" :id="(index==1?'guide003':'widget')">
                         <div class="widget-handle-item">
                             <i class="le-icon le-icon-trash" @click.stop="onDelete"></i>
                         </div>

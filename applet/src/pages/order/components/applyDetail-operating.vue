@@ -92,7 +92,7 @@ export default {
                     type: -1
                 }
             ],
-            showModal: true
+            showModal: false
         }
     },
     methods: {

@@ -7,8 +7,6 @@
  */
 namespace framework\common;
 
-use app\core\response\ApiCode;
-use app\datamodel\BaseActiveQuery;
 use Yii;
 
 class CommonModels extends \yii\db\ActiveRecord
@@ -125,7 +123,7 @@ class CommonModels extends \yii\db\ActiveRecord
 
         return [
             'code' => 1,
-            'msg' => $msg
+            'msg'  => $msg,
         ];
     }
 

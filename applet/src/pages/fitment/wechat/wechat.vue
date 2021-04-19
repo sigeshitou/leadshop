@@ -4,105 +4,65 @@
     </view>
 </template>
 <script type="text/javascript">
-// import empty from './empty.vue'
 export default {
-    components: {
-        // empty
-    },
-    data() {
-        return {
-
-        };
-    },
-    /**
-     * 计算属性
-     * @type {Object}
-     */
-    computed: {
-
-    },
-    /**
-     * 页面渲染前
-     * @return {[type]} [description]
-     */
-    created() {
-
-    },
-    /**
-     * 数据监听
-     * @type {Object}
-     */
-    watch: {
-
-    },
-    /**
-     * 页面加载执行
-     * @return {[type]} [description]
-     */
-    async mounted() {
-
-    },
-    methods: {
-
-    }
+    name: 'wechat',
 };
 </script>
 <style lang="scss" scoped="true">
 .le-wechat {
-    height: 170rpx;
+    height: 170px;
     width: 100%;
 
     .le-wechat__tips {
         color: #c5c5c5;
-        font-size: 20rpx;
-        padding-left: 20rpx;
+        font-size: 20px;
+        padding-left: 20px;
     }
 
     .le-wechat-body {
         width: 100%;
-        height: 120rpx;
+        height: 120px;
         position: relative;
 
         .le-wechat-img {
             position: absolute;
-            width: 90rpx;
-            height: 90rpx;
+            width: 90px;
+            height: 90px;
             background-color: red;
-            left: 20rpx;
-            top: 20rpx;
+            left: 20px;
+            top: 20px;
         }
 
         .le-wechat-title {
             position: absolute;
-            width: 800rpx;
-            height: 90rpx;
-            left: 130rpx;
-            top: 25rpx;
+            width: 800px;
+            height: 90px;
+            left: 130px;
+            top: 25px;
 
             .le-wechat-h3 {
-                font-size: 32rpx;
+                font-size: 32px;
                 color: #000000;
             }
 
             .le-wechat-p {
-                font-size: 24rpx;
+                font-size: 24px;
                 color: #ababab;
-                line-height: 50rpx;
+                line-height: 50px;
             }
         }
 
         .le-wechat-btn {
             position: absolute;
-            width: 130rpx;
-            height: 60rpx;
-            border-radius: 8rpx;
+            width: 130px;
+            height: 60px;
+            border-radius: 8px;
             color: #54c856;
             border: 2px solid #54c856;
-            right: 40rpx;
-            bottom: 20rpx;
+            right: 40px;
+            bottom: 20px;
             text-align: center;
-            line-height: 60rpx;
-            font-weight: 24rpx;
+            line-height: 60px;
         }
     }
 }

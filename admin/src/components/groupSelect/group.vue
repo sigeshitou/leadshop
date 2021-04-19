@@ -87,7 +87,7 @@ export default {
                         }
                     }
                 })
-                end.address = _l.join("/");
+                end.address = _l.join(">");
                 this.$emit('input', end);
                 this.handleClose();
             } else {

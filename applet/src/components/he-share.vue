@@ -29,8 +29,8 @@
        <he-poster v-model="isPoster" :goods="goods" :goods-id="goodsId"></he-poster>
        <!--#ifdef H5-->
        <view class="le-share" v-if="isWeChat">
-           <img class="le-one" src="@/static/h5/image/one.png" alt="">
-           <img src="@/static/h5/image/two.png" class="le-two" alt="">
+           <img class="le-one" src="@/static/img/one.png" alt="">
+           <img src="@/static/img/two.png" class="le-two" alt="">
            <view class="le-button" @click="isWeChat = false">我知道了</view>
        </view>
        <!--#endif-->
@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import HePopup from "@/components/he-popup.vue";
+import HePopup from "../components/he-popup.vue";
 import hePoster from "./he-poster.vue";
 
 export default {

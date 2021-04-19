@@ -22,7 +22,7 @@ class IndexController extends BasicController
     }
 
     /**
-     * 创建购物车
+     * 创建短信
      * @return [type] [description]
      */
     public function actionCreate()
@@ -65,10 +65,6 @@ class IndexController extends BasicController
                 Error('操作失败');
             }
         }
-
-        // return $model;
-
-        // return $post;
 
     }
 

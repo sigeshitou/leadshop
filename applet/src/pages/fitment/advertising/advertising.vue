@@ -8,11 +8,12 @@
         top:item.top +'px',
         height:item.height +'px',
         width:item.width +'px',
-        backgroundImage:'url('+(item.url || url)+')' ,
-        }" v-for="(item,index) in picture" :key="index"  @click="navigateToDetail(item.link)">
+        backgroundImage:'url('+(item.url || url)+')'
+        }" v-for="(item, index) in picture" :key="index" @click="navigateToDetail(item.link)">
         </view>
     </view>
 </template>
+
 <script type="text/javascript">
 export default {
     props: {
@@ -25,7 +26,7 @@ export default {
     },
     data() {
         return {
-            url: "http://qmxq.oss-cn-hangzhou.aliyuncs.com/le-default-goods-bg.png"
+            url: this.ipAddress + "/le-default-goods-bg.png"
         }
     },
     /**
@@ -63,11 +64,9 @@ export default {
                 case 2:
                 case 6:
                     return data.windowWidth / 2;
-                    break;
                 case 3:
                 case 5:
                     return data.windowWidth / 3;
-                    break;
                 default:
                     return data.windowWidth;
             }
@@ -190,7 +189,7 @@ export default {
                     left: left,
                     top: top,
                     width: this.width,
-                    height: i == 0 ? this.height : this.height / 2
+                    height: i === 0 ? this.height : this.height / 2
                 }
                 if (i === 0) {
                     left = left + parseFloat(this.width);

@@ -123,8 +123,8 @@ class ExportController extends BasicController
                 'statistical as statistical',
             ])
             ->where($where)
+            ->groupBy(['user.id'])
             ->asArray()
-            ->distinct()
             ->all();
 
         $tHeader     = [];

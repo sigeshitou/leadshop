@@ -115,7 +115,8 @@ export default {
                 "background_color": "#FFFFFF",
                 "inactive_color": "#1A1818",
                 "active_color": "#f5212d",
-                "data": [{
+                "data": [
+                    {
                         "text": "首页",
                         "page": "setup",
                         "iconPath": "http://qmxq.oss-cn-hangzhou.aliyuncs.com/tabbar/nav_home_normal.png",

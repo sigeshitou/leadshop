@@ -127,7 +127,15 @@ export default {
                 }
             }
             if (this.self.type == 'checkbox') {
-                this.self.selectData = arr;
+                if ((this.self.value.length + arr.length) > this.self.limit) {
+                    this.$message({
+                        message: '选多选' + this.self.limit + '件商品',
+                        type: 'warning'
+                    });
+                } else {
+                    this.self.selectData = arr;
+                }
+
             }
         },
         /**
@@ -137,7 +145,7 @@ export default {
          * @return {[type]}               [description]
          */
         querySearch(queryString, cb) {
-            this.$heshop.search("POST", { include: 'goods' }, { keyword: { tab_key: "onsale",search: queryString } }).page(1, 20).then(data => {
+            this.$heshop.search("POST", { include: 'goods' }, { keyword: { tab_key: "onsale", search: queryString } }).page(1, 20).then(data => {
                 let _array = [];
                 data.data.map((iten) => {
                     _array.push({
@@ -161,7 +169,7 @@ export default {
          * @return {[type]} [description]
          */
         handleSearch() {
-            this.handleGoods({ current: 1, keyword: {  search: this.keyword } }).then(data => {
+            this.handleGoods({ current: 1, keyword: { search: this.keyword } }).then(data => {
                 this.toggleSelection(data);
             });
         },
@@ -180,6 +188,7 @@ export default {
          * @return {[type]}          [description]
          */
         selectEnable(row, rowIndex) {
+
             if (this.self.value && this.self.value.some(item => item.id === row.id)) {
                 // 禁用
                 return false

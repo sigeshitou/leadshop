@@ -12,8 +12,8 @@
     <!-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> -->
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover"/>
     <script type="text/javascript" src="//res2.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
-    <script type="text/javascript" src="//at.alicdn.com/t/font_2072967_x7eli27ey4n.js"></script>
-    <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_2072967_tpzdufcamfn.css">
+    <script type="text/javascript" src="//at.alicdn.com/t/font_2072967_irmruj0qtt.js"></script>
+    <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_2072967_irmruj0qtt.css">
     <title><?=$title?></title>
     <?php $this->head()?>
     <script language="javascript">

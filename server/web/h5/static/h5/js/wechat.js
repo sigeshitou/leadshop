@@ -48,7 +48,7 @@ function init(callback) {
     }
 }
 
-function chooseWXPay({ timestamp, nonceStr, packAge, signType, paySign, success, fail, cancel}) {
+function chooseWXPay({timestamp, nonceStr, packAge, signType, paySign, success, fail, cancel}) {
     jWeixin.chooseWXPay({
         timestamp: timestamp,
         nonceStr: nonceStr,
@@ -58,21 +58,21 @@ function chooseWXPay({ timestamp, nonceStr, packAge, signType, paySign, success,
         success: function (res) {
             success && success(res);
         },
-        fail:function(err) {
+        fail: function (err) {
             fail && fail(err);
             console.error(err);
         },
-        cancel: function(res) {
+        cancel: function (res) {
             cancel && cancel(res);
         },
-        complete: function(err) {
+        complete: function (err) {
             alert(JSON.stringify(err));
         }
     });
 }
 
 function hideAllNonBaseMenuItem() {
-    init(function(jssdk) {
+    init(function (jssdk) {
         jssdk.hideAllNonBaseMenuItem();
     });
 }

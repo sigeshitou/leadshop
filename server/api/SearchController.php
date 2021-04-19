@@ -7,22 +7,22 @@
  */
 namespace leadmall\api;
 
-use Yii;
-use leadmall\Map;
 use basics\api\BasicsController as BasicsModules;
+use leadmall\Map;
+use Yii;
 
 class SearchController extends BasicsModules implements Map
 {
     public $modules = [
-        'goods' => [
+        'goods'         => [
             'module'     => 'goods',
             'controller' => 'index',
         ],
-        'order' => [
+        'order'         => [
             'module'     => 'order',
             'controller' => 'index',
         ],
-        'orderafter' => [
+        'orderafter'    => [
             'module'     => 'order',
             'controller' => 'after',
         ],
@@ -30,15 +30,15 @@ class SearchController extends BasicsModules implements Map
             'module'     => 'order',
             'controller' => 'evaluate',
         ],
-        'setting' => [
+        'setting'       => [
             'module'     => 'setting',
             'controller' => 'index',
         ],
-        'fitment' => [
+        'fitment'       => [
             'module'     => 'fitment',
             'controller' => 'index',
         ],
-        'users' => [
+        'users'         => [
             'module'     => 'users',
             'controller' => 'index',
         ],
@@ -58,14 +58,13 @@ class SearchController extends BasicsModules implements Map
 
     public function actionCreate()
     {
-    	$include = Yii::$app->request->get('include', '');
+        $include = Yii::$app->request->get('include', '');
         $module  = $this->modules[$include] ?? false;
         if (!$module) {
             Error('未定义操作');
         }
 
         return $this->runModule($module['module'], $module['controller'], "search");
-        
     }
 
 }

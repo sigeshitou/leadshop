@@ -12,7 +12,8 @@ use framework\common\CommonModels;
 class Template extends CommonModels
 {
     const id           = ['bigkey' => 10, 'unique', 'comment' => 'ID'];
-    const name         = ['varchar' => 50, 'notNull', 'comment' => '微页面名称'];
+    const name         = ['varchar' => 50, 'notNull', 'comment' => '模板名称'];
+    const background   = ['varchar' => 50, 'notNull', 'default' => '#F7F7F7', 'comment' => '背景色'];
     const image        = ['varchar' => 255, 'notNull', 'comment' => '封面'];
     const content      = ['text' => 0, 'notNull', 'comment' => '页面配置'];
     const writer       = ['varchar' => 50, 'notNull', 'comment' => '作者'];
@@ -31,6 +32,7 @@ class Template extends CommonModels
     {
         return [
             [['name', 'image', 'content', 'writer'], 'required', 'message' => '{attribute}不能为空'],
+            [['background'], 'string', 'message' => '{attribute}必须是字符串'],
         ];
     }
 
@@ -55,8 +57,8 @@ class Template extends CommonModels
     public function scenarios()
     {
         $scenarios           = parent::scenarios();
-        $scenarios['create'] = ['name', 'image', 'content', 'writer'];
-        $scenarios['update'] = ['name', 'image', 'content'];
+        $scenarios['create'] = ['name', 'image', 'content', 'writer', 'background'];
+        $scenarios['update'] = ['name', 'image', 'content', 'background'];
         return $scenarios;
     }
 
@@ -66,10 +68,11 @@ class Template extends CommonModels
     public function attributeLabels()
     {
         return [
-            "name"    => "模板名称",
-            "content" => "模板内容",
-            "image"   => "封面图",
-            "writer"  => "作者",
+            "name"       => "模板名称",
+            "content"    => "模板内容",
+            "image"      => "封面图",
+            "writer"     => "作者",
+            "background" => "背景色",
         ];
     }
 }

@@ -1,6 +1,6 @@
 <template>
-    <view class="detail-evaluation" :data-theme="theme">
-        <view class="he-top flex justify-between align-center">
+    <view class="detail-evaluation" :data-theme="theme" id="detail-evaluation">
+        <view class="he-top flex justify-between align-center" @tap="navigateTo">
             <view class="flex align-center">
                 <view class="he-sign"></view>
                 <view class="he-title">
@@ -8,7 +8,7 @@
                     <text class="he-number">({{count}})</text>
                 </view>
             </view>
-            <view class="flex justify-center align-center" @tap="navigateTo">
+            <view class="flex justify-center align-center" >
                 <text class="he-more">查看全部</text>
                 <view class="iconfont iconbtn_arrow"></view>
             </view>
@@ -29,8 +29,8 @@
                 {{evaluation.content}}
             </view>
             <view class="he-pictures flex flex-wrap" v-if="!$h.test.isEmpty(evaluation.images)">
-                <he-image :height="160" :width="160" mode="aspectFill" class="he-img" :image-style="{
-                            borderRadius: '8rpx'}" :src="item" :key="index" @click="doPreviewImage(item, images)" v-for="(item, index) in images"></he-image>
+                <he-image v-for="(item, index) in images" :key="index" :height="160" :width="160" mode="aspectFill" class="he-img" :image-style="{
+                            borderRadius: '8rpx'}" :src="item"  @click="doPreviewImage(item, images)" ></he-image>
             </view>
         </view>
         <view class="he-nothing" v-if="count === 0">暂无评价</view>

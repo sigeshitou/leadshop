@@ -6,7 +6,7 @@
             <div class="modal-main">
                 <img class="modal-image" src="./image/loading2.gif" alt="">
                 <div class="model-content">
-                    <span>模板启用中，请稍后...</span>
+                    <span>{{title}}</span>
                 </div>
             </div>
         </div>
@@ -18,6 +18,12 @@ export default {
     props: {
         show: {
             type: [Boolean, Object]
+        },
+        title: {
+            type: String,
+            default: function () {
+                return '加载中';
+            }
         }
     },
     data() {

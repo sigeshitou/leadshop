@@ -35,18 +35,21 @@
                 </popconfirm>
             </template>
         </div>
-        <el-table :data="value" @select="selectRow" @select-all="selectAll" @selection-change="selectionChange"
-                  @sort-change="sortChange" class="le_goods__main" ref="goodsTable" row-key="id"
-                  :default-sort="{prop: 'created_time', order: 'descending'}" style="width: 100%" v-loading="loading">
+        <el-table :data="value" @select="selectRow" @select-all="selectAll"
+                  @selection-change="selectionChange" @sort-change="sortChange" class="le_goods__main" ref="goodsTable"
+                  row-key="id" :default-sort="{prop: 'created_time', order: 'descending'}" style="width: 100%" v-loading="loading">
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column label="商品描述" width="309">
                 <template slot-scope="scope">
                     <div class="flex">
                         <img :src="scope.row.slideshow[0]" class="le_goods__main-pic"/>
                         <div class="le_goods__main-goodsinfo">
-                            <el-popover :content="scope.row.name" placement="top-start" trigger="hover" width="232">
-                                <div class="le_goods__main-goodsname" slot="reference">{{ scope.row.name }}</div>
-                            </el-popover>
+                            <div class="le_goods__main-goodsname" slot="reference">
+                                {{ scope.row.name }}
+                                <div class="le-goods__editor">
+                                    <he-icon v-popup.editName="scope.row" :id="'editName_' + scope.row.id" module="goods" width="380" title="编辑商品名称" class="le_goods__main-sortedit" type="le-icon-editor"></he-icon>
+                                </div>
+                            </div>
                             <div class="le_goods__main-goodscn">
                                 货号：{{ scope.row.goods_sn ? scope.row.goods_sn : '--' }}
                             </div>
@@ -194,11 +197,12 @@
 <script type="text/javascript">
 import popconfirm from "../../../components/popconfirm.vue";
 import HelpHint from "./helpHint.vue";
-
+import editName from "./editName";
 export default {
     components: {
         HelpHint,
-        popconfirm
+        popconfirm,
+        editName
     },
     props: {
         value: {
@@ -276,7 +280,7 @@ export default {
         this.getGroup();
     },
     methods: {
-        hintRender: function () {
+        hintRender : function() {
             return this.$createElement('HelpHint', {
                 props: {
                     content: '序号越大，排序越靠前'
@@ -476,6 +480,7 @@ export default {
     height: 64px;
     margin-right: 9px;
     display: block;
+    object-fit: contain;
 }
 
 .le_goods__main-goodsinfo {
@@ -500,6 +505,25 @@ export default {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     cursor: pointer;
+    position: relative;
+}
+.le_goods__main-goodsname:hover .le-goods__editor {
+    display: inline-block;
+}
+.le-goods__editor {
+    position: absolute;
+    display: none;
+    width: 32px;
+    height: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0;
+    text-align: center;
+    line-height: 32px;
+    .le_goods__main-sortedit {
+        opacity: 1;
+    }
+    background: linear-gradient(90deg, #F7F5FE 0%, #F7F5FE 100%);
 }
 
 .le_goods__main-goodscn {

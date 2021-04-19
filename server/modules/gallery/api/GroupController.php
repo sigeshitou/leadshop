@@ -73,7 +73,7 @@ class GroupController extends BasicController
         if ($parent_id === 0 || $parent_id === -1) {
             $where = ['or', ['id' => 1], $where];
         }
-        return $this->modelClass::find()->where($where)->orderBy(['sort' => SORT_DESC, 'id' => SORT_DESC])->asArray()->all();
+        return $this->modelClass::find()->where($where)->orderBy(['sort' => SORT_DESC, 'created_time' => SORT_DESC])->asArray()->all();
     }
 
     /**

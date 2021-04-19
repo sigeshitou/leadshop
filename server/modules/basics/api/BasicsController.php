@@ -65,4 +65,49 @@ class BasicsController extends BasicController
         }
         return $controller->runAction($action, $params);
     }
+
+    /**
+     * 执行插件目录
+     * @param  [type] $model  [description]
+     * @param  string $name   [description]
+     * @param  string $action [description]
+     * @param  array  $params [description]
+     * @return [type]         [description]
+     */
+    public function runPlugin($model, $name = '', $action = "index", $params = [])
+    {
+        $class      = ['', $model, 'api', ucfirst($name) . "Controller"];
+        $class      = implode('\\', $class);
+        $controller = (new $class($this->id, $this->module));
+        if ($action == "index") {
+            $_POST['_method']          = "get";
+            $_SERVER['REQUEST_METHOD'] = "GET";
+        }
+        if ($action == "create") {
+            $_POST            = Yii::$app->request->post();
+            $_POST['_method'] = "post";
+        }
+        if ($action == "view") {
+            if (empty($params)) {
+                $params = $_GET;
+            } else {
+                $_GET = $params;
+            }
+            $_POST['_method']          = "get";
+            $_SERVER['REQUEST_METHOD'] = "GET";
+        }
+        if ($action == "update") {
+            if (empty($params)) {
+                $params = $_GET;
+            } else {
+                $_GET = $params;
+            }
+            $_POST            = Yii::$app->request->post();
+            $_POST['_method'] = "put";
+        }
+        if ($action == "delete") {
+            $_POST['_method'] = "delete";
+        }
+        return $controller->runAction($action, $params);
+    }
 }

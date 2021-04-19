@@ -4,7 +4,7 @@
             <view class="he-input flex align-center" @tap="navigateTo">
                 <view class="iconfont iconsearchbar_search"></view>
                 <text class="he-placeholder" v-if="!keyword.search">输入商品名称搜索</text>
-                <text class="he-input__text" v-else>{{keyword.search}}</text>
+                <text class="he-input__text" v-else>{{ keyword.search }}</text>
             </view>
         </view>
         <list-sort @sort="setSort"></list-sort>
@@ -58,21 +58,21 @@ export default {
         heLoadMore
     },
     methods: {
-        navigateTo: function() {
+        navigateTo: function () {
             let url = '/pages/goods/search?keyword=' + this.keyword.search + '&from=/pages/goods/search-list';
             uni.redirectTo({
                 url: url
             });
         },
-        getList: function() {
+        getList: function () {
             let _this = this;
-            return new Promise(function(resolve, reject) {
+            return new Promise(function (resolve, reject) {
                 _this.$heshop.search('post', {
                     include: 'goods'
                 }, {
                     keyword: _this.keyword
-                }).page(_this.page.current, _this.page.size).then(function(res) {
-                    let { data, headers } = res;
+                }).page(_this.page.current, _this.page.size).then(function (res) {
+                    let {data, headers} = res;
                     resolve(data);
                     // #ifdef MP-WEIXIN
                     _this.page = {
@@ -93,7 +93,7 @@ export default {
                 });
             });
         },
-        setSort: function(e) {
+        setSort: function (e) {
             let style = this.style;
             let _this = this;
             this.list = [];
@@ -102,17 +102,17 @@ export default {
             }
             this.page.current = 1;
             this.loadStatus = "loadmore";
-            this.getList().then(function(res) {
+            this.getList().then(function (res) {
                 _this.style = -1;
                 _this.list = res;
-                setTimeout(function() {
+                setTimeout(function () {
                     _this.style = style;
                 });
                 _this.loadStatus = _this.list.length < _this.page.size ? 'nomore' : 'loadmore';
             });
         },
-        toDetail: function(item) {
-            uni.navigateTo({ url: '/pages/goods/detail?id=' + item.id });
+        toDetail: function (item) {
+            uni.navigateTo({url: '/pages/goods/detail?id=' + item.id});
         }
     },
     onLoad(options) {
@@ -129,7 +129,7 @@ export default {
             this.keyword.search = search_key;
             uni.removeStorageSync('search_key');
         }
-        this.getList().then(function(res) {
+        this.getList().then(function (res) {
             _this.list = res;
             _this.isNothing = _this.list.length === 0;
             _this.loadStatus = _this.list.length < _this.page.size ? 'nomore' : 'loadmore';
@@ -140,7 +140,7 @@ export default {
         if (this.page.count > this.page.current) {
             this.page.current++;
             this.loadStatus = "loading";
-            this.getList().then(function(res) {
+            this.getList().then(function (res) {
                 _this.list.push(...res);
                 _this.loadStatus = "loadmore";
             });

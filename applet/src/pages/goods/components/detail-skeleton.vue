@@ -12,7 +12,7 @@
             <view class="data-v-f0a9f5ba">
                 <view class="detail-basic-information information--detail-basic-information data-v-1d870588 information--data-v-1d870588">
                     <view class="he-top information--he-top data-v-1d870588 information--data-v-1d870588">
-                        <text class="he-price information--he-price data-v-1d870588 information--data-v-1d870588 sk-transparent sk-text-14-2857-311 sk-text">￥15.00</text>
+                        <text class="he-price information--he-price data-v-1d870588 information--data-v-1d870588 sk-transparent sk-text-14-2857-311 sk-text"></text>
                         <text class="he-old-price information--he-old-price data-v-1d870588 information--data-v-1d870588 sk-transparent sk-text-14-2857-822 sk-text" style="text-decoration-color: transparent;">¥15.00</text>
                         <text class="fr information--fr he-sale information--he-sale data-v-1d870588 information--data-v-1d870588 sk-transparent sk-text-14-2857-339 sk-text">已售2162克</text>
                     </view>

@@ -262,7 +262,7 @@ class IndexController extends BasicController
      * @param  [type] $event [description]
      * @return [type]        [description]
      */
-    public static function cart_clear($event)
+    public static function cartClear($event)
     {
         //判断是否存在购物车ID,存在则清除对应购物车商品
         if (isset($event->order_goods[0]['id'])) {

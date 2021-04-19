@@ -2,7 +2,7 @@
  * @Author: qinuoyun
  * @Date:   2021-02-10 21:40:32
  * @Last Modified by:   qinuoyun
- * @Last Modified time: 2021-03-16 13:31:43
+ * @Last Modified time: 2021-04-15 17:29:16
  */
 const panels = {
     "basics": {
@@ -69,7 +69,19 @@ const panels = {
                     style: 1, //风格
                     data: [{
                         url: "",
-                        title: "导航",
+                        title: "导航一",
+                        link: {}
+                    },{
+                        url: "",
+                        title: "导航二",
+                        link: {}
+                    },{
+                        url: "",
+                        title: "导航三",
+                        link: {}
+                    },{
+                        url: "",
+                        title: "导航四",
                         link: {}
                     }]
                 },

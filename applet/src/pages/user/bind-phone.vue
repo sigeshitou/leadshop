@@ -2,7 +2,7 @@
     <view class="he-page-content" :data-theme="theme">
         <text class="he-mobile-text" v-if="mobile">
             更换手机后，下次登录可使用新手机号登录。
-            当前手机号：{{mobile}}
+            当前手机号：{{ mobile }}
         </text>
         <view class="he-box">
             <view class="he-item flex ">
@@ -21,7 +21,8 @@
                 <button type="text" class="cu-btn he-item__get-code"
                         :disabled="!!time"
                         :class="time ? 'he-item__get-code-0' : 'he-item__get-code-1'"
-                        @click="getCode">{{time ? num + 's后重新获取' : '获取验证码'}}</button>
+                        @click="getCode">{{ time ? num + 's后重新获取' : '获取验证码' }}
+                </button>
             </view>
         </view>
         <button class="cu-btn he-submit" @click="submit">确认绑定</button>
@@ -40,12 +41,12 @@ export default {
         }
     },
     computed: {
-        mobile: function() {
+        mobile: function () {
             return this.getStorageSync('userInfo').mobile;
         }
     },
     methods: {
-        submit: function() {
+        submit: function () {
             let _this = this;
             if (this.iphone && this.code) {
                 this.$heshop.users('put', {
@@ -54,29 +55,29 @@ export default {
                 }, {
                     mobile: this.iphone,
                     code: this.code
-                }).then(function() {
+                }).then(function () {
                     _this.$h.toast("绑定手机号成功");
-                }).catch(function(err) {
+                }).catch(function (err) {
                     console.error(err);
                 });
             }
         },
-        getCode: function() {
+        getCode: function () {
             if (!this.iphone) return;
             if (this.time) return;
             let _this = this;
             this.$heshop.sms('post', {
                 mobile: this.iphone,
                 type: 1
-            }).then(function(err) {
-                _this.time = setInterval(function() {
+            }).then(function (err) {
+                _this.time = setInterval(function () {
                     _this.num--;
                     if (_this.num <= 0) {
                         clearInterval(_this.time);
                         _this.time = null;
                     }
                 }, 1000);
-            }).catch(function(err) {
+            }).catch(function (err) {
             });
         }
     },
@@ -90,18 +91,22 @@ export default {
 .he-page-content {
     padding: 20px;
 }
+
 .he-box {
     width: 710px;
     background: #FFFFFF;
     border-radius: 16px;
     padding: 16px 24px;
 }
+
 .he-item {
     height: 100px;
 }
+
 .he-item:first-child {
     border-bottom: 1px solid #E5E5E5;
 }
+
 .he-submit {
     margin-top: 80px;
     width: 710px;
@@ -113,6 +118,7 @@ export default {
     color: #FFFFFF;
     @include background_color('background_color');
 }
+
 .he-item__label {
     font-size: 26px;
     font-family: PingFang SC;
@@ -121,10 +127,12 @@ export default {
     width: 156px;
     line-height: 100px;
 }
+
 .he-item__input {
     height: 100px;
     width: 100%;
 }
+
 .he-item__get-code {
     width: 240px;
     height: 100px;
@@ -134,12 +142,15 @@ export default {
     font-weight: 500;
     background-color: #FFFFFF;
 }
+
 .he-item__get-code-0 {
     color: #999999;
 }
+
 .he-item__get-code-1 {
     @include font_color('font_color');
 }
+
 .he-mobile-text {
     font-size: 26px;
     font-family: PingFang SC;

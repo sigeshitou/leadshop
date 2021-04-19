@@ -1,16 +1,18 @@
 .tabs {
     .tabs-header {
-        position: relative;
+        position: -webkit-sticky;
+        position: sticky;
+        z-index: 1;
+        top: var(--window-top);
         white-space: nowrap;
         overflow: hidden;
         padding-right: 40px;
-        background-color: RGBA(243, 245, 247, 1);
-
+        background-color: RGBA(243, 245, 247, 0);
         .tabs-header-icon {
             position: absolute;
             height: 80px;
             line-height: 80px;
-            right: 0px;
+            right: 0;
             width: 66px;
             padding-left: 16px;
             z-index: 2;
@@ -121,5 +123,6 @@
     }
 
 
-    .tabs-content {}
+    .tabs-content {
+    }
 }

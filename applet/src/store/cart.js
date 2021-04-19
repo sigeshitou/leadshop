@@ -9,13 +9,11 @@ const cart = {
         }
     },
     getters: {
-        getCartAdd: function(state) {
+        getCartAdd: function (state) {
             return state.cart_add;
         }
     },
-    actions: {
-
-    }
+    actions: {}
 };
 
 export default cart;

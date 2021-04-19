@@ -30,7 +30,7 @@
     </div>
 </template>
 <script type="text/javascript">
-var parent = window.parent.window.app;
+let parent = window.parent.window.app;
 export default {
     data() {
         return {
@@ -50,19 +50,12 @@ export default {
         }
     },
     /**
-     * 页面渲染前
-     * @return {[type]} [description]
-     */
-    created() {
-
-    },
-    /**
      * 数据监听
      * @type {Object}
      */
     watch: {
-        onIndex(val) {
-            let index = this.getIndex();
+        onIndex() {
+            this.getIndex();
         }
     },
     /**

@@ -101,7 +101,7 @@ class Goods extends CommonModels
             ['min_number', 'default', 'value' => 1],
 
             //统一数字
-            [['status', 'is_real', 'sort', 'visit', 'sales'], 'integer', 'message' => '{attribute}必须是整数'],
+            [['status', 'is_real', 'sort', 'visits', 'sales'], 'integer', 'message' => '{attribute}必须是整数'],
 
         ];
     }

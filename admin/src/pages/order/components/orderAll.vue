@@ -103,7 +103,7 @@
                             </he-link>
                         </div>
                         <div v-if="item.is_recycle !== 1">
-                            <el-button type="text" class="he-click" title="物流信息" :hide_cancel="true" sure_btn="我知道了" v-if="item.status >= 202 && item.freight" :width="item.freight && item.freight.type ===1?415:283" module="order" top="35vh" :id="item.id +'_logistics_information'" v-popup.logisticsInformation="item">查看物流</el-button>
+                            <el-button type="text" class="he-click" title="物流信息" :hide_cancel="true" v-if="item.status >= 202 && item.freight" :width="item.freight.type === 1 ? 740 : 285" module="order" top="35vh" :id="item.id +'_logistics_information'" v-popup.logisticsInformation="item">查看物流</el-button>
                         </div>
                     </el-col>
                     <el-col class="he-operating he-vertical__center" :span="2">

@@ -1,5 +1,5 @@
 <template>
-    <view class="he-products-featured">
+    <view class="he-products-featured"  id="products-featured">
         <view class="he-top flex justify-center align-center">
             <text class="iconfont iconproductrecommendation_line"></text>
             <view class="he-text">为你推荐</view>
@@ -39,6 +39,7 @@ export default {
 <style scoped>
 .he-products-featured {
     width: 750px;
+    overflow: hidden;
 }
 .he-top {
     margin-top: 43px;

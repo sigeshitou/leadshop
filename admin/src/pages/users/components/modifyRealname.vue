@@ -22,8 +22,8 @@ export default {
     },
     methods: {
         affirm(e) {
-            let { handleClose } = e;
-            this.$heshop.users('put', { id: this.value.id, behavior: 'setting' }, {
+            let {handleClose} = e;
+            this.$heshop.users('put', {id: this.value.id, behavior: 'setting'}, {
                 realname: this.realname
             }).then(() => {
                 this.value.realname = this.realname;

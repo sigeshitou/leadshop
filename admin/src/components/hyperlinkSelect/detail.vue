@@ -6,7 +6,7 @@
             </el-input>
         </div>
         <el-scrollbar :style="{height:'196px'}">
-            <el-radio-group v-model="self.selectData">
+            <el-radio-group v-model="self.selectData" @change="handlerChange">
                 <el-radio :label="item" v-for="(item,index) in linkList" :key="index" v-if="self.forbidden.indexOf(index) == -1">
                     <div class="hyperlink-detail-span" v-if="item.extend">
                         <goodsSelet type="radio" v-if="item.index == 2" v-model="item.param">
@@ -25,8 +25,8 @@
                         </groupSelect>
                         <pagesSelet v-if="item.index == 7" v-model="item.param">
                             {{item.name}}
-                            <span class="hyperlink-detail-tips" v-if="item.param.name">
-                                ({{item.param.name}})
+                            <span class="hyperlink-detail-tips" v-if="item.param.title">
+                                ({{item.param.title}})
                             </span>
                             <i class="le-icon le-icon-arrow-right"></i>
                         </pagesSelet>
@@ -125,6 +125,15 @@ export default {
      * @type {Object}
      */
     watch: {
+        "self.original": {
+            handler(newData, oldData) { //特别注意，不能用箭头函数，箭头函数，this指向全局
+                if (newData) {
+                    this.handlerDataUpdate();
+                }
+            },
+            immediate: true, //刷新加载 立马触发一次handler
+            deep: true // 可以深度检测到 obj 对象的属性值的变化
+        },
         searchData(value) {
             if (value == "") {
                 this.linkList = JSON.parse(JSON.stringify(this.cacheData));
@@ -138,8 +147,33 @@ export default {
      */
     async mounted() {
         this.cacheData = JSON.parse(JSON.stringify(this.linkList));
+        this.handlerDataUpdate();
     },
     methods: {
+        /**
+         * 处理选择器
+         * @param  {[type]} value [description]
+         * @return {[type]}       [description]
+         */
+        handlerChange(value) {
+             console.log("value",value)
+        },
+        /**
+         * 数据更新
+         * @return {[type]} [description]
+         */
+        handlerDataUpdate() {
+            let original = this.self.original;
+            for (var index in this.linkList) {
+                let item = this.linkList[index];
+                if (original.index == item.index) {
+                    this.linkList[index] = original;
+                }
+            }
+            if (original) {
+                this.self.selectData = original;
+            }
+        },
         hendleSearch(e) {
             let value = this.searchData;
             let simpleArr = this.linkList.filter((item, i) => {

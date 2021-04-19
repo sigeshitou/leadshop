@@ -14,8 +14,7 @@
                     <template slot-scope="scope">
                         <div class="he-text">
                             {{scope.row.conditions.time_start | getTime}} ~
-                        </div>
-                        <div class="he-text">
+                            <br/>
                             {{scope.row.conditions.time_end | getTime}}
                         </div>
                     </template>
@@ -56,12 +55,16 @@
                 </el-table-column>
             </el-table>
             <div class="he-pagination el-row--flex is-align-middle is-justify-end">
-                <el-pagination :current-page="page.current" background layout="prev, pager, next, jumper" @current-change="currentChange" :page-count="page.count">
+                <el-pagination :current-page="page.current"
+                               background layout="prev, pager, next, jumper"
+                               @current-change="currentChange"
+                               :page-count="page.count">
                 </el-pagination>
             </div>
         </div>
     </div>
 </template>
+
 <script type="text/javascript">
 import popconfirm from "@/components/popconfirm.vue";
 export default {
@@ -81,27 +84,6 @@ export default {
             loading: false
         };
     },
-    /**
-     * 计算属性
-     * @type {Object}
-     */
-    computed: {},
-    /**
-     * 页面渲染前
-     * @return {[type]} [description]
-     */
-    created() {},
-    /**
-     * 数据监听
-     * @type {Object}
-     */
-    watch: {
-
-    },
-    /**
-     * 页面加载执行
-     * @return {[type]} [description]
-     */
     async mounted() {
         this.getList(this.page);
     },

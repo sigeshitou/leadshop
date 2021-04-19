@@ -4,14 +4,10 @@
         <choice :data="navData" width="112px" group="navData" v-model="content.style"></choice>
         <template slot="content">
             <el-form ref="form" :model="content" @submit.native.prevent label-width="90px" size="mini" label-position="left">
-                <draggable v-model="content.data" handle=".select-cover__move" chosenClass="chosen" forceFallback="true" group="navigation10" animation="1000" @start="onStart" @end="onEnd" v-if="content.data.length>1">
+                <draggable v-model="content.data" handle=".select-cover" chosenClass="chosen" forceFallback="true" group="navigation10" animation="1000" @start="onStart" @end="onEnd">
                     <transition-group>
                         <div class="select-cover" v-for="item,index in content.data" :key="`im_${index}`" v-if="content.style==1">
                             <i class="le-icon le-icon-cha2 select-photo__close" @click="handleDelete(index)"></i>
-                            <div class="select-cover__header">
-                                <i class="le-icon le-icon-tuoye select-cover__move" @click.stop="onStart"></i>
-                                <span>导航{{index+1}}</span>
-                            </div>
                             <div class="select-cover__content">
                                 <div class="select-cover__item">
                                     <pictureDialog v-model="item.url">
@@ -40,14 +36,10 @@
                         </div>
                     </transition-group>
                 </draggable>
-                <draggable v-model="content.data" handle=".select-cover__move" chosenClass="chosen" forceFallback="true" group="navigation10" animation="1000" @start="onStart" @end="onEnd" v-if="content.style==2">
+                <draggable v-model="content.data" handle=".select-text" chosenClass="chosen" forceFallback="true" group="navigation10" animation="1000" @start="onStart" @end="onEnd" v-if="content.style==2">
                     <transition-group>
                         <div class="select-text" v-for="item,index in content.data" :key="`te_${index}`">
                             <i class="le-icon le-icon-cha2 select-photo__close" @click="handleDelete(index)"></i>
-                            <div class="select-cover__header">
-                                <i class="le-icon le-icon-tuoye select-cover__move" @click.stop="onStart"></i>
-                                <span>导航{{index+1}}</span>
-                            </div>
                             <div class="select-text__detail">
                                 <el-form-item label="标题" label-width="40px">
                                     <el-input type="text" @keyup.native.enter placeholder="请输入标题" v-model="item.title" maxlength="10">
@@ -208,7 +200,7 @@ export default {
      * @return {[type]} [description]
      */
     async mounted() {
-
+        console.log("图文到哈",this.content)
     },
     methods: {
         //开始拖拽事件

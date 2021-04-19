@@ -20,7 +20,9 @@
                 </view>
             </view>
             <view class="he-body flex flex-wrap">
-                <text class="he-item" @tap="setKeyword(item)" v-for="(item, index) in keywordList" :key="index">{{item}}</text>
+                <text class="he-item" @tap="setKeyword(item)" v-for="(item, index) in keywordList" :key="index">
+                    {{ item }}
+                </text>
             </view>
         </view>
     </view>
@@ -42,7 +44,7 @@ export default {
         this.keywordList = this.getStorageSync('keyword_list') ? this.getStorageSync('keyword_list') : [];
     },
     methods: {
-        search: function() {
+        search: function () {
             if (!this.$h.test.isEmpty(this.keyword)) {
                 uni.setStorageSync('search_key', this.keyword);
                 let list = this.getStorageSync('keyword_list');
@@ -57,14 +59,14 @@ export default {
                 });
             }
         },
-        setKeyword: function(item) {
+        setKeyword: function (item) {
             this.keyword = item;
             uni.setStorageSync('search_key', item);
             uni.redirectTo({
                 url: '/pages/goods/search-list'
             });
         },
-        emptyList: function() {
+        emptyList: function () {
             uni.removeStorageSync('keyword_list');
             this.keywordList = [];
         }
@@ -76,11 +78,13 @@ export default {
 .he-page-content {
     background: #FFFFFF;
 }
+
 .he-search {
     width: 750px;
     height: 112px;
     padding: 24px 8px 24px 32px;
 }
+
 .he-search__input {
     width: 609px;
     height: 64px;
@@ -88,6 +92,7 @@ export default {
     border-radius: 32px;
     padding: 0 32px;
 }
+
 .he-search__text {
     font-size: 28px;
     font-family: PingFang SC;
@@ -97,6 +102,7 @@ export default {
     line-height: 64px;
     text-align: center;
 }
+
 .he-search__icon {
     width: 28px;
     height: 28px;
@@ -104,30 +110,36 @@ export default {
     color: RGBA(153, 153, 153, 1);
     margin-right: 16px;
 }
-/deep/.he-placeholder {
+
+/deep/ .he-placeholder {
     font-size: 28px;
     font-family: PingFang SC;
     font-weight: 400;
     color: #999999;
 }
+
 .he-history {
     min-height: calc(100vh - 112px);
     padding-top: 19px;
 }
+
 .iconsearch_empty {
     font-size: 36px;
     color: #CBCBCB;
     width: 36px;
     height: 36px;
 }
+
 .he-clear {
     height: 56px;
     padding: 10px;
     margin-right: 20px;
 }
+
 .he-header {
     height: 56px;
 }
+
 .he-header .he-title {
     font-size: 28px;
     font-family: PingFang SC;
@@ -135,15 +147,17 @@ export default {
     color: #555555;
     margin-left: 32px;
 }
+
 .he-body {
     padding: 10px 32px 0 32px;
 }
+
 .he-body .he-item {
     font-size: 28px;
     font-family: PingFang SC;
     font-weight: 500;
     color: #222222;
-    padding:16px 24px;
+    padding: 16px 24px;
     background: #F7F7F7;
     border-radius: 32px;
     margin: 0 16px 16px 0;

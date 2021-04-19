@@ -24,7 +24,7 @@
                         </el-radio-group>
                     </el-form-item>
                     <div class="empty"></div>
-                    <goodsSelet v-if="contentData.type!=2" v-model="contentData.goods" :number="20" :limit="20-contentData.goods.length" @change="handleGoodsChange" @confirm="handleGoodsConfirm" @remove="handleGoodsRemove"></goodsSelet>
+                    <goodsSelet v-if="contentData.type!=2" v-model="contentData.goods" :number="50" :limit="50-contentData.goods.length" @change="handleGoodsChange" @confirm="handleGoodsConfirm" @remove="handleGoodsRemove"></goodsSelet>
                     <classifySelect v-if="contentData.type==2" v-model="contentData.group" @confirm="handleGroupConfirm" @delete="handleGroupConfirm"></classifySelect>
                 </div>
                 <el-divider v-if="content.data.length"></el-divider>
@@ -228,7 +228,7 @@ export default {
                 this.content.data.push({
                     title: "名称",
                     type: 1,
-                    goods: "",
+                    goods: [],
                     group: {}
                 });
             } else {

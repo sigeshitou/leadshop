@@ -16,11 +16,9 @@
                 <view class="advertising-item-image" style="width: 33.333%">
                     <image lazy-load style="width: 100%; height: 100%" :src="adverArray[0].url" mode="widthFix" v-if="adverArray[0].url" @click="navigateToDetail(adverArray[0].link)"></image>
                 </view>
-                </label>
                 <view class="advertising-item-image" style="width: 33.333%">
                     <image lazy-load style="width: 100%; height: 100%" :src="adverArray[1].url" mode="widthFix" v-if="adverArray[1].url" @click="navigateToDetail(adverArray[1].link)"></image>
                 </view>
-                </label>
                 <view class="advertising-item-image" style="width: 33.333%">
                     <image lazy-load style="width: 100%; height: 100%" :src="adverArray[2].url" mode="widthFix" v-if="adverArray[2].url" @click="navigateToDetail(adverArray[2].link)"></image>
                 </view>
@@ -67,10 +65,10 @@
             </view>
             <view class="advertising-item-6" v-if="size==6">
                 <view class="advertising-item-image" :style="{
-                     'width': '50%',
-                'height': '188rpx',
-                'top':0,
-                'left':0
+                    'width': '50%',
+                    'height': '188rpx',
+                    'top':0,
+                    'left':0
             }">
                     <image lazy-load style="width: 100%; height: 100%" :src="adverArray[0].url" mode="aspectFill" v-if="adverArray[0].url" @click="navigateToDetail(adverArray[0].link)"></image>
                 </view>
@@ -112,11 +110,9 @@
                 </view>
             </template>
         </view>
-        <!--     {{cubeArray}} -->
     </view>
 </template>
 <script type="text/javascript">
-import MPageNavigate from "../../../libs/function/MPageNavigate";
 
 export default {
     props: {
@@ -126,11 +122,6 @@ export default {
         content: {
             type: [Object, Array]
         }
-    },
-    data() {
-        return {
-
-        };
     },
     /**
      * 计算属性
@@ -147,27 +138,6 @@ export default {
             let _s = uni.getSystemInfoSync();
             return _s.windowWidth;
         }
-    },
-    /**
-     * 页面渲染前
-     * @return {[type]} [description]
-     */
-    created() {
-
-    },
-    /**
-     * 数据监听
-     * @type {Object}
-     */
-    watch: {
-
-    },
-    /**
-     * 页面加载执行
-     * @return {[type]} [description]
-     */
-    async mounted() {
-
     },
     methods: {
         /**
@@ -197,7 +167,7 @@ export default {
         getCover(cover = "") {
             let url = "";
             if (cover) {
-                if (Object.prototype.toString.call(cover) == '[object Array]' && cover[0]) {
+                if (Object.prototype.toString.call(cover) === '[object Array]' && cover[0]) {
                     return cover[0].url;
                 }
             }

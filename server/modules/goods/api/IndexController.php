@@ -51,7 +51,7 @@ class IndexController extends BasicController
 
         $data = M()::find()
             ->where($where)
-            ->orderBy(['id' => SORT_DESC])
+            ->orderBy(['created_time' => SORT_DESC])
             ->asArray()
             ->all();
 
@@ -301,9 +301,14 @@ class IndexController extends BasicController
             Error('商品不存在');
         }
 
-        $result['group']               = explode('-', trim($result['group'], '-'));
-        $result['services']            = $result['services'] ? to_array($result['services']) : [];
-        $result['video']               = to_array($result['video']);
+        $result['group']    = explode('-', trim($result['group'], '-'));
+        $result['services'] = $result['services'] ? to_array($result['services']) : [];
+        $result['video']    = to_array($result['video']);
+        if ($result['video']) {
+            $result['video']['type'] = isset($result['video']['type']) ? $result['video']['type'] : 1;
+        } else {
+            $result['video'] = null;
+        }
         $result['slideshow']           = to_array($result['slideshow']);
         $result['param']['param_data'] = $result['param']['param_data'] ? to_array($result['param']['param_data']) : [];
         $result['body']['content']     = htmlspecialchars_decode($result['body']['content']);
@@ -324,6 +329,9 @@ class IndexController extends BasicController
         switch ($behavior) {
             case 'basicsetting': //基本设置
                 return $this->basicSetting();
+                break;
+            case 'simplesetting': //简单设置
+                return $this->simpleSetting();
                 break;
             case 'paramsetting': //价格库存设置
                 return $this->paramSetting();
@@ -444,6 +452,38 @@ class IndexController extends BasicController
 
         }
         return $model;
+    }
+
+    /**
+     * 一些可能需要单独做的编辑
+     */
+    public function simpleSetting()
+    {
+        $id    = Yii::$app->request->get('id', false);
+        $post  = Yii::$app->request->post();
+        $model = M()::findOne($id);
+        if (empty($model)) {
+            Error('商品不存在');
+        }
+
+        if (N('name')) {
+            $model->name = $post['name'];
+        }
+
+        if (N('sort')) {
+            if ($post['sort'] > 999) {
+                Error('排序不能超过999');
+            }
+            $model->sort = $post['sort'];
+        }
+
+        $result = $model->save();
+
+        if ($result) {
+            return true;
+        } else {
+            Error('修改失败');
+        }
     }
 
     /**

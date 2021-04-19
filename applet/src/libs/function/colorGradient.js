@@ -45,7 +45,7 @@ function hexToRgb(sColor, str = true) {
         for (let i = 1; i < 7; i += 2) {
             sColorChange.push(parseInt("0x" + sColor.slice(i, i + 2)));
         }
-        if(!str) {
+        if (!str) {
             return sColorChange;
         } else {
             return `rgb(${sColorChange[0]},${sColorChange[1]},${sColorChange[2]})`;
@@ -120,8 +120,7 @@ function colorToRgba(color, alpha = 0.3) {
         }
         // return sColorChange.join(',')
         return 'rgba(' + sColorChange.join(',') + ',' + alpha + ')';
-    }
-    else {
+    } else {
         return sColor;
     }
 }

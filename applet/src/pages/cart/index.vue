@@ -3,7 +3,7 @@
         <view v-if="cartLoading" class="flex align-center justify-center he-loading-require">
             <he-loading mode="flower"></he-loading>
         </view>
-        <cart-empty v-if="!isLoading && list.length === 0 && failure.length === 0"></cart-empty>
+        <cart-empty v-if="isEmpty"></cart-empty>
         <template v-else-if="!isLoading && (list.length > 0 || failure.length > 0)">
             <view class="cart-list" :data-theme="theme">
                 <view class="he-top flex">
@@ -14,36 +14,35 @@
                     <view class="he-button" @click="setEdit">{{ isEdit ? '完成' : '编辑' }}</view>
                 </view>
                 <view class="he-body">
-                    <cart-item v-for="(item, index) in list" :options="options"
-                               :custom-style="actionStyle"
-                               @select="setRadio(index, 'list')"
-                               @number="(obj) => {setNumber(obj, 'list')}"
-                               :show="item.show"
-                               :item="item"
-                               @openShopping="(obj) => {openShopping(obj, 'list')}"
-                               @click="delItem(item, index, 'list')" @open="(key) => {open(key, 'list')}"
-                               :index="index" :key="item.id"></cart-item>
-                    <template v-if="failure.length">
+                    <cart-item
+                        v-for="(item, index) in list"
+                        @select="setRadio(index, 'list')"
+                        @number="setNumber($event, 'list')"
+                        :item="item"
+                        @openShopping="openShopping($event, 'list')"
+                        :index="index"
+                        :key="item.id"></cart-item>
+                    <template v-if="!$h.test.isEmpty(failure)">
                         <view class="he-failure-text">以下商品暂时无法购买</view>
-                        <cart-item v-for="(item, index) in failure" :options="options"
-                                   :custom-style="actionStyle"
-                                   :item="item"
-                                   :show="item.show"
-                                   :isEdit="isEdit"
-                                   @openShopping="(obj) => {openShopping(obj, 'failure')}"
-                                   @number="(obj) => {setNumber(obj, 'failure')}"
-                                   @select="setRadio(index, 'failure')"
-                                   @click="delItem(item, index, 'failure')" @open="(key) => {open(key, 'failure')}"
-                                   :index="index" :key="item.id"></cart-item>
+                        <cart-item
+                            v-for="(item, index) in failure"
+                            :item="item"
+                            :isEdit="isEdit"
+                            @openShopping="openShopping($event, 'failure')"
+                            @number="setNumber($event, 'failure')"
+                            @select="setRadio(index, 'failure')"
+                            :index="index"
+                            :key="item.id"></cart-item>
                     </template>
                 </view>
-                <view class="he-bottom"></view>
             </view>
             <cart-settlement @setAll="setAll" :total="total" :select="select" v-model="all" :is-edit="isEdit"
                              @submit="submit" @del="del"></cart-settlement>
             <he-cart shopping-type="join" :goods="detail" @put="setParam" :select.sync="selectObj"
                      :show.sync="shopping"></he-cart>
         </template>
+        <he-products-featured v-if="goodsSetting.recommend_showpage.cart.value"></he-products-featured>
+        <view class="he-bottom" v-if="!isEmpty"></view>
         <he-toast v-model="isLoading">
             <view class="he-loading flex flex-direction align-center">
                 <image class="he-loading__image" :src="ipAddress + '/cart-image-loading.gif'"></image>
@@ -59,7 +58,9 @@ import cartEmpty from "./components/cart-empty.vue";
 import heToast from "../../components/he-toast.vue";
 import heCart from "../../components/he-cart.vue";
 import cartItem from "./components/cart-item.vue";
+import heProductsFeatured from "../../components/he-products-featured.vue";
 import heLoading from "../../components/he-loading";
+import {mapGetters} from "vuex";
 
 export default {
     name: "index",
@@ -70,6 +71,7 @@ export default {
         heCart,
         cartItem,
         heLoading,
+        heProductsFeatured
     },
     data() {
         return {
@@ -81,12 +83,6 @@ export default {
             select: [],
             isEdit: false,
             isFirst: false,
-            options: [
-                {
-                    text: '删除',
-                    style: {}
-                }
-            ],
             selectObj: {},
             shopping: false,
             detail: {
@@ -100,12 +96,11 @@ export default {
         isLogin: function () {
             return this.$store.state.apply.is_login;
         },
-        actionStyle: function () {
-            return {
-                borderRadius: '16rpx',
-                marginBottom: '16rpx',
-                overflow: 'hidden'
-            }
+        ...mapGetters('setting', {
+            goodsSetting: 'goodsSetting'
+        }),
+        isEmpty: function () {
+            return this.$h.test.isEmpty(this.failure) && this.$h.test.isEmpty(this.list) && !this.isLoading;
         }
     },
     methods: {
@@ -167,21 +162,6 @@ export default {
             }).catch(function (err) {
                 console.error(err);
                 _this.$toError();
-            });
-        },
-        delItem: function (item, index, key) {
-            let _this = this;
-            this.$heshop.cart('delete', [item.id]).then(function () {
-                _this.$delete(_this[key], index);
-            }).catch(function (err) {
-                console.error(err);
-                _this.$toError();
-            });
-        },
-        open: function (index, key) {
-            this[key][index].show = true;
-            this[key].map((val, idx) => {
-                if (index != idx) this[key][idx].show = false;
             });
         },
         setRadio: function (index, key) {
@@ -272,7 +252,6 @@ export default {
     onLoad() {
         let _this = this;
         if (!this.isLogin) {
-            uni.navigateTo({url: '/pages/user/login'});
             _this.isFirst = true;
         } else {
             this.isLoading = true;

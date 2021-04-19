@@ -1,6 +1,6 @@
 <?php
 /**
- * 商品管理
+ * 上传
  * @link http://www.heshop.com/
  * @copyright Copyright (c) 2020 HeShop Software LLC
  * @license http://www.heshop.com/license/
@@ -8,7 +8,7 @@
 namespace leadmall\app;
 
 use basics\app\BasicsController as BasicsModules;
-use gallery\models\Upload;
+use app\components\Upload;
 use leadmall\Map;
 use Yii;
 
@@ -32,7 +32,7 @@ class UploadController extends BasicsModules implements Map
 
             $file      = $upload->image_base64($content);
             $url       = $file['url'];
-            $thumbnail = $upload->image_compress($url);
+            $thumbnail = $upload->image_compress($url,1000);
 
             if ($url !== $thumbnail) {
                 $path = Yii::$app->basePath;

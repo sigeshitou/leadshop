@@ -111,9 +111,6 @@ export default {
                 ],
                 appSecret: [
                     { required: true, message: '请输入AppSecret', trigger: 'blur' },
-                ],
-                file: [
-                    { required: true, message: '请上传验证文件', trigger: 'blur' },
                 ]
             },
             typeList: [{

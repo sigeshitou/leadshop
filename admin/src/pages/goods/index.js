@@ -18,6 +18,7 @@ import chooseCategory from "./components/chooseCategory.vue";
 import promote from "@/components/promote.vue";
 import emptyPopup from "./components/emptyPopup.vue";
 import groupManual from "./components/group-manual.vue";
+import editName from "./components/editName";
 //初始化变量
 let modules = {};
 
@@ -26,6 +27,7 @@ modules.install = function() {
     Heshop.component("goods", "chooseCategory", chooseCategory);
     Heshop.component("goods", "promote", promote);
     Heshop.component("goods", "emptyPopup", emptyPopup);
+    Heshop.component("goods", "editName", editName);
 
     //添加设置界面
     Heshop.component("goods", "role", confirmPopup);

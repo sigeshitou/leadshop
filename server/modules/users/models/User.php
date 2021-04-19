@@ -9,6 +9,8 @@ namespace users\models;
 
 use sizeg\jwt\Jwt;
 use Yii;
+use yii\web\ForbiddenHttpException;
+use yii\web\UnauthorizedHttpException;
 
 /**
  * This is the model class for table "{{%user}}".
@@ -126,6 +128,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             $id = $token->getClaim('id');
             if ($id) {
                 $data = static::find()->where(['id' => $id])->with(['oauth'])->one();
+                if (!$data) {
+                    throw new UnauthorizedHttpException('请先登录');
+                }
                 return $data;
             } else {
                 return null;

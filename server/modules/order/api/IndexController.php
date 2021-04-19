@@ -140,31 +140,11 @@ class IndexController extends BasicController
                     'user as user',
                 ])
                 ->where($w)
-                ->distinct()
+                ->groupBy(['order.id'])
                 ->count();
         }
 
         return $data_list;
-    }
-
-    public function test()
-    {
-        $list = M('order', 'OrderBuyer')::find()->where(['>', 'id', 500])->asArray()->all();
-        foreach ($list as $value) {
-            $post       = to_array($value['consignee_info']);
-            $buyer_data = [
-                'name'     => $post['name'],
-                'mobile'   => $post['mobile'],
-                'province' => $post['province'],
-                'city'     => $post['city'],
-                'district' => $post['district'],
-                'address'  => $post['address'],
-            ];
-            $buyer_model = M('order', 'OrderBuyer')::findOne($value['id']);
-            $buyer_model->setScenario('update');
-            $buyer_model->setAttributes($buyer_data);
-            $buyer_model->save();
-        }
     }
 
     /**
@@ -295,8 +275,8 @@ class IndexController extends BasicController
                         'freight as freight',
                     ])
                     ->where($where)
+                    ->groupBy(['order.id'])
                     ->orderBy($orderBy)
-                    ->distinct()
                     ->asArray(),
                 'pagination' => ['pageSize' => $pageSize, 'validatePage' => false],
             ]
@@ -490,8 +470,6 @@ class IndexController extends BasicController
             $order_goods                             = M('order', 'OrderGoods')::find()->where(['order_sn' => $model->order_sn])->select('goods_id,goods_param,goods_number')->asArray()->all();
             $this->module->event->cancel_order_goods = $order_goods;
             $this->module->trigger('cancel_order');
-            // $this->module->event->order_info = $model->toArray();
-            // $this->module->trigger('statistical_order');
             return ['status' => $model->status];
         } else {
             Error('操作失败');
@@ -537,8 +515,6 @@ class IndexController extends BasicController
             if ($freight_model->validate()) {
                 if ($freight_model->save()) {
                     $transaction->commit(); //事务执行
-                    // $this->module->event->order_info = $model->toArray();
-                    // $this->module->trigger('statistical_order');
                     return ['status' => $model->status];
                 } else {
                     $transaction->rollBack(); //事务回滚
@@ -616,8 +592,6 @@ class IndexController extends BasicController
         $model->received_time = time();
         $model->status        = 203;
         if ($model->save()) {
-            // $this->module->event->order_info = $model->toArray();
-            // $this->module->trigger('statistical_order');
             return ['status' => $model->status];
         } else {
             Error('操作失败');
@@ -700,7 +674,8 @@ class IndexController extends BasicController
         return $model;
     }
 
-    public static function check_order()
+    //还没有加列队,临时凑合着用
+    public static function checkOrder()
     {
         $AppID         = Yii::$app->params['AppID'];
         $time          = time();
@@ -728,7 +703,6 @@ class IndexController extends BasicController
                             M('goods', 'Goods')::updateAllCounters(['stocks' => $value['goods_number']], ['id' => $value['goods_id']]);
                         }
                     }
-                    // M('statistical', 'OrderLog')::updateAll(['status' => 102], ['order_sn' => $cancel_list]);
                 }
             }
         }
@@ -738,15 +712,11 @@ class IndexController extends BasicController
             M('order', 'Order')::updateAll(['status' => 203, 'finish_time' => $finish_time, 'evaluate_time' => $evaluate_time], ['order_sn' => $received_list]);
         }
 
-        // M('statistical', 'OrderLog')::updateAll(['status' => 203], ['order_sn' => $received_list]);
-
         $finish_list = M('order', 'Order')::find()->where(['and', ['AppID' => $AppID, 'status' => 203, 'after_sales' => 0], ['<=', 'finish_time', $time]])->select('order_sn')->asArray()->all();
         if (!empty($finish_list)) {
             $finish_list = array_column($finish_list, 'order_sn');
             M('order', 'Order')::updateAll(['status' => 204], ['order_sn' => $finish_list]);
         }
-
-        // M('statistical', 'OrderLog')::updateAll(['status' => 204], ['order_sn' => $finish_list]);
     }
 
 }

@@ -5,37 +5,44 @@
                 <image class="he-goods__image" :src="good.goods_image"></image>
                 <view class="he-goods__content ">
                     <view class="he-goods__name he-line-1">
-                        {{good.goods_name}}
+                        {{ good.goods_name }}
                     </view>
-                    <view class="he-goods__attr he-line-1">{{good.goods_param}}</view>
+                    <view class="he-goods__attr he-line-1">{{ good.goods_param }}</view>
                 </view>
             </view>
             <view class="he-body">
                 <view class="he-star flex align-center">
                     <view class="he-star__text">商品评分</view>
                     <view class="he-icons flex">
-                        <view class="iconfont iconevaluate_star" @click="form[index].star = 1;" :class="form[index].star >= 1 ? 'he-star__1' : 'he-star__0'"></view>
-                        <view class="iconfont iconevaluate_star" @click="form[index].star = 2;" :class="form[index].star >= 2 ? 'he-star__1' : 'he-star__0'"></view>
-                        <view class="iconfont iconevaluate_star" @click="form[index].star = 3;" :class="form[index].star >= 3 ? 'he-star__1' : 'he-star__0'"></view>
-                        <view class="iconfont iconevaluate_star" @click="form[index].star = 4;" :class="form[index].star >= 4 ? 'he-star__1' : 'he-star__0'"></view>
-                        <view class="iconfont iconevaluate_star" @click="form[index].star = 5;" :class="form[index].star === 5 ? 'he-star__1' : 'he-star__0'"></view>
+                        <view class="iconfont iconevaluate_star" @click="form[index].star = 1;"
+                              :class="form[index].star >= 1 ? 'he-star__1' : 'he-star__0'"></view>
+                        <view class="iconfont iconevaluate_star" @click="form[index].star = 2;"
+                              :class="form[index].star >= 2 ? 'he-star__1' : 'he-star__0'"></view>
+                        <view class="iconfont iconevaluate_star" @click="form[index].star = 3;"
+                              :class="form[index].star >= 3 ? 'he-star__1' : 'he-star__0'"></view>
+                        <view class="iconfont iconevaluate_star" @click="form[index].star = 4;"
+                              :class="form[index].star >= 4 ? 'he-star__1' : 'he-star__0'"></view>
+                        <view class="iconfont iconevaluate_star" @click="form[index].star = 5;"
+                              :class="form[index].star === 5 ? 'he-star__1' : 'he-star__0'"></view>
                     </view>
                     <view class="he-star__text he-evaluation-text">
-                        {{form[index].star | getStarText}}
+                        {{ form[index].star | getStarText }}
                     </view>
                 </view>
                 <view class="he-evaluation">
                     <textarea class="he-textarea"
-                        placeholder-style="font-size:26rpx;font-family: PingFang SC;font-weight: 500; color: #999999; line-height:1.3;"
-                        placeholder="说说你的购买体验，为更多小伙伴提供有价值的参考吧。"
-                        :maxlength="300"
-                        :value="form[index].content"
-                        @input="(e) => setTextarea(e, index)"
+                              placeholder-style="font-size:26rpx;font-family: PingFang SC;font-weight: 500; color: #999999; line-height:1.3;"
+                              placeholder="说说你的购买体验，为更多小伙伴提供有价值的参考吧。"
+                              :maxlength="300"
+                              :value="form[index].content"
+                              @input="(e) => setTextarea(e, index)"
                     ></textarea>
                     <view class="he-prompt flex">
-                        <view class="he-max">{{form[index].content.length}}/300</view>
+                        <view class="he-max">{{ form[index].content.length }}/300</view>
                         <view class="he-min" v-if="form[index].content.length < 10">
-                            再输入<text class="he-number">{{10 - form[index].content.length}}</text>个字就能发表了哦
+                            再输入
+                            <text class="he-number">{{ 10 - form[index].content.length }}</text>
+                            个字就能发表了哦
                         </view>
                     </view>
                 </view>
@@ -43,7 +50,7 @@
             <view class="he-footer">
                 <view class="he-top">
                     <text class="he-title">添加图片</text>
-                    <text class="he-number">({{form[index].images.length}}/6)</text>
+                    <text class="he-number">({{ form[index].images.length }}/6)</text>
                 </view>
                 <view class="he-bottom">
                     <he-upload-image
@@ -55,7 +62,9 @@
                 </view>
             </view>
         </view>
-        <button class="cu-btn he-submit__btn" :disabled="isDis" @click.once="submit" v-if="!$h.test.isEmpty(detail.goods)">提交</button>
+        <button class="cu-btn he-submit__btn" :disabled="isDis" @click.once="submit"
+                v-if="!$h.test.isEmpty(detail.goods)">提交
+        </button>
     </view>
 </template>
 
@@ -68,14 +77,14 @@ export default {
         heUploadImage
     },
     data() {
-      return {
-          form: [],
-          detail: {},
-          orderId: null
-      }
+        return {
+            form: [],
+            detail: {},
+            orderId: null
+        }
     },
     computed: {
-        isDis: function() {
+        isDis: function () {
             let num = 0;
             for (let i = 0; i < this.form.length; i++) {
                 if (this.form[i].content.length >= 10) {
@@ -93,12 +102,12 @@ export default {
             }
             this.form[index].content = str;
         },
-        removeImage: function(index, lists, key) {
+        removeImage: function (index, lists, key) {
             this.form[key].images.slice(index, 1);
         },
         getDetail: function (id) {
             let _this = this;
-            this.$heshop.order('get', id).then(function(res) {
+            this.$heshop.order('get', id).then(function (res) {
                 _this.detail = res;
                 res.goods.forEach(function (good) {
                     _this.form.push({
@@ -108,12 +117,12 @@ export default {
                         order_goods_id: good.id
                     });
                 });
-            }).catch(function(err) {
+            }).catch(function (err) {
                 console.error(err);
                 _this.$toError();
             });
         },
-        submit: function() {
+        submit: function () {
             let _this = this;
             this.$heshop.evaluate('post', {
                 order_sn: this.detail.order_sn,
@@ -123,13 +132,13 @@ export default {
                     id: _this.orderId
                 });
                 uni.navigateBack({delta: 1});
-            }).catch(function(err) {
+            }).catch(function (err) {
                 console.error(err);
                 _this.$toError();
             })
         },
-        uploaded: function(list, index) {
-            this.form[index].images = list.map(function(item) {
+        uploaded: function (list, index) {
+            this.form[index].images = list.map(function (item) {
                 return item.response;
             });
         }
@@ -139,7 +148,7 @@ export default {
         this.orderId = parseInt(options.id);
     },
     filters: {
-        getStarText: function(star) {
+        getStarText: function (star) {
             switch (star) {
                 case 5:
                     return '非常满意';
@@ -162,6 +171,7 @@ export default {
 .he-page-content {
     padding: 20px;
 }
+
 .he-content {
     width: 710px;
     background: #FFFFFF;
@@ -169,10 +179,12 @@ export default {
     padding: 16px 24px 32px 24px;
     margin-bottom: 20px;
 }
+
 .he-header {
     height: 132px;
     padding: 16px 0;
 }
+
 .he-goods__image {
     width: 100px;
     height: 100px;
@@ -180,11 +192,13 @@ export default {
     display: block;
     margin-right: 24px;
 }
+
 .he-goods__content {
     height: 100px;
     width: 538px;
     padding: 16px 0 0 0;
 }
+
 .he-goods__name {
     font-size: 26px;
     font-family: PingFang SC;
@@ -192,6 +206,7 @@ export default {
     color: #222222;
     line-height: 1.3;
 }
+
 .he-goods__attr {
     font-size: 22px;
     font-family: PingFang SC;
@@ -199,9 +214,11 @@ export default {
     color: #999999;
     margin-top: 10px;
 }
+
 .he-star {
     height: 88px;
 }
+
 .he-star__text {
     font-size: 26px;
     font-family: PingFang SC;
@@ -209,6 +226,7 @@ export default {
     color: #222222;
     margin-right: 4px;
 }
+
 .he-evaluation-text {
     margin-left: 23px;
     font-size: 26px;
@@ -216,18 +234,22 @@ export default {
     font-weight: 500;
     color: #222222;
 }
+
 .iconevaluate_star {
     width: 40px;
     height: 40px;
     font-size: 40px;
     margin-left: 20px;
 }
+
 .he-star__0 {
     color: #E5E5E5;
 }
+
 .he-star__1 {
     color: #FFC71C;
 }
+
 .he-evaluation {
     width: 662px;
     height: 280px;
@@ -237,6 +259,7 @@ export default {
     position: relative;
     margin: 16px 0;
 }
+
 .he-textarea {
     width: 614px;
     height: 200px;
@@ -246,6 +269,7 @@ export default {
     color: #222222;
     line-height: 1.3;
 }
+
 .he-prompt {
     position: absolute;
     font-size: 26px;
@@ -256,12 +280,15 @@ export default {
     bottom: 24px;
     right: 24px;
 }
+
 .he-min {
     margin-left: 17px;
 }
+
 .he-min .he-number {
     color: rgba(230, 11, 48, 1);
 }
+
 .he-footer .he-top {
     height: 73px;
     line-height: 73px;
@@ -270,13 +297,16 @@ export default {
     font-weight: 500;
     color: #222222;
 }
+
 .he-footer .he-top .he-title {
     color: #222222;
 }
+
 .he-footer .he-top .he-number {
     color: #999999;
     margin-left: 15px;
 }
+
 .he-submit__btn {
     width: 710px;
     height: 80px;
@@ -288,6 +318,7 @@ export default {
     color: #FFFFFF;
     margin-top: 36px;
 }
+
 .he-submit__btn[disabled] {
     background: #CCCCCC;
     color: #FFFFFF;

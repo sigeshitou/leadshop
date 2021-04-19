@@ -1,7 +1,7 @@
 <template>
     <view class="list-C" :data-theme="theme" v-if="newList.length > 0">
         <view class="he-group" v-for="(item, index) in newList"  :key="index">
-            <view class="he-item he-item__1" @click="navigateTo(item[0])" >
+            <view class="he-item he-item__1" @click="navigateTo(item[0])" v-if="item[0]">
                 <he-image :height="710" :width="710" :src="item[0].slideshow[0]"></he-image>
                 <view class="he-item__name he-line-1">{{item[0].name}}</view>
                 <view class="he-item__footer flex justify-between align-center">

@@ -8,7 +8,7 @@
             <view class="he-price">
                 <view>
                     <text class="he-total__text">合计：</text>
-                    <text class="he-total__price">¥{{total | floatPrice}}</text>
+                    <text class="he-total__price">¥{{ total | floatPrice }}</text>
                 </view>
                 <view class="he-shipping__text">不含运费</view>
             </view>
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import heRadio from "@/components/he-radio.vue";
+import heRadio from "../../../components/he-radio.vue";
 
 export default {
     name: "cart-settlement",
@@ -45,20 +45,20 @@ export default {
             get: function () {
                 return this.value;
             },
-            set: function(val) {
+            set: function (val) {
                 return this.$emit('input', val);
             }
         }
     },
     methods: {
-        submit: function(item) {
+        submit: function (item) {
             if (!this.$h.test.isEmpty(this.select)) {
                 this.$emit(item);
             } else {
                 this.$h.toast("您还没有选择宝贝哦");
             }
         },
-        setAll: function() {
+        setAll: function () {
             this.all = !this.all;
             this.$emit('setAll', !this.all);
         }
@@ -74,7 +74,9 @@ export default {
     height: 96px;
     background: #FFFFFF;
     padding: 0 20px;
+    z-index: 2;
 }
+
 .he-button {
     width: 180px;
     height: 72px;
@@ -86,6 +88,7 @@ export default {
     font-weight: bold;
     color: #FFFFFF;
 }
+
 .he-select__all {
     font-size: 24px;
     font-family: PingFang SC;
@@ -93,21 +96,25 @@ export default {
     color: #222222;
     margin-left: 16px;
 }
+
 .he-price {
     margin-right: 24px;
 }
+
 .he-total__text {
     font-size: 26px;
     font-family: PingFang SC;
     font-weight: 500;
     color: #222222;
 }
+
 .he-total__price {
     font-size: 32px;
     font-family: DINPro;
     font-weight: bold;
     @include font_color('font_color');
 }
+
 .he-shipping__text {
     font-size: 22px;
     font-family: PingFang SC;
@@ -115,6 +122,7 @@ export default {
     color: #999999;
     text-align: right;
 }
+
 .he-btn__delete {
     width: 180px;
     height: 72px;
@@ -128,13 +136,15 @@ export default {
     @include border_color("border_color");
     @include font_color('font_color');
 }
+
 .he-button[disabled] {
     background: #cccccc !important;
     opacity: 1;
     color: #FFFFFF;
 }
+
 .he-btn__delete[disabled] {
-  opacity: 1;
-  background-color: #FFFFFF!important;
+    opacity: 1;
+    background-color: #FFFFFF !important;
 }
 </style>

@@ -12,7 +12,7 @@ const pages = {
         status: -1,
         page: [],
         coms: null,
-        iframeHeight:0
+        iframeHeight: 0
     },
     mutations: {
         /**
@@ -21,8 +21,8 @@ const pages = {
          * @param {[type]} data  [description]
          */
         setAttribute(state, data) {
-            let { index, key, value } = data;
-            let { status } = state;
+            let {index, key, value} = data;
+            let {status} = state;
             state.page[index][key] = JSON.parse(JSON.stringify(value));
         },
         /**
@@ -90,7 +90,7 @@ const pages = {
          * @return {[type]}       [description]
          */
         pushPagesComs(context, data) {
-            let { dragIndex, coms, page, status, position } = context.state;
+            let {dragIndex, coms, page, status, position} = context.state;
             let element = JSON.parse(JSON.stringify(coms));
             //数据阻隔，否则在激活状态下，在顶部的增加数据会错乱
             let pages = JSON.parse(JSON.stringify(page));

@@ -8,7 +8,7 @@
 namespace leadmall\api;
 
 use basics\api\BasicsController as BasicsModules;
-use gallery\models\Upload;
+use app\components\Upload;
 use leadmall\Map;
 use Yii;
 
@@ -32,13 +32,7 @@ class ImageController extends BasicsModules implements Map
 
             $file      = $upload->image_base64($content);
             $url       = $file['url'];
-            $thumbnail = $upload->image_compress($url);
-            if ($url !== $thumbnail) {
-                $path = Yii::$app->basePath;
-                unlink($path .'/web'. $url);
-                $url = $thumbnail;
-            }
-
+            
         } elseif ($type == 2) {
 
             $content = $_FILES['content'];

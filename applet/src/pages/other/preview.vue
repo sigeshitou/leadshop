@@ -2,7 +2,7 @@
     <view class="he-page-content">
         <image class="he-image__content" :src="pic" @click="navigateBack"></image>
         <view class="he-name">
-           {{name}}
+            {{ name }}
         </view>
     </view>
 </template>
@@ -33,14 +33,16 @@ export default {
     background-color: #000000;
     overflow: hidden;
 }
+
 .he-image__content {
-    width:750px;
+    width: 750px;
     height: 750px;
     margin-top: 292px;
     // #ifdef H5
     object-fit: contain;
     // #endif
 }
+
 .he-name {
     width: 356px;
     border: 2px solid #FFFFFF;

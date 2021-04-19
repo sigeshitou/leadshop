@@ -3,7 +3,7 @@
                         'background-color': facade.background_color
                 }">
         <div class="navigation-text" :class="{'one':facade.nav_style==1,'two':facade.nav_style==2}" v-if="content.style==2">
-            <div class="navigation-text-item" v-for="item,index in navigation" :key="index" :style="{width:width}">
+            <div class="navigation-text-item" v-for="item,index in navigationData" :key="index" :style="{width:width}">
                 <span class="navigation-text-item__title" :style="{
                         color: facade.text_color
                 }">
@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="navigation-image" :class="{'one':facade.nav_style==1,'two':facade.nav_style==2}" v-if="content.style==1">
-            <div class="navigation-image-item" v-for="item,index in navigation" :key="index" :style="{width:width}">
+            <div class="navigation-image-item" v-for="item,index in navigationData" :key="index" :style="{width:width}">
                 <div class="navigation-image-item__cover" :style="{
                                           'background-image': 'url('+getCover(item.url)+')'
                                     }">
@@ -47,7 +47,7 @@ export default {
         return {
             navigation: [{
                 id: 1,
-                title: "商品名称",
+                title: "导航一",
                 url: "",
                 link: {},
             }]
@@ -58,20 +58,48 @@ export default {
      * @type {Object}
      */
     computed: {
+        navigationData: {
+            get() {
+                if (this.navigation.length === 0) {
+                    return [{
+                        url: "",
+                        title: "导航一",
+                        link: {}
+                    }, {
+                        url: "",
+                        title: "导航二",
+                        link: {}
+                    }, {
+                        url: "",
+                        title: "导航三",
+                        link: {}
+                    }, {
+                        url: "",
+                        title: "导航四",
+                        link: {}
+                    }]
+                } else {
+                    return this.navigation
+                }
+            },
+            set() {
+
+            }
+        },
         width() {
             if (this.facade.nav_style == 1) {
                 if (this.content.style == 1) {
-                    if (this.navigation.length > 5) {
+                    if (this.navigationData.length > 5) {
                         return "24%";
                     } else {
-                        return (100 / this.navigation.length) + "%";
+                        return (100 / this.navigationData.length) + "%";
                     }
                 }
                 if (this.content.style == 2) {
-                    if (this.navigation.length > 4) {
+                    if (this.navigationData.length > 4) {
                         return "30%";
                     } else {
-                        return (100 / this.navigation.length) + "%";
+                        return (100 / this.navigationData.length) + "%";
                     }
                 }
 

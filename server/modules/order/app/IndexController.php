@@ -100,8 +100,8 @@ class IndexController extends BasicController
                         'user as user',
                     ])
                     ->where($where)
+                    ->groupBy(['order.id'])
                     ->orderBy($orderBy)
-                    ->distinct()
                     ->asArray(),
                 'pagination' => ['pageSize' => $pageSize, 'validatePage' => false],
             ]
@@ -279,8 +279,6 @@ class IndexController extends BasicController
                     $table_name = $prefix . 'order_goods';
                     $goods_res  = Yii::$app->db->createCommand()->batchInsert($table_name, $col, $row)->execute();
                     if ($buyer_res && $goods_res) {
-                        // $this->module->event->order_info = $model->toArray();
-                        // $this->module->trigger('statistical_order');
                         array_push($order_list, ['order_sn' => $order_sn, 'order_id' => $model->attributes['id']]);
                     } else {
                         $transaction->rollBack(); //事务回滚
@@ -345,9 +343,8 @@ class IndexController extends BasicController
             $model->pay_type = '';
             $model->pay_time = time();
             if ($model->save()) {
-                $this->module->event->order_info = $model->toArray();
+                $this->module->event->pay_order_sn = $order_sn;
                 $this->module->trigger('pay_order');
-                // $this->module->trigger('statistical_order');
                 $this->module->event->user_statistical = ['UID' => $model->UID, 'buy_number' => 1, 'buy_amount' => $model->pay_amount, 'last_buy_time' => time()];
                 $this->module->trigger('user_statistical');
                 return true;
@@ -424,8 +421,6 @@ class IndexController extends BasicController
             $this->module->event->cancel_order_goods = $order_goods;
             $this->module->trigger('cancel_order');
 
-            // $this->module->event->order_info = $model->toArray();
-            // $this->module->trigger('statistical_order');
             return true;
         } else {
             Error('操作失败');
@@ -462,8 +457,6 @@ class IndexController extends BasicController
         $model->received_time = time();
         $model->status        = 203;
         if ($model->save()) {
-            // $this->module->event->order_info = $model->toArray();
-            // $this->module->trigger('statistical_order');
             return true;
         } else {
             Error('操作失败');

@@ -16,13 +16,15 @@
                                     </el-radio>
                                     <div class="picture-selet__detail-action"></div>
                                 </li>
-                                <li v-for="item,index in groupList">
-                                    <el-radio class="picture-selet__detail-radio" :label="index">
+                                <li v-for="(item, key) in groupList" :key="key">
+                                    <el-radio class="picture-selet__detail-radio" :label="key">
                                         <img src="http://manongyun.oss-cn-hangzhou.aliyuncs.com/Qmpaas/le-icon-folder.png">
                                         <el-input placeholder="请输入内容" v-model="item.name" v-if="is_edit===item.id">
-                                            <el-button slot="append" type="primary" @click="(e)=>{UpdateGroupItem(item);is_edit=-1}">确认</el-button>
+                                            <el-button slot="append" type="primary"
+                                                       @click="(e)=>{UpdateGroupItem(item);is_edit=-1}">确认
+                                            </el-button>
                                         </el-input>
-                                        <span v-else>{{item.name}}</span>
+                                        <span v-else>{{ item.name }}</span>
                                     </el-radio>
                                 </li>
                             </ul>
@@ -38,46 +40,53 @@
             <div class="picture-selet__layout">
                 <div class="picture-selet__header">
                     <el-breadcrumb separator-class="el-icon-arrow-right">
-                        <el-breadcrumb-item v-for="item,index in breadcrumb" :key="index">
-                            <span @click="handleCrumbItem(item,index)">{{item.name || item.title_name}}</span>
+                        <el-breadcrumb-item v-for="(item, key) in breadcrumb" :key="key">
+                            <span @click="handleCrumbItem(item,key)">{{ item.name || item.title_name }}</span>
                         </el-breadcrumb-item>
                     </el-breadcrumb>
                     <div class="picture-selet__action">
-                        <Upload :action="uploadFile" :multiple="true" :onSuccess="uploadOK" autoUpload >
+                        <Upload :action="uploadFile" :multiple="true" :onSuccess="uploadOK" autoUpload>
                             <el-button type="primary">上传图片</el-button>
                         </Upload>
                     </div>
                 </div>
                 <div class="picture-selet__content" :style="{height:limit>1?'355px':'486px'}">
                     <ul v-if="photoList.length>0" v-loading="loading">
-                        <li v-for="(item,index) in photoList">
+                        <li v-for="(item, key) in photoList" :key="key">
                             <label class="picture-selet__content-label" @dblclick.stop="handleDblClick(item)">
-                                <input class="picture-selet__content-input" :type="inputType" :value="item" v-model="checkedData" :disabled="checkedData.length == limit" v-if="item.type > 0">
+                                <input class="picture-selet__content-input" :type="inputType" :value="item"
+                                       v-model="checkedData" :disabled="checkedData.length == limit"
+                                       v-if="item.type > 0">
                                 <div class="picture-selet__content-item">
                                     <div class="picture-selet__content-close">
                                         <i class="le-icon le-icon-tick"></i>
                                     </div>
                                     <div class="picture-selet__content-item-photo">
                                         <div class="picture-selet__content-item-cover">
-                                            <el-image fit="cover" style="width: 100%; height: 100%" :src="item.url" v-if="item.type > 0"></el-image>
-                                            <el-image fit="cover" style="width: 100%; height: 100%" v-else src="http://manongyun.oss-cn-hangzhou.aliyuncs.com/Qmpaas/le-icon-folder.png"></el-image>
+                                            <el-image fit="cover" style="width: 100%; height: 100%" :src="item.url"
+                                                      v-if="item.type > 0"></el-image>
+                                            <el-image fit="cover" style="width: 100%; height: 100%" v-else
+                                                      src="http://manongyun.oss-cn-hangzhou.aliyuncs.com/Qmpaas/le-icon-folder.png"></el-image>
                                         </div>
                                     </div>
-                                    <el-button slot="reference" type="text">{{item.title_name}}</el-button>
+                                    <el-button slot="reference" type="text">{{ item.title_name }}</el-button>
                                 </div>
                             </label>
                         </li>
                     </ul>
                     <div v-else class="picture-selet__content-empty">
                         <div>
-                            <el-image fit="cover" style="width: 100%; height: 100%" src="http://qmxq.oss-cn-hangzhou.aliyuncs.com/gallery_bg.png"></el-image>
+                            <el-image fit="cover" style="width: 100%; height: 100%"
+                                      src="http://qmxq.oss-cn-hangzhou.aliyuncs.com/gallery_bg.png"></el-image>
                             <p>该分组下暂无内容</p>
                         </div>
                     </div>
                     <div class="picture-selet__paging">
                         <el-pagination
-                                       background
-                                       layout="prev, pager, next,jumper" :page-size="pageInfo.size" :current-page="pageInfo.current" :total="pageInfo.total" @current-change="handleSizeChange"></el-pagination>
+                            background
+                            layout="prev, pager, next,jumper" :page-size="pageInfo.size"
+                            :current-page="pageInfo.current" :total="pageInfo.total"
+                            @current-change="handleSizeChange"></el-pagination>
                     </div>
                 </div>
             </div>
@@ -89,10 +98,11 @@
                         已选 图片
                     </div>
                 </li>
-                <li v-for="item,index in checkedData" :key="index">
+                <li v-for="(item,key) in checkedData" :key="key">
                     <div class="picture-selet__footer-image">
                         <el-image style="width: 100%; height: 100%" :src="item.url" fit="cover"></el-image>
-                        <i class="le-icon le-icon-cha2 picture-selet__footer-close" @click="()=>{checkedData.splice(index, 1)}"></i>
+                        <i class="le-icon le-icon-cha2 picture-selet__footer-close"
+                           @click="()=>{checkedData.splice(key, 1)}"></i>
                     </div>
                 </li>
             </ul>
@@ -101,8 +111,9 @@
 </template>
 <script type="text/javascript">
 import Upload from '../photoSelect/upload.vue'
-import { createNamespacedHelpers } from 'vuex'
-const { mapState, mapActions, mapMutations } = createNamespacedHelpers('photo');
+import {createNamespacedHelpers} from 'vuex'
+
+const {mapState, mapActions, mapMutations} = createNamespacedHelpers('photo');
 export default {
     components: {
         Upload
@@ -117,6 +128,10 @@ export default {
          * @type {Number}
          */
         limit: {
+            type: Number,
+            default: 1
+        },
+        max: {
             type: Number,
             default: 1
         }
@@ -157,10 +172,12 @@ export default {
             /**
              * 处理分级
              */
-            breadcrumb: [{
-                id: -1,
-                name: "全部"
-            }]
+            breadcrumb: [
+                {
+                    id: -1,
+                    name: "全部"
+                }
+            ]
         }
     },
     /**
@@ -181,11 +198,12 @@ export default {
             }
             this.breadcrumb = [groupInfo];
             //设置当前分组信息
-            this.setGroupInfo(groupInfo)
+            this.setGroupInfo(groupInfo);
             //加载当前分组数组
-            this.LoadPhotoList({ id: groupInfo.id, current: 1, pageSize: this.pageSize })
+            this.LoadPhotoList({id: groupInfo.id, current: 1, pageSize: this.pageSize});
         },
         checkedData(value) {
+            console.log(value);
             if (value.length == this.photoList.length) {
                 this.isIndeterminate = false;
                 this.checkAll = true;
@@ -210,36 +228,23 @@ export default {
          * @return {[type]} [description]
          */
         pageSize() {
-            if (this.limit > 1) {
-                return 10;
-            } else {
-                return 15;
-            }
+            return this.limit > 1 ? 10 : 15;
         },
         inputType() {
-            if (this.limit > 1) {
-                return 'checkbox';
-            } else {
-                return 'radio';
-            }
+            console.log(this.max);
+            console.log(this.max > 1 ? "checkbox" : "radio");
+            return this.max > 1 ? "checkbox" : "radio";
         },
         /**
          * 是否创建
          * @return {Boolean} [description]
          */
         is_make() {
-            if (this.groupInfo.name == "全部") {
-                return false
-            }
-            if (this.groupInfo.name == "未分组") {
-                return false
+            if (this.groupInfo.name === "全部" || this.groupInfo.name === "未分组") {
+                return false;
             }
             let path = this.groupInfo.path || this.groupInfo.url || '0';
-            if (path.split("-").length >= 3) {
-                return false
-            }
-            return true;
-
+            return path.split("-").length < 3;
         },
         /**
          * 移动
@@ -250,11 +255,7 @@ export default {
                 return true;
             }
             let s = JSON.stringify(this.checkedData);
-            if ((s.indexOf('"type":0') > -1)) {
-                return true;
-            } else {
-                return false;
-            }
+            return s.indexOf('"type":0') > -1;
         },
         /**
          * 是否删除
@@ -277,7 +278,7 @@ export default {
          * @return {Boolean} [description]
          */
         is_rename() {
-            if (this.checkedData.length == 0) {
+            if (this.checkedData.length === 0) {
                 return true;
             }
             if (this.checkedData.length > 1) {
@@ -309,8 +310,8 @@ export default {
         ]),
         initialize() {
             setTimeout(() => {
-                this.LoadGroupList().then(res => {
-                    this.LoadPhotoList({ id: -1, current: 1, pageSize: this.pageSize })
+                this.LoadGroupList().then(() => {
+                    this.LoadPhotoList({id: -1, current: 1, pageSize: this.pageSize})
                 });
             }, 1000);
         },
@@ -328,19 +329,19 @@ export default {
                         name: '全部'
                     });
                     //重载分组列表
-                    this.LoadGroupList().then(res => {});
+                    this.LoadGroupList().then(() => {});
                 }
                 if (type == 2) {
                     setTimeout(() => {
                         let id = value.parent_id || this.groupInfo.id;
                         //重载当前分组列表
-                        this.LoadPhotoList({ id: id, current: 1, pageSize: this.pageSize }).then(res => {
+                        this.LoadPhotoList({id: id, current: 1, pageSize: this.pageSize}).then(() => {
                             this.loading = false;
                         });
                         //this.checkedData = [];
                     }, 500);
                 }
-            }).catch(error => {
+            }).catch(() => {
                 this.loading = false;
             })
         },
@@ -356,11 +357,15 @@ export default {
                 type: 'warning',
                 center: true
             }).then(() => {
-                this.DeleteGroupItem({ id, type }).then(() => {
+                this.DeleteGroupItem({id, type}).then(() => {
                     if (type == 1) {
                         setTimeout(() => {
                             //重载当前分组列表
-                            this.LoadPhotoList({ id: this.groupInfo.id, current: 1, pageSize: this.pageSize }).then(() => {
+                            this.LoadPhotoList({
+                                id: this.groupInfo.id,
+                                current: 1,
+                                pageSize: this.pageSize
+                            }).then(() => {
                                 this.loading = false;
                             });
                         }, 500);
@@ -407,9 +412,9 @@ export default {
                 }
             })
         },
-        uploadOK(){
+        uploadOK() {
             let _this = this;
-            setTimeout(function() {
+            setTimeout(function () {
                 _this.handleSizeChange();
             }, 1000);
         },
@@ -431,7 +436,7 @@ export default {
          */
         handleSizeChange(mumber = 1) {
             //重载当前分组列表
-            this.LoadPhotoList({ id: this.groupInfo.id, current: mumber, pageSize: this.pageSize });
+            this.LoadPhotoList({id: this.groupInfo.id, current: mumber, pageSize: this.pageSize});
             //this.checkedData = [];
         },
         /**
@@ -462,16 +467,14 @@ export default {
                     center: true
                 }).then(() => {
                     //处理素材删除
-                    this.DeletePhotoList(arr).then(data => {
+                    this.DeletePhotoList(arr).then(() => {
                         //重载当前分组列表
-                        this.LoadPhotoList({ id: this.groupInfo.id, current: 1, pageSize: this.pageSize }).then(res => {
+                        this.LoadPhotoList({id: this.groupInfo.id, current: 1, pageSize: this.pageSize}).then(() => {
                             this.loading = false;
                         });
                         //this.checkedData = [];
                     });
-                }).catch(() => {
-
-                });
+                }).catch(() => {});
             }
         },
         /**
@@ -483,9 +486,9 @@ export default {
             this.checkedData.map(item => {
                 _array.push(item.id);
             })
-            this.MovePhotoList({ list: _array, group_id }).then(res => {
+            this.MovePhotoList({list: _array, group_id}).then(() => {
                 //重载当前分组列表
-                this.LoadPhotoList({ id: this.groupInfo.id, current: 1, pageSize: this.pageSize });
+                this.LoadPhotoList({id: this.groupInfo.id, current: 1, pageSize: this.pageSize});
                 //this.checkedData = [];
             });
         },
@@ -495,16 +498,24 @@ export default {
          */
         handleRenameItem(data) {
             if (data.type == 0) {
-                this.handleEditClassify(data).then(res => {
+                this.handleEditClassify(data).then(() => {
                     //重载当前分组列表
-                    this.UpdateGroupItem({ id: this.groupInfo.id, current: this.pageInfo.current, pageSize: this.pageSize });
+                    this.UpdateGroupItem({
+                        id: this.groupInfo.id,
+                        current: this.pageInfo.current,
+                        pageSize: this.pageSize
+                    });
                     //this.checkedData = [];
                 })
             } else {
                 if (data.id) {
-                    this.UpdatePhotoItem(data).then(res => {
+                    this.UpdatePhotoItem(data).then(() => {
                         //重载当前分组列表
-                        this.LoadPhotoList({ id: this.groupInfo.id, current: this.pageInfo.current, pageSize: this.pageSize });
+                        this.LoadPhotoList({
+                            id: this.groupInfo.id,
+                            current: this.pageInfo.current,
+                            pageSize: this.pageSize
+                        });
                         //this.checkedData = [];
                     })
                 }
@@ -522,7 +533,7 @@ export default {
                 //面包屑
                 this.breadcrumb.push(value)
                 //重载当前分组列表
-                this.LoadPhotoList({ id: value.id, current: 1, pageSize: this.pageSize });
+                this.LoadPhotoList({id: value.id, current: 1, pageSize: this.pageSize});
                 //this.checkedData = [];
             }
         },
@@ -535,7 +546,7 @@ export default {
                 this.upadteGroupInfo(value);
                 this.breadcrumb = [value]
                 //重置图片数据信息
-                this.LoadPhotoList({ id: value.id, current: 1, pageSize: this.pageSize });
+                this.LoadPhotoList({id: value.id, current: 1, pageSize: this.pageSize});
                 //this.checkedData = [];
             }
             if (index === 1) {
@@ -545,7 +556,7 @@ export default {
                 let value = this.breadcrumb[1];
                 this.upadteGroupInfo(value);
                 //重置图片数据信息
-                this.LoadPhotoList({ id: value.id, current: 1, pageSize: this.pageSize });
+                this.LoadPhotoList({id: value.id, current: 1, pageSize: this.pageSize});
                 //this.checkedData = [];
             }
         }

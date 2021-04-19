@@ -95,8 +95,8 @@ class EvaluateController extends BasicController
                         'user as user',
                     ])
                     ->where($where)
+                    ->groupBy(['evaluate.id'])
                     ->orderBy(['created_time' => SORT_DESC])
-                    ->distinct()
                     ->asArray(),
                 'pagination' => ['pageSize' => $pageSize, 'validatePage' => false],
             ]
@@ -171,7 +171,7 @@ class EvaluateController extends BasicController
         }
     }
 
-    public static function check_evaluate()
+    public static function checkEvaluate()
     {
         $AppID      = Yii::$app->params['AppID'];
         $time       = time();

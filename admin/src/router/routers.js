@@ -9,7 +9,6 @@ import Package from '@/components/layout/package'
 import Console from '@/components/layout/console'
 
 
-
 /**
  * iview-admin中meta除了原生参数外可配置的参数:
  * hidden: (false) 设为true后在左侧菜单不会显示该页面选项
@@ -34,7 +33,8 @@ export default [
         component: Main,
         redirect: '/panel/index',
         name: 'leadshop',
-        children: [{
+        children: [
+            {
                 path: '/panel/index',
                 name: 'panel',
                 meta: {
@@ -48,9 +48,10 @@ export default [
                 path: '/goods/goods',
                 component: Aside, // Parent router-view
                 name: 'goods',
-                meta: { title: '商品', index: '2' },
+                meta: {title: '商品', index: '2'},
                 redirect: '/goods/index',
-                children: [{
+                children: [
+                    {
                         path: '/goods/index',
                         component: () => import('@/pages/goods/goods'),
                         name: 'goods_index',
@@ -158,9 +159,10 @@ export default [
                 path: '/order/order',
                 component: Aside, // Parent router-view
                 name: 'order',
-                meta: { title: '订单', index: '4' },
+                meta: {title: '订单', index: '4'},
                 redirect: '/order/index',
-                children: [{
+                children: [
+                    {
                         path: '/order/index',
                         component: () => import('@/pages/order/order'),
                         name: 'order_index',
@@ -223,6 +225,17 @@ export default [
                         }
                     },
                     {
+                        path: '/order/bulkShipping',
+                        component: () => import('@/pages/order/bulkShipping'),
+                        name: 'order_remark',
+                        meta: {
+                            keepAlive: true,
+                            title: '批量发货',
+                            parentMenu: '/order/order',
+                            icon: "le-icon-dingdan-piliangfahuo"
+                        }
+                    },
+                    {
                         path: '/order/freightTemplate',
                         component: Layout,
                         meta: {
@@ -231,7 +244,20 @@ export default [
                             parentMenu: '/order/order',
                             icon: "le-icon-distribution"
                         },
-                        children: [{
+                        children: [
+                            {
+                                path: '/order/logisticsSettings',
+                                component: () => import('@/pages/order/logisticsSettings'),
+                                name: 'order_logisticsSettings',
+                                hidden: false,
+                                meta: {
+                                    keepAlive: true,
+                                    subset: true,
+                                    title: '物流设置',
+                                    parentMenu: '/order/order'
+                                }
+                            },
+                            {
                                 path: '/order/freightTemplate',
                                 component: () => import('@/pages/order/freightTemplate'),
                                 name: 'order_freightTemplate',
@@ -315,9 +341,10 @@ export default [
                 path: '/users/users',
                 component: Aside, // Parent router-view
                 name: 'users',
-                meta: { title: '用户' },
+                meta: {title: '用户'},
                 redirect: '/users/index',
-                children: [{
+                children: [
+                    {
                         path: '/users/index',
                         component: () => import('@/pages/users/users'),
                         name: 'users_index',
@@ -362,9 +389,10 @@ export default [
                 path: '/store/store',
                 component: Aside, // Parent router-view
                 name: 'store',
-                meta: { title: '店铺' },
+                meta: {title: '店铺'},
                 redirect: '/store/color',
-                children: [{
+                children: [
+                    {
                         path: '/store/color',
                         component: () => import('@/pages/store/themeColor'),
                         name: 'store_themeColor',
@@ -414,9 +442,10 @@ export default [
                 path: '/channel/channel',
                 component: Aside, // Parent router-view
                 name: 'channel',
-                meta: { title: '渠道' },
+                meta: {title: '渠道'},
                 redirect: '/channel/weChat-info',
-                children: [{
+                children: [
+                    {
                         path: '/channel/weChat-info',
                         component: Layout,
                         meta: {
@@ -425,7 +454,8 @@ export default [
                             parentMenu: '/channel/channel',
                             icon: "le-icon-weixin2"
                         },
-                        children: [{
+                        children: [
+                            {
                                 path: '/channel/weChat-info',
                                 component: () => import('@/pages/channel/weChat-info'),
                                 meta: {
@@ -438,7 +468,7 @@ export default [
                                 component: () => import('@/pages/channel/weChat-pay'),
                                 meta: {
                                     keepAlive: true,
-                                    title: '支付配置',
+                                    title: '公众号',
                                     parentMenu: '/channel/channel'
                                 },
                             },
@@ -464,7 +494,8 @@ export default [
                             parentMenu: '/channel/channel',
                             icon: "le-icon-xiaochengxu"
                         },
-                        children: [{
+                        children: [
+                            {
                                 path: '/channel/applets-info',
                                 component: () => import('@/pages/channel/applets-info'),
                                 meta: {
@@ -488,9 +519,10 @@ export default [
                 path: '/setup/setup',
                 component: Aside, // Parent router-view
                 name: 'setup',
-                meta: { title: '设置' },
+                meta: {title: '设置'},
                 redirect: '/setup/index',
-                children: [{
+                children: [
+                    {
                         path: '/setup/index',
                         component: () => import('@/pages/setup/setup'),
                         name: 'setup_index',
@@ -537,17 +569,18 @@ export default [
 
         },
         redirect: '/finish/index',
-        children: [{
-            path: '/finish/index',
-            component: () => import('@/pages/pages/index'),
-            name: 'finish_index',
-            meta: {
-                keepAlive: true,
-                title: '微页面',
-                parentMenu: 'finish',
-                icon: ""
-            }
-        }]
+        children: [
+            {
+                path: '/finish/index',
+                component: () => import('@/pages/pages/index'),
+                name: 'finish_index',
+                meta: {
+                    keepAlive: true,
+                    title: '微页面',
+                    parentMenu: 'finish',
+                    icon: ""
+                }
+            }]
     },
     {
         path: '/package',
@@ -557,16 +590,22 @@ export default [
             title: '装修'
         },
         redirect: '/package/index',
-        children: [{
-            path: '/package/index',
-            component: () => import('@/pages/package/index'),
-            name: 'package_index',
-            meta: {
-                title: '微页面',
-                parentMenu: 'package',
-                icon: ""
+        children: [
+            {
+                path: '/package/index',
+                component: () => import('@/pages/package/index'),
+                name: 'package_index',
+                meta: {
+                    title: '微页面',
+                    parentMenu: 'package',
+                    icon: ""
+                }
             }
-        }]
+        ]
+    },
+    {
+        path: '/changelog',
+        component: () => import('@/pages/store/changelog'),
     },
     {
         path: "/store/pagePreview",

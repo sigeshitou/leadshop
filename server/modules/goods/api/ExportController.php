@@ -156,7 +156,7 @@ class ExportController extends BasicController
             ->with('param')
             ->where($where)
             ->asArray()
-            ->distinct()
+            ->groupBy(['id'])
             ->all();
 
         $tHeader     = [];

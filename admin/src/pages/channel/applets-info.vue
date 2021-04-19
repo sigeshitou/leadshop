@@ -51,6 +51,12 @@
                             <div class="le-item-tip">下载小程序码，用于推广与分享小程序</div>
                         </div>
                     </div>
+                    <div class="le-item flex">
+                        <div class="le-item__label">小程序包</div>
+                        <div class="le-item__value">
+                            <div class="le-item--download" @click="download()">下载小程序包</div>
+                        </div>
+                    </div>
                 </div>
                 <div class="le-info le-card">
                     <div class="le-info__header flex align-center">
@@ -76,6 +82,8 @@
 </template>
 
 <script>
+import fileDownload from "js-file-download";
+
 export default {
     name: "applets-info",
     data() {
@@ -145,6 +153,22 @@ export default {
                 this.qrcode = res.weapp.image;
             }).catch((err) => {
                 this.$message.error(err.data.message);
+            });
+        },
+        download: function() {
+            const downloading = this.$loading({
+                lock: true,
+                text: '下载中……',
+                spinner: 'el-icon-loading'
+            });
+            this.$heshop.download().then(res => {
+                //如何监听下载完成？
+                setTimeout(() => {
+                    downloading.close();
+                }, 1000)
+                fileDownload(res, 'wxapp.zip');
+            }).catch(err => {
+                console.error(err);
             });
         }
     },

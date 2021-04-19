@@ -1,140 +1,63 @@
 <template>
     <div class="le-matter">
-        <el-card class="le-form-card">
+        <div class="le-form-card">
             <div class="le-theme-list">
-                <div :class="{'he-theme__active': active ==='red_theme'}" @click="setActive('red_theme')" class="he-red">
-                    <div class="he-red__theme he-theme__heart">
-                    </div>
-                    <div class="he-active__box" v-if="active === 'red_theme'">
-                        <he-icon type="le-icon-shangse">
-                        </he-icon>
-                        <span class="he-active__text">
-                            使用中
-                        </span>
-                    </div>
-                </div>
-                <div :class="{'he-theme__active': active ==='purple_theme'}" @click="setActive('purple_theme')" class="he-purple">
-                    <div class="he-purple__theme he-theme__heart">
-                    </div>
-                    <div class="he-active__box" v-if="active === 'purple_theme'">
-                        <he-icon type="le-icon-shangse">
-                        </he-icon>
-                        <span class="he-active__text">
-                            使用中
-                        </span>
-                    </div>
-                </div>
-                <div :class="{'he-theme__active': active ==='blue_theme'}" @click="setActive('blue_theme')" class="he-blue">
-                    <div class="he-blue__theme he-theme__heart">
-                    </div>
-                    <div class="he-active__box" v-if="active === 'blue_theme'">
-                        <he-icon type="le-icon-shangse">
-                        </he-icon>
-                        <span class="he-active__text">
-                            使用中
-                        </span>
-                    </div>
-                </div>
-                <div :class="{'he-theme__active': active ==='green_theme'}" @click="setActive('green_theme')" class="he-green">
-                    <div class="he-green__theme he-theme__heart">
-                    </div>
-                    <div class="he-active__box" v-if="active === 'green_theme'">
-                        <he-icon type="le-icon-shangse">
-                        </he-icon>
-                        <span class="he-active__text">
-                            使用中
-                        </span>
-                    </div>
-                </div>
-                <div :class="{'he-theme__active': active ==='orange_theme'}" @click="setActive('orange_theme')" class="he-orange">
-                    <div class="he-origin__theme he-theme__heart">
-                    </div>
-                    <div class="he-active__box" v-if="active === 'orange_theme'">
-                        <he-icon type="le-icon-shangse">
-                        </he-icon>
-                        <span class="he-active__text">
-                            使用中
-                        </span>
-                    </div>
-                </div>
-                <div :class="{'he-theme__active': active ==='golden_theme'}" @click="setActive('golden_theme')" class="he-golden">
-                    <div class="he-golden__theme he-theme__heart">
-                    </div>
-                    <div class="he-active__box" v-if="active === 'golden_theme'">
-                        <he-icon type="le-icon-shangse">
-                        </he-icon>
-                        <span class="he-active__text">
-                            使用中
-                        </span>
+                <div :class="[{'he-theme__active': active ===item.key}]" :key="index" v-for="(item, index) in list" @click="setActive(item.key)" >
+                    <div class="he-theme__heart" :class="item.className"></div>
+                    <div class="he-active__box" v-if="active === item.key">
+                        <he-icon type="le-icon-shangse"></he-icon>
+                        <span class="he-active__text">使用中</span>
                     </div>
                 </div>
             </div>
             <div class="he-theme__preview">
-                <template v-if="active === 'red_theme'">
-                    <img class="he-preview__image" src="./image/he-1-goods.png">
-                    <img class="he-preview__image" src="./image/he-1-user.png">
-                    <img class="he-preview__image" src="./image/he-1-order.png">
-                    </img>
-                    </img>
-                    </img>
-                </template>
-                <template v-else-if="active === 'purple_theme'">
-                    <img class="he-preview__image" src="./image/he-2-goods.png">
-                    <img class="he-preview__image" src="./image/he-2-user.png">
-                    <img class="he-preview__image" src="./image/he-2-order.png">
-                    </img>
-                    </img>
-                    </img>
-                </template>
-                <template v-else-if="active === 'blue_theme'">
-                    <img class="he-preview__image" src="./image/he-3-goods.png">
-                    <img class="he-preview__image" src="./image/he-3-user.png">
-                    <img class="he-preview__image" src="./image/he-3-order.png">
-                    </img>
-                    </img>
-                    </img>
-                </template>
-                <template v-else-if="active === 'green_theme'">
-                    <img class="he-preview__image" src="./image/he-4-goods.png">
-                    <img class="he-preview__image" src="./image/he-4-user.png">
-                    <img class="he-preview__image" src="./image/he-4-order.png">
-                    </img>
-                    </img>
-                    </img>
-                </template>
-                <template v-else-if="active === 'orange_theme'">
-                    <img class="he-preview__image" src="./image/he-5-goods.png">
-                    <img class="he-preview__image" src="./image/he-5-user.png">
-                    <img class="he-preview__image" src="./image/he-5-order.png">
-                    </img>
-                    </img>
-                    </img>
-                </template>
-                <template v-else-if="active === 'golden_theme'">
-                    <img class="he-preview__image" src="./image/he-6-goods.png">
-                    <img class="he-preview__image" src="./image/he-6-user.png">
-                    <img class="he-preview__image" src="./image/he-6-order.png">
-                    </img>
-                    </img>
-                    </img>
+                <template v-for="(item, index) in list" >
+                    <template v-if="active === item.key">
+                        <img :key="index + '_goods'" class="he-preview__image" :src="require('./image/he-'+(index + 1)+'-goods.png')"/>
+                        <img :key="index + '_user'" class="he-preview__image" :src="require('./image/he-'+ (index + 1) +'-user.png')"/>
+                        <img :key="index + '_order'" class="he-preview__image" :src="require('./image/he-' +  (index + 1)  + '-order.png')"/>
+                    </template>
                 </template>
             </div>
-        </el-card>
+        </div>
         <div class="le-cardpin">
-            <el-button @click="setTheme" type="primary">
-                保存
-            </el-button>
+            <el-button @click="setTheme" type="primary">保存</el-button>
         </div>
     </div>
 </template>
 <script>
-import fileDownload from 'js-file-download'
 
 export default {
     name: "themeColor",
     data() {
         return {
-            active: 'red_theme'
+            active: 'red_theme',
+            list: [
+                {
+                    key: 'red_theme',
+                    className: 'he-red__theme'
+                },
+                {
+                    key: 'purple_theme',
+                    className: 'he-purple__theme'
+                },
+                {
+                    key: 'blue_theme',
+                    className: 'he-blue__theme'
+                },
+                {
+                    key: 'green_theme',
+                    className: 'he-green__theme'
+                },
+                {
+                    key: 'orange_theme',
+                    className: 'he-orange__theme'
+                },
+                {
+                    key: 'golden_theme',
+                    className: 'he-golden__theme'
+                }
+            ]
         }
     },
     mounted() {
@@ -171,13 +94,11 @@ export default {
 </script>
 <style scoped="">
 .le-form-card {
-    box-shadow: none !important;
-}
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 68px;
 
-.le-form-card /deep/.el-card__body {
-    padding: 48px;
 }
-
 .le-theme-list {
     display: flex;
 }
@@ -233,7 +154,7 @@ export default {
     background: linear-gradient(-45deg, #1FC551 0%, rgba(31, 197, 81, 0.4) 100%);
 }
 
-.he-origin__theme {
+.he-orange__theme {
     background: linear-gradient(-45deg, #FF7F00 0%, rgba(255, 127, 0, 0.4) 100%);
 }
 

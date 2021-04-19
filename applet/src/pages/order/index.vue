@@ -1,9 +1,11 @@
 <template>
     <view class="he-page-content">
-        <he-tabs ref="tabs" :list="tabs" :bar-height="4" :tabs-style="{position: 'fixed', top: 0, width: '100%', zIndex: 1}" :bar-bottom="24" :active-color="themeColor" :bold="false" bg-color="#F5F5F5"
+        <he-tabs ref="tabs" :list="tabs" :bar-height="4"
+                 :tabs-style="{position: 'fixed', top: 0, width: '100%', zIndex: 1}" :bar-bottom="24"
+                 :active-color="themeColor" :bold="false" bg-color="#F5F5F5"
                  :height="114" :is-scroll="false" @change="change" :current="current"></he-tabs>
         <index-list v-model="list" :tab-cur="tabCur"></index-list>
-        <view class="he-nothing"  v-show="isNothing">
+        <view class="he-nothing" v-show="isNothing">
             <image class="he-nothing__image" :src="ipAddress + '/order-background-empty.png'"></image>
             <view>暂无相关订单</view>
         </view>
@@ -17,6 +19,7 @@ import indexNav from "./components/index-nav.vue";
 import indexList from "./components/index-list.vue";
 import heLoadMore from "@/components/he-load-more.vue";
 import heTabs from "@/components/he-tabs.vue"
+
 export default {
     name: "index",
     data() {
@@ -32,23 +35,26 @@ export default {
             isNothing: false,
             loadStatus: 'loadmore',
             loading: false,
-            tabs: [{name: '全部', key: 'all'}, {name: '待付款', key: 'unpaid'}, {name: '待发货', key: 'unsent'}, {name: '待收货', key: 'unreceived'}, {name: '待评价', key: 'noevaluate'}]
+            tabs: [{name: '全部', key: 'all'}, {name: '待付款', key: 'unpaid'}, {name: '待发货', key: 'unsent'}, {
+                name: '待收货',
+                key: 'unreceived'
+            }, {name: '待评价', key: 'noevaluate'}]
         }
     },
     components: {
         indexNav,
         indexList,
-        heLoadMore,heTabs
+        heLoadMore, heTabs
     },
     methods: {
-        setTab: function(callBack) {
+        setTab: function (callBack) {
             let _this = this;
             this.page.current = 1;
             // this.list = [];
             this.isNothing = false;
             this.loading = true;
             this.loadStatus = "loadmore";
-            this.getList().then(function(res) {
+            this.getList().then(function (res) {
                 _this.loading = false;
                 _this.list = res;
                 _this.isNothing = _this.list.length === 0;
@@ -56,13 +62,13 @@ export default {
                 callBack();
             });
         },
-        getList: function() {
+        getList: function () {
             let _this = this;
             return new Promise(function (resolve) {
                 _this.$heshop.order('get', {
                     tab_key: _this.tabCur
                 }).page(_this.page.current, _this.page.size).then(function (res) {
-                    let { data, headers } = res;
+                    let {data, headers} = res;
                     resolve(data);
                     // #ifdef MP-WEIXIN
                     _this.page = {
@@ -78,21 +84,24 @@ export default {
                         size: +headers['x-pagination-per-page']
                     }
                     // #endif
-                }).catch(function(err) {
+                }).catch(function (err) {
                     console.error(err);
                     _this.$toError();
                 });
             });
         },
-        change: function(e) {
+        change: function (e) {
             let _this = this;
             _this.tabCur = _this.tabs[e].key;
-            this.setTab(function() {
+            this.setTab(function () {
                 _this.current = e;
             });
         }
     },
     onLoad(options) {
+        // #ifdef H5
+        this.$wechat.init();
+        // #endif
         this.tabCur = options.tabCur ? options.tabCur :'all';
         for (let i = 0; i < this.tabs.length; i++) {
             if (this.tabs[i].key === this.tabCur) {
@@ -100,10 +109,10 @@ export default {
             }
         }
         let _this = this;
-        this.getList().then(function(res) {
-          _this.list = res;
-          _this.isNothing = _this.list.length === 0;
-          _this.loadStatus = _this.list.length < _this.page.size ? 'nomore' : 'loadmore';
+        this.getList().then(function (res) {
+            _this.list = res;
+            _this.isNothing = _this.list.length === 0;
+            _this.loadStatus = _this.list.length < _this.page.size ? 'nomore' : 'loadmore';
         });
     },
     onShow() {
@@ -128,7 +137,7 @@ export default {
         if (this.page.count > this.page.current) {
             this.page.current++;
             this.loadStatus = "loading";
-            this.getList().then(function(res) {
+            this.getList().then(function (res) {
                 _this.list.push(...res);
                 _this.loadStatus = "loadmore";
             });
@@ -143,6 +152,7 @@ export default {
 .he-page-content {
     overflow: hidden;
 }
+
 .he-nothing {
     font-size: 26px;
     font-family: PingFang SC;
@@ -150,6 +160,7 @@ export default {
     color: #999999;
     text-align: center;
 }
+
 .he-nothing__image {
     width: 320px;
     height: 320px;

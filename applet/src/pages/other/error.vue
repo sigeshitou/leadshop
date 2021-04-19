@@ -2,10 +2,10 @@
     <view class="he-page-content">
         <image class="he-errImage" :src="ipAddress + '/error-background.png'"></image>
         <!--#ifdef MP-->
-        <view>小程序出错了，即将跳回首页({{num}}s)</view>
+        <view>小程序出错了，即将跳回首页({{ num }}s)</view>
         <!--#endif-->
         <!--#ifdef H5-->
-        <view>应用出错了，即将跳回首页({{num}}s)</view>
+        <view>应用出错了，即将跳回首页({{ num }}s)</view>
         <!--#endif-->
     </view>
 </template>
@@ -21,9 +21,9 @@ export default {
         this.setTime();
     },
     methods: {
-        setTime: function() {
+        setTime: function () {
             let _this = this;
-            setTimeout(function() {
+            setTimeout(function () {
                 _this.num = _this.num - 1;
                 if (_this.num > 0) {
                     _this.setTime();
@@ -39,7 +39,7 @@ export default {
 </script>
 <style scoped>
 .he-page-content {
-    padding-top:378px;
+    padding-top: 378px;
     font-family: PingFang SC;
     font-size: 26px;
     font-weight: 500;
@@ -47,6 +47,7 @@ export default {
     line-height: 1.3;
     text-align: center;
 }
+
 .he-errImage {
     width: 320px;
     height: 320px;

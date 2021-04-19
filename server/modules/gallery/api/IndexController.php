@@ -9,7 +9,7 @@
 namespace gallery\api;
 
 use framework\common\BasicController;
-use gallery\models\Upload;
+use app\components\Upload;
 use Yii;
 use yii\data\ActiveDataProvider;
 
@@ -92,12 +92,12 @@ class IndexController extends BasicController
             $where2['UID'] = $UID;
         }
 
-        $query1 = M('gallery', 'GalleryGroup')::find()->where($where)->select('id,name as title_name,is_deleted as type,parent_id,path as url,AppID as cover');
-        $query2 = M()::find()->where($where2)->select('id,title as title_name,type,group_id as parent_id,url,thumbnail as cover');
+        $query1 = M('gallery', 'GalleryGroup')::find()->where($where)->select('id,name as title_name,is_deleted as type,parent_id,path as url,AppID as cover,created_time');
+        $query2 = M()::find()->where($where2)->select('id,title as title_name,type,group_id as parent_id,url,thumbnail as cover,created_time');
         $query  = (new \yii\db\Query())->from($query1->union($query2, true));
         $data   = new ActiveDataProvider(
             [
-                'query'      => $query->orderBy(['type' => SORT_ASC, 'id' => SORT_DESC]),
+                'query'      => $query->orderBy(['type' => SORT_ASC, 'created_time' => SORT_DESC]),
                 'pagination' => ['pageSize' => intval($pageSize), 'validatePage' => false],
             ]
         );

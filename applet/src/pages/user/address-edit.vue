@@ -31,13 +31,15 @@
             <view class="he-info__item flex align-center justify-between">
                 <text class="he-item__label">所在地区</text>
                 <view class="flex align-center" @click="isAddress = true;">
-                    <text class="he-item__value he-area-text" v-if="form.province && form.city && form.district">{{form.province}}/{{form.city}}/{{form.district}}</text>
+                    <text class="he-item__value he-area-text" v-if="form.province && form.city && form.district">
+                        {{ form.province }}/{{ form.city }}/{{ form.district }}
+                    </text>
                     <text v-else class="he-placeholder he-area-text">请选择所在地区</text>
                     <view class="iconfont iconbtn_arrow"></view>
                 </view>
             </view>
             <view class="he-info__itemOther flex justify-between">
-                <view class="he-item__label" >详细地址</view>
+                <view class="he-item__label">详细地址</view>
                 <textarea
                     id="textarea"
                     @input="setArea"
@@ -86,7 +88,7 @@ export default {
         }
     },
     methods: {
-        chooseAddress: function() {
+        chooseAddress: function () {
             let _this = this;
             uni.chooseAddress({
                 success: function (res) {
@@ -97,7 +99,7 @@ export default {
                     _this.form.address = res.detailInfo;
                     _this.form.district = res.countyName;
                 },
-                fail: function(err) {
+                fail: function (err) {
                     console.error(err);
                     _this.$toError();
                 }
@@ -107,18 +109,18 @@ export default {
             let _this = this;
             this.$heshop.address('get', id).then(function (res) {
                 _this.form = res;
-            }).catch(function(err) {
+            }).catch(function (err) {
                 console.error(err);
                 _this.$toError();
             });
         },
-        setArea: function(e) {
+        setArea: function (e) {
             this.form.address = e.detail.value;
         },
-        setStatus: function() {
-            this.form.status  = this.form.status === 0 ? 1 : 0;
+        setStatus: function () {
+            this.form.status = this.form.status === 0 ? 1 : 0;
         },
-        submit: function() {
+        submit: function () {
             let _this = this;
             if (this.id) {
                 this.$heshop.address('put', this.id, this.form).then(function () {
@@ -130,7 +132,7 @@ export default {
                     uni.navigateBack({
                         delta: 1
                     });
-                }).catch(function(err) {
+                }).catch(function (err) {
                     console.error(err);
                     _this.$toError();
                 });
@@ -144,9 +146,12 @@ export default {
                     uni.navigateBack({
                         delta: 1
                     });
-                }).catch(function(err) {
-                    console.error(err);
-                    _this.$toError();
+                }).catch(function (err) {
+                    if (err.status === 422) {
+                        _this.$h.toast(err.data[0].message);
+                    } else {
+                        _this.$toError();
+                    }
                 });
             }
         },
@@ -165,18 +170,18 @@ export default {
                 _this.$toError();
             });
         },
-        selectArea: function(area) {
+        selectArea: function (area) {
             this.form.province = area[0].name;
             this.form.city = area[1].name;
             this.form.district = area[2].name;
         },
-        editAddress: function(val) {
+        editAddress: function (val) {
             this.form.status = val;
         }
     },
     onLoad(options) {
         if (options.id) {
-            this.id =parseInt(options.id);
+            this.id = parseInt(options.id);
             uni.setNavigationBarTitle({
                 title: '编辑收货地址'
             });
@@ -199,16 +204,19 @@ export default {
 .he-page-content {
     padding: 20px;
 }
+
 .he-box {
     background: #FFFFFF;
     border-radius: 16px;
 }
+
 .he-get-address {
     height: 96px;
     line-height: 96px;
     padding: 0 24px 0 32px;
     margin-bottom: 16px;
 }
+
 .he-get-address .he-text {
     font-size: 26px;
     font-family: PingFang SC;
@@ -216,56 +224,69 @@ export default {
     color: #222222;
     margin-left: 20px;
 }
+
 .iconbtn_arrow {
     width: 22px;
     height: 22px;
     font-size: 22px;
     color: #bebebe;
 }
+
 .iconaddress_wechataddress {
     width: 36px;
     height: 36px;
     font-size: 36px;
     color: RGBA(70, 187, 54, 1);
 }
+
 .he-info {
     padding: 16px 24px;
     margin-bottom: 16px;
 }
+
 .he-info__item {
     height: 100px;
     border-bottom: 1px solid #E5E5E5;
 }
+
 .he-item__label {
     font-size: 26px;
     font-family: PingFang SC;
     font-weight: 500;
     color: #222222;
 }
+
 .he-item__value {
     width: 506px;
 }
+
 .he-area-text {
     width: 484px;
 }
+
 .he-placeholder {
     font-size: 26px;
     font-family: PingFang SC;
     font-weight: 500;
     color: #999999;
 }
+
 .he-info__itemOther {
-    padding:38px 0 0 0;
+    padding: 38px 0 0 0;
 }
+
 .he-info__itemOther .he-item__label {
 }
+
 .he-info__itemOther .he-item__value {
     height: 127px;
 }
+
 .he-default {
     height: 96px;
     padding: 0 24px;
 }
+
 .he-default .he-text {
     font-size: 26px;
     font-family: PingFang SC;
@@ -281,11 +302,13 @@ export default {
     font-family: PingFang SC;
     font-weight: 500;
 }
+
 .he-save {
     margin-top: 80px;
     @include background_color('background_color');
     color: #FFFFFF;
 }
+
 .he-delete {
     background: #FFFFFF;
     border: 1px solid #CCCCCC;

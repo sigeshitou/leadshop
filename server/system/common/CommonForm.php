@@ -10,7 +10,6 @@
 
 namespace framework\common;
 
-
 class CommonForm extends \yii\base\Model
 {
     /**

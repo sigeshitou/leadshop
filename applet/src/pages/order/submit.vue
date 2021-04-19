@@ -37,13 +37,13 @@ export default {
                 goods_data: [],
                 pay_amount: 0
             },
-            goodsData:[],
+            goodsData: [],
             consigneeInfo: null,
             note: ''
         }
     },
     computed: {
-        disabled: function() {
+        disabled: function () {
             let bool = false;
             this.detail.goods_data.forEach(function (item) {
                 if (item.failure_reason) bool = true;
@@ -52,18 +52,18 @@ export default {
         }
     },
     methods: {
-        getPreview: function() {
+        getPreview: function () {
             let _this = this;
-            console.log('天哪')
             this.$heshop.order('post', {
                 calculate: 'calculate'
-            },{
+            }, {
                 goods_data: this.goodsData,
                 consignee_info: this.consigneeInfo
-            }).then(function(res) {
+            }).then(function (res) {
                 _this.detail = res;
-            }).catch(function(err) {
-               console.error(err);
+            }).catch(function (err) {
+                console.error(err);
+                _this.$toError();
             });
         },
         submit: function () {
@@ -78,12 +78,12 @@ export default {
                 consignee_info: this.consigneeInfo,
                 note: this.note,
                 source: 1
-            }).then(function(res) {
+            }).then(function (res) {
                 _this.$store.commit('cart/setCartAdd', true);
                 if (res.pay_total_amount !== 0) {
                     _this.$heshop.pay({
                         order_sn: res.order_sn
-                    }).then(function(data) {
+                    }).then(function (data) {
                         // #ifdef MP_WEIXIN
                         uni.redirectTo({
                             url: '/pages/order/successful?order_id=' + res.order_id
@@ -96,22 +96,22 @@ export default {
                             paySign: data.paySign,
                             signType: data.signType,
                             timestamp: data.timeStamp,
-                            success: function() {
+                            success: function () {
                                 uni.redirectTo({
                                     url: '/pages/order/successful?order_id=' + res.order_id
                                 });
                             },
-                            fail: function() {
+                            fail: function () {
                                 _this.$toError();
                             },
-                            cancel: function() {
+                            cancel: function () {
                                 uni.redirectTo({
                                     url: '/pages/order/index?tabCur=unpaid'
                                 });
                             }
                         });
                         // #endif
-                    }).catch(function(err) {
+                    }).catch(function (err) {
                         if (err.status === 403) {
                             _this.$h.toast(err.data.message);
                         }
@@ -124,15 +124,15 @@ export default {
                         url: '/pages/order/successful?order_id=' + res.order_id
                     });
                 }
-            }).catch(function(err) {
+            }).catch(function (err) {
                 if (err.status === 403) {
                     _this.$h.toast(err.data.message);
                     _this.$store.dispatch('setting/resetting');
-                    setTimeout(function() {
+                    setTimeout(function () {
                         uni.navigateBack({
                             delta: 1
                         });
-                    },1000);
+                    }, 1000);
                 } else {
                     _this.$toError();
                 }

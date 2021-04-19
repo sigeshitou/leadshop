@@ -11,9 +11,9 @@
         <el-row class="le-line"></el-row>
         <el-row>
             <el-col :span="8">
-                <el-card shadow="never" class="le-form-card he-do-info">
+                <div class="le-card he-do-info">
                     <div style="height: 150px;">
-                        <div class="he-status">{{detail.status | orderStatus}}</div>
+                        <div class="he-status">{{ detail.status | orderStatus }}</div>
                         <div class="he-cancel" v-if="detail.status === 101">买家取消</div>
                         <div class="he-cancel" v-if="detail.status === 102">订单超时未付款</div>
                         <div class="he-cancel" v-if="detail.status === 103">后台取消</div>
@@ -22,7 +22,7 @@
                         </div>
                         <template v-if="detail.status === 100">
                             <span class="he-received-text">
-                                买家未在{{detail.cancel_time | getTime2}}内付款
+                                买家未在{{ detail.cancel_time | getTime2 }}内付款
                             </span>
                             <he-link href="setup/index">
                                 <el-button type="text" class="he-goSetting he-purple">去设置</el-button>
@@ -33,7 +33,7 @@
                         </template>
                         <template v-if="detail.status === 202">
                             <span class="he-received-text">
-                                买家未在{{detail.received_time | getTime2}}内确认收货
+                                买家未在{{ detail.received_time | getTime2 }}内确认收货
                             </span>
                             <he-link href="setup/index">
                                 <el-button type="text" class="he-goSetting he-purple">去设置</el-button>
@@ -44,232 +44,281 @@
                         </template>
                         <div class="he-do-info__item">
                             <span class="he-label">订单号:</span>
-                            <span class="he-value">{{detail.order_sn}}</span>
+                            <span class="he-value">{{ detail.order_sn }}</span>
                         </div>
                         <div class="he-do-info__item">
                             <span class="he-label">下单时间:</span>
-                            <span class="he-value">{{detail.created_time | getTime}}</span>
+                            <span class="he-value">{{ detail.created_time | getTime }}</span>
                         </div>
                     </div>
-                    <popconfirm width="392px" v-if="detail.status === 100" @confirm="cancelItem(detail)" title="订单取消请谨慎操作，确定取消？">
+                    <popconfirm width="392px" v-if="detail.status === 100" @confirm="cancelItem(detail)"
+                                title="订单取消请谨慎操作，确定取消？">
                         <el-button class="he-do-btn">取消订单</el-button>
                     </popconfirm>
-                    <el-button class="he-do-btn" action="getNew" :disabled="afterShow(detail)" v-if="detail.status === 100" :title="'修改价格'" width="431" v-popup.modifyPrice="detail" module="order">修改价格</el-button>
-                    <el-button class="he-do-btn" :disabled="afterShow(detail)" v-if="detail.status === 201" title="订单发货" :id="detail.id+'_shipping'" width="512" module="order" v-popup.orderShipping="{item: detail}">发货</el-button>
-                    <el-button class="he-do-btn" v-if="detail.status === 202" title="修改物流" width="524" module="order" top="35vh" :id="detail.id +'_modify_logistics'" :disabled="afterShow(detail)" v-popup.modifyLogistics="{item: detail}">修改物流</el-button>
-                    <popconfirm width="440px" v-if="detail.status === 202" :disabled="afterShow(detail)" @confirm="confirmReceipt(detail)" title="确认收货请谨慎操作，确定买家已收货？">
+                    <el-button class="he-do-btn" action="getNew" :disabled="afterShow(detail)"
+                               v-if="detail.status === 100" :title="'修改价格'" width="431" v-popup.modifyPrice="detail"
+                               module="order">修改价格
+                    </el-button>
+                    <el-button class="he-do-btn" :disabled="afterShow(detail)" v-if="detail.status === 201" title="订单发货"
+                               :id="detail.id+'_shipping'" width="512" module="order"
+                               v-popup.orderShipping="{item: detail}">发货
+                    </el-button>
+                    <el-button class="he-do-btn" v-if="detail.status === 202" title="修改物流" width="524" module="order"
+                               top="35vh" :id="detail.id +'_modify_logistics'" :disabled="afterShow(detail)"
+                               v-popup.modifyLogistics="{item: detail}">修改物流
+                    </el-button>
+                    <popconfirm width="440px" v-if="detail.status === 202" :disabled="afterShow(detail)"
+                                @confirm="confirmReceipt(detail)" title="确认收货请谨慎操作，确定买家已收货？">
                         <el-button class="he-do-btn" :disabled="afterShow(detail)">确认收货</el-button>
                     </popconfirm>
-                </el-card>
+                </div>
             </el-col>
             <el-col :span="16">
-                <el-card shadow="never" class="le-form-card he-step">
-                    <div class="el-row--flex is-align-middle">
-                        <div class="el-row--flex is-justify-space-around ">
-                            <div class="he-buyer-orders">
-                                <div class="he-img__box el-row--flex is-justify-center is-align-middle" :class="detail.status === 100 ? 'he-img__select' : detail.status >= 100 ?
+                <div class="le-card he-step flex align-center justify-around">
+                    <div class="he-buyer-orders">
+                        <div class="he-img__box el-row--flex is-justify-center is-align-middle" :class="detail.status === 100 ? 'he-img__select' : detail.status >= 100 ?
                                 'he-img__active' : 'he-img__noActive'">
-                                    <he-icon class="img" type="le-icon-place-order"></he-icon>
+                            <he-icon class="img" type="le-icon-place-order"></he-icon>
+                        </div>
+                        <div class="he-title">买家下单</div>
+                        <div class="he-time">
+                            {{ detail.created_time | getDay }}<br/>
+                            {{ detail.created_time | getHour }}<br/>
+                        </div>
+                    </div>
+                    <div class="he-transition">
+                        <div class="he-dot-bar el-row--flex is-justify-space-around">
+                            <div class="he-dots" :class="detail.status > 100 ? 'he-select' : 'he-noSelect'"></div>
+                            <div class="he-dots" :class="detail.status > 100 ? 'he-select' : 'he-noSelect'"></div>
+                            <div class="he-dots" :class="detail.status > 100 ? 'he-select' : 'he-noSelect'"></div>
+                        </div>
+                        <div class="he-row"
+                             :class="detail.status > 100 ? 'he-row-select' : 'he-row-noSelect'"></div>
+                    </div>
+                    <template v-if="detail.status !== 101 && detail.status !== 102 && detail.status !== 103">
+                        <div class="he-buyer-payment">
+                            <div class="he-img__box el-row--flex is-justify-center is-align-middle" :class="detail.status === 201 ? 'he-img__select' : detail.status >= 202 ?
+                                    'he-img__active' : 'he-img__noActive'">
+                                <he-icon class="img" type="le-icon-payment"></he-icon>
+                            </div>
+                            <div class="he-title">买家付款</div>
+                            <div class="he-time" v-if="detail.pay_time">
+                                {{ detail.pay_time | getDay }}<br/>
+                                {{ detail.pay_time | getHour }}<br/>
+                            </div>
+                        </div>
+                        <template v-if="!isAfterOver">
+                            <div class="he-transition">
+                                <div class="he-dot-bar el-row--flex is-justify-space-around">
+                                    <div class="he-dots"
+                                         :class="detail.status >= 202 ? 'he-select' : 'he-noSelect'"></div>
+                                    <div class="he-dots"
+                                         :class="detail.status >= 202 ? 'he-select' : 'he-noSelect'"></div>
+                                    <div class="he-dots"
+                                         :class="detail.status >= 202 ? 'he-select' : 'he-noSelect'"></div>
                                 </div>
-                                <div class="he-title">买家下单</div>
-                                <div class="he-time">
-                                    {{detail.created_time | getDay}}<br />
-                                    {{detail.created_time | getHour}}<br />
+                                <div class="he-row"
+                                     :class="detail.status >= 202 ? 'he-row-select' : 'he-row-noSelect'"></div>
+                            </div>
+                            <div class="he-buyer-shipment">
+                                <div class="he-img__box  el-row--flex is-justify-center is-align-middle" :class="detail.status === 202 ? 'he-img__select' : detail.status >= 203
+                                    ? 'he-img__active':'he-img__noActive'">
+                                    <he-icon class="img" type="le-icon-delivery"></he-icon>
+                                </div>
+                                <div class="he-title">卖家发货</div>
+                                <div class="he-time" v-if="detail.status >= 202">
+                                    {{ detail.send_time | getDay }}<br/>
+                                    {{ detail.send_time | getHour }}<br/>
                                 </div>
                             </div>
                             <div class="he-transition">
                                 <div class="he-dot-bar el-row--flex is-justify-space-around">
-                                    <div class="he-dots" :class="detail.status > 100 ? 'he-select' : 'he-noSelect'"></div>
-                                    <div class="he-dots" :class="detail.status > 100 ? 'he-select' : 'he-noSelect'"></div>
-                                    <div class="he-dots" :class="detail.status > 100 ? 'he-select' : 'he-noSelect'"></div>
+                                    <div class="he-dots"
+                                         :class="detail.status >= 203 ? 'he-select' : 'he-noSelect'"></div>
+                                    <div class="he-dots"
+                                         :class="detail.status >= 203 ? 'he-select' : 'he-noSelect'"></div>
+                                    <div class="he-dots"
+                                         :class="detail.status >= 203 ? 'he-select' : 'he-noSelect'"></div>
                                 </div>
-                                <div class="he-row" :class="detail.status > 100 ? 'he-row-select' : 'he-row-noSelect'"></div>
+                                <div class="he-row"
+                                     :class="detail.status >= 203 ? 'he-row-select' : 'he-row-noSelect'"></div>
                             </div>
-                            <template v-if="detail.status !== 101 && detail.status !== 102 && detail.status !== 103">
-                                <div class="he-buyer-payment">
-                                    <div class="he-img__box el-row--flex is-justify-center is-align-middle" :class="detail.status === 201 ? 'he-img__select' : detail.status >= 202 ?
+                            <div class="he-buyer-receiving">
+                                <div class="he-img__box el-row--flex is-justify-center is-align-middle" :class="detail.status === 203 ? 'he-img__select' : detail.status === 204 ?
                                     'he-img__active' : 'he-img__noActive'">
-                                        <he-icon class="img" type="le-icon-payment"></he-icon>
-                                    </div>
-                                    <div class="he-title">买家付款</div>
-                                    <div class="he-time" v-if="detail.pay_time">
-                                        {{detail.pay_time | getDay}}<br />
-                                        {{detail.pay_time | getHour}}<br />
-                                    </div>
+                                    <he-icon class="img" type="le-icon-receipt"></he-icon>
                                 </div>
-                                <template v-if="!isAfterOver">
-                                    <div class="he-transition">
-                                        <div class="he-dot-bar el-row--flex is-justify-space-around">
-                                            <div class="he-dots" :class="detail.status >= 202 ? 'he-select' : 'he-noSelect'"></div>
-                                            <div class="he-dots" :class="detail.status >= 202 ? 'he-select' : 'he-noSelect'"></div>
-                                            <div class="he-dots" :class="detail.status >= 202 ? 'he-select' : 'he-noSelect'"></div>
-                                        </div>
-                                        <div class="he-row" :class="detail.status >= 202 ? 'he-row-select' : 'he-row-noSelect'"></div>
-                                    </div>
-                                    <div class="he-buyer-shipment">
-                                        <div class="he-img__box  el-row--flex is-justify-center is-align-middle" :class="detail.status === 202 ? 'he-img__select' : detail.status >= 203
-                                    ? 'he-img__active':'he-img__noActive'">
-                                            <he-icon class="img" type="le-icon-delivery"></he-icon>
-                                        </div>
-                                        <div class="he-title">卖家发货</div>
-                                        <div class="he-time" v-if="detail.status >= 202">
-                                            {{detail.send_time | getDay}}<br />
-                                            {{detail.send_time | getHour}}<br />
-                                        </div>
-                                    </div>
-                                    <div class="he-transition">
-                                        <div class="he-dot-bar el-row--flex is-justify-space-around">
-                                            <div class="he-dots" :class="detail.status >= 203 ? 'he-select' : 'he-noSelect'"></div>
-                                            <div class="he-dots" :class="detail.status >= 203 ? 'he-select' : 'he-noSelect'"></div>
-                                            <div class="he-dots" :class="detail.status >= 203 ? 'he-select' : 'he-noSelect'"></div>
-                                        </div>
-                                        <div class="he-row" :class="detail.status >= 203 ? 'he-row-select' : 'he-row-noSelect'"></div>
-                                    </div>
-                                    <div class="he-buyer-receiving">
-                                        <div class="he-img__box el-row--flex is-justify-center is-align-middle" :class="detail.status === 203 ? 'he-img__select' : detail.status === 204 ?
-                                    'he-img__active' : 'he-img__noActive'">
-                                            <he-icon class="img" type="le-icon-receipt"></he-icon>
-                                        </div>
-                                        <div class="he-title">买家收货</div>
-                                        <div class="he-time" v-if="detail.status >= 203">
-                                            {{detail.received_time | getDay}}<br />
-                                            {{detail.received_time | getHour}}<br />
-                                        </div>
-                                    </div>
-                                </template>
-                                <template v-if="isAfterOver">
-                                    <template v-if="detail.status >= 202 && detail.send_time">
-                                        <div class="he-transition">
-                                            <div class="he-dot-bar el-row--flex is-justify-space-around">
-                                                <div class="he-dots he-select"></div>
-                                                <div class="he-dots he-select"></div>
-                                                <div class="he-dots he-select"></div>
-                                            </div>
-                                            <div class="he-row" :class="detail.status >= 202 ? 'he-row-select' : 'he-row-noSelect'"></div>
-                                        </div>
-                                        <div class="he-buyer-shipment">
-                                            <div class="he-img__box  el-row--flex is-justify-center is-align-middle" :class="detail.status === 202 ? 'he-img__select' : detail.status >= 203
-                                    ? 'he-img__active':'he-img__noActive'">
-                                                <he-icon class="img" type="le-icon-delivery"></he-icon>
-                                            </div>
-                                            <div class="he-title">卖家发货</div>
-                                            <div class="he-time">
-                                                {{detail.send_time | getDay}}<br />
-                                                {{detail.send_time | getHour}}<br />
-                                            </div>
-                                        </div>
-                                    </template>
-                                    <template v-if="detail.status >= 203 && detail.received_time">
-                                        <div class="he-transition">
-                                            <div class="he-dot-bar el-row--flex is-justify-space-around">
-                                                <div class="he-dots he-select" :class="detail.status >= 203 ? '' : 'he-noSelect'"></div>
-                                                <div class="he-dots" :class="detail.status >= 203 ? 'he-select' : 'he-noSelect'"></div>
-                                                <div class="he-dots" :class="detail.status >= 203 ? 'he-select' : 'he-noSelect'"></div>
-                                            </div>
-                                            <div class="he-row" :class="detail.status >= 203 ? 'he-row-select' : 'he-row-noSelect'"></div>
-                                        </div>
-                                        <div class="he-buyer-receiving">
-                                            <div class="he-img__box el-row--flex is-justify-center is-align-middle" :class="detail.status === 203 ? 'he-img__select' : detail.status === 204 ?
-                                    'he-img__active' : 'he-img__noActive'">
-                                                <he-icon class="img" type="le-icon-receipt"></he-icon>
-                                            </div>
-                                            <div class="he-title">买家收货</div>
-                                            <div class="he-time">
-                                                {{detail.received_time | getDay}}<br />
-                                                {{detail.received_time | getHour}}<br />
-                                            </div>
-                                        </div>
-                                    </template>
-                                </template>
+                                <div class="he-title">买家收货</div>
+                                <div class="he-time" v-if="detail.status >= 203">
+                                    {{ detail.received_time | getDay }}<br/>
+                                    {{ detail.received_time | getHour }}<br/>
+                                </div>
+                            </div>
+                        </template>
+                        <template v-if="isAfterOver">
+                            <template v-if="detail.status >= 202 && detail.send_time">
                                 <div class="he-transition">
                                     <div class="he-dot-bar el-row--flex is-justify-space-around">
-                                        <div class="he-dots" :class="detail.status === 204? 'he-select' : 'he-noSelect'"></div>
-                                        <div class="he-dots" :class="detail.status === 204? 'he-select' : 'he-noSelect'"></div>
-                                        <div class="he-dots" :class="detail.status === 204? 'he-select' : 'he-noSelect'"></div>
+                                        <div class="he-dots he-select"></div>
+                                        <div class="he-dots he-select"></div>
+                                        <div class="he-dots he-select"></div>
                                     </div>
-                                    <div class="he-row" :class="detail.status >= 204 ? 'he-row-select' : 'he-row-noSelect'"></div>
+                                    <div class="he-row"
+                                         :class="detail.status >= 202 ? 'he-row-select' : 'he-row-noSelect'"></div>
                                 </div>
-                                <div class="he-successful-transaction">
-                                    <div class="he-img__box el-row--flex is-justify-center is-align-middle" :class="detail.status === 204 ? 'he-img__select' : 'he-img__noActive'">
-                                        <he-icon class="img" type="le-icon-order-finished"></he-icon>
+                                <div class="he-buyer-shipment">
+                                    <div class="he-img__box  el-row--flex is-justify-center is-align-middle"
+                                         :class="detail.status === 202 ? 'he-img__select' : detail.status >= 203
+                                    ? 'he-img__active':'he-img__noActive'">
+                                        <he-icon class="img" type="le-icon-delivery"></he-icon>
                                     </div>
-                                    <div class="he-title">{{isAfterOver ? '已完成' : '交易成功'}}</div>
-                                    <div class="he-time" v-if="detail.status >= 204">
-                                        {{detail.finish_time | getDay}}<br />
-                                        {{detail.finish_time | getHour}}<br />
-                                    </div>
-                                </div>
-                            </template>
-                            <template v-else>
-                                <div class="he-successful-transaction">
-                                    <div class="he-img__box el-row--flex is-justify-center is-align-middle" :class="detail.status === 101 || detail.status === 102 ||  detail.status === 103 ? 'he-img__select' : 'he-img__noActive'">
-                                        <he-icon class="img" type="le-icon-order-closed"></he-icon>
-                                    </div>
-                                    <div class="he-title">订单关闭</div>
+                                    <div class="he-title">卖家发货</div>
                                     <div class="he-time">
-                                        {{detail.cancel_time | getDay}}<br />
-                                        {{detail.cancel_time | getHour}}<br />
+                                        {{ detail.send_time | getDay }}<br/>
+                                        {{ detail.send_time | getHour }}<br/>
                                     </div>
                                 </div>
                             </template>
+                            <template v-if="detail.status >= 203 && detail.received_time">
+                                <div class="he-transition">
+                                    <div class="he-dot-bar el-row--flex is-justify-space-around">
+                                        <div class="he-dots he-select"
+                                             :class="detail.status >= 203 ? '' : 'he-noSelect'"></div>
+                                        <div class="he-dots"
+                                             :class="detail.status >= 203 ? 'he-select' : 'he-noSelect'"></div>
+                                        <div class="he-dots"
+                                             :class="detail.status >= 203 ? 'he-select' : 'he-noSelect'"></div>
+                                    </div>
+                                    <div class="he-row"
+                                         :class="detail.status >= 203 ? 'he-row-select' : 'he-row-noSelect'"></div>
+                                </div>
+                                <div class="he-buyer-receiving">
+                                    <div class="he-img__box el-row--flex is-justify-center is-align-middle" :class="detail.status === 203 ? 'he-img__select' : detail.status === 204 ?
+                                    'he-img__active' : 'he-img__noActive'">
+                                        <he-icon class="img" type="le-icon-receipt"></he-icon>
+                                    </div>
+                                    <div class="he-title">买家收货</div>
+                                    <div class="he-time">
+                                        {{ detail.received_time | getDay }}<br/>
+                                        {{ detail.received_time | getHour }}<br/>
+                                    </div>
+                                </div>
+                            </template>
+                        </template>
+                        <div class="he-transition">
+                            <div class="he-dot-bar el-row--flex is-justify-space-around">
+                                <div class="he-dots"
+                                     :class="detail.status === 204? 'he-select' : 'he-noSelect'"></div>
+                                <div class="he-dots"
+                                     :class="detail.status === 204? 'he-select' : 'he-noSelect'"></div>
+                                <div class="he-dots"
+                                     :class="detail.status === 204? 'he-select' : 'he-noSelect'"></div>
+                            </div>
+                            <div class="he-row"
+                                 :class="detail.status >= 204 ? 'he-row-select' : 'he-row-noSelect'"></div>
                         </div>
-                    </div>
-                </el-card>
+                        <div class="he-successful-transaction">
+                            <div class="he-img__box el-row--flex is-justify-center is-align-middle"
+                                 :class="detail.status === 204 ? 'he-img__select' : 'he-img__noActive'">
+                                <he-icon class="img" type="le-icon-order-finished"></he-icon>
+                            </div>
+                            <div class="he-title">{{ isAfterOver ? '已完成' : '交易成功' }}</div>
+                            <div class="he-time" v-if="detail.status >= 204">
+                                {{ detail.finish_time | getDay }}<br/>
+                                {{ detail.finish_time | getHour }}<br/>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div class="he-successful-transaction">
+                            <div class="he-img__box el-row--flex is-justify-center is-align-middle"
+                                 :class="detail.status === 101 || detail.status === 102 ||  detail.status === 103 ? 'he-img__select' : 'he-img__noActive'">
+                                <he-icon class="img" type="le-icon-order-closed"></he-icon>
+                            </div>
+                            <div class="he-title">订单关闭</div>
+                            <div class="he-time">
+                                {{ detail.cancel_time | getDay }}<br/>
+                                {{ detail.cancel_time | getHour }}<br/>
+                            </div>
+                        </div>
+                    </template>
+                </div>
             </el-col>
         </el-row>
         <el-row class="le-line"></el-row>
         <el-row class="he-note">
             <el-col>
-                <el-card shadow="never" class="le-form-card">
-                    <span class="he-note__text">商家备注：{{detail.note}}</span>
-                    <he-icon type="le-icon-editor" class="he-note__edit" title="商家备注" width="480" top="35vh" v-popup.merchantNotes="detail" module="order"></he-icon>
-                </el-card>
+                <div class="le-card">
+                    <span class="he-note__text">商家备注：{{ detail.note }}</span>
+                    <he-icon type="le-icon-editor" class="he-note__edit" title="商家备注" width="480" top="35vh"
+                             v-popup.merchantNotes="detail" module="order"></he-icon>
+                </div>
             </el-col>
         </el-row>
-        <template v-if="detail.status === 202">
+        <template v-if="detail.status >= 202">
             <el-row class="le-line"></el-row>
-            <el-row>
-                <el-col>
-                    <el-card shadow="never" class="le-form-card">
-                        <div style="font-size: 16px;margin-bottom: 5px;">物流信息</div>
-                        <div>
-                            <span class="he-logistics__title">发货方式：</span>
-                            <span class="he-logistics__value">{{detail.freight.type ==1?'自己联系快递':'无需物流'}}</span>
+            <div class="le-card">
+                <el-row class="flex he-info">
+                    <el-col  :span="6" :class="detail.freight.type == 1 ? 'he-form__line' : ''">
+                        <div class="he-title">
+                            <span>物流信息</span>
+                        </div>
+                        <div class="he-info__content">
+                            <div>
+                                <span class="he-logistics__title">发货方式：</span>
+                                <span class="he-logistics__value">{{ detail.freight.type == 1 ? '自己联系快递' : '无需物流' }}</span>
+                            </div>
                             <div style="display: inline-block;" v-if="detail.freight.type === 1">
-                                <span class="he-logistics__title">物流公司：</span>
-                                <span class="he-logistics__value">{{detail.freight.logistics_company}}</span>
+                                <div>
+                                    <span class="he-logistics__title">物流公司：</span>
+                                    <span class="he-logistics__value">{{ detail.freight.logistics_company }}</span>
+                                </div>
                                 <span class="he-logistics__title">快递单号：</span>
-                                <span class="he-logistics__value" style="margin-right: 0px;">{{detail.freight.freight_sn}}</span>
+                                <span class="he-logistics__value"
+                                      style="margin-right: 0;">{{ detail.freight.freight_sn }}</span>
                                 <el-button class="he-button" type="text" @click="copyTrackingNumber">复制</el-button>
                                 <input id="copy-tracking-number" :value="detail.freight.freight_sn">
                             </div>
                         </div>
-                    </el-card>
-                </el-col>
-            </el-row>
+                    </el-col>
+                    <el-col :span="18" class="he-logistics-details" v-if="detail.freight.type == 1">
+                        <div class="he-title">
+                            物流详情
+                        </div>
+                        <div class="he-info__content">
+                            <div style="padding: 0;" class="le-desc" v-if="logisticsList.length === 0">抱歉！未查到此运单物流信息，请确认运单号码是否正确，或联系客服</div>
+<!--                            <el-scrollbar style="height: 100%" v-else>-->
+                                <logistics-step :list="logisticsList"></logistics-step>
+<!--                            </el-scrollbar>-->
+                        </div>
+                    </el-col>
+                </el-row>
+            </div>
         </template>
         <el-row class="le-line"></el-row>
         <el-row class="he-info">
             <el-col>
-                <el-card shadow="never" class="le-form-card">
-                    <el-row class="el-row--flex ">
+                <div class="le-card">
+                    <el-row class="flex ">
                         <el-col class="he-info__box he-form__line" :span="isPay(detail.status) ? 6 : 8">
                             <div class="he-title">
                                 <span>收货信息</span>
-                                <he-icon v-if="detail.status === 201" type="le-icon-editor" size="18px" class="he-edit__price" :id="detail.id + '_price'" :title="'修改地址'" width="524" v-popup.changeAddress="{item:detail}" module="order"></he-icon>
+                                <he-icon v-if="detail.status === 201" type="le-icon-editor" size="18px"
+                                         class="he-edit__price" :id="detail.id + '_price'" :title="'修改地址'" width="524"
+                                         v-popup.changeAddress="{item:detail}" module="order"></he-icon>
                             </div>
                             <div class="he-info__content">
                                 <div class="he-info__item">
                                     <span class="he-label">收货人姓名:</span>
-                                    <span class="he-value">{{detail.buyer.name}}</span>
+                                    <span class="he-value">{{ detail.buyer.name }}</span>
                                 </div>
                                 <div class="he-info__item">
                                     <span class="he-label">联系方式:</span>
-                                    <span class="he-value">{{detail.buyer.mobile}}</span>
+                                    <span class="he-value">{{ detail.buyer.mobile }}</span>
                                 </div>
                                 <div class="he-info__item">
                                     <span class="he-label">收货地址:</span>
-                                    <span class="he-value">{{detail.buyer | getAddress}}</span>
+                                    <span class="he-value">{{ detail.buyer | getAddress }}</span>
                                 </div>
                             </div>
                         </el-col>
@@ -280,11 +329,11 @@
                             <div class="he-info__content">
                                 <div class="he-info__item">
                                     <span class="he-label">买家昵称:</span>
-                                    <span class="he-value">{{detail.user.nickname}}</span>
+                                    <span class="he-value">{{ detail.user.nickname }}</span>
                                 </div>
                                 <div class="he-info__item">
                                     <span class="he-label">买家留言:</span>
-                                    <span class="he-value">{{detail.buyer.note}}</span>
+                                    <span class="he-value">{{ detail.buyer.note }}</span>
                                 </div>
                             </div>
                         </el-col>
@@ -295,19 +344,19 @@
                             <div class="he-info__content">
                                 <div class="he-info__item">
                                     <span class="he-label">支付方式:</span>
-                                    <span class="he-value">{{detail.pay_type | getPayType}}</span>
+                                    <span class="he-value">{{ detail.pay_type | getPayType }}</span>
                                 </div>
                                 <div class="he-info__item">
                                     <span class="he-label">交易单号:</span>
-                                    <span class="he-value">{{detail.pay_number}}</span>
+                                    <span class="he-value">{{ detail.pay_number }}</span>
                                 </div>
                                 <div class="he-info__item">
                                     <span class="he-label">实付金额:</span>
-                                    <span class="he-value">¥{{detail.pay_amount}}</span>
+                                    <span class="he-value">¥{{ detail.pay_amount }}</span>
                                 </div>
                                 <div class="he-info__item">
                                     <span class="he-label">付款时间:</span>
-                                    <span class="he-value">{{detail.pay_time | getTime}}</span>
+                                    <span class="he-value">{{ detail.pay_time | getTime }}</span>
                                 </div>
                             </div>
                         </el-col>
@@ -316,31 +365,35 @@
                                 订单来源
                             </div>
                             <div class="he-info__content">
-                                <span class="he-value"> {{detail.source === 'weapp' ? '微信小程序' : detail.source === 'wechat' ? '公众号' : ''}}</span>
+                                <span
+                                    class="he-value"> {{
+                                        detail.source === 'weapp' ? '微信小程序' : detail.source === 'wechat' ? '公众号' : ''
+                                    }}</span>
                             </div>
                         </el-col>
                     </el-row>
-                </el-card>
+                </div>
             </el-col>
         </el-row>
         <el-row class="le-line"></el-row>
         <el-row>
             <el-col>
-                <el-card shadow="never" class="le-form-card">
+                <div class="le-card">
                     <el-table :data="detail.goods" style="width: 100%">
                         <el-table-column label="商品">
                             <template slot-scope="scope">
                                 <div class="el-row--flex ">
                                     <div class="he-goods__img__box">
                                         <img class="he_goods__pic" :src="scope.row.goods_image" alt="">
-                                        <div class="he-goods__after" v-if="scope.row.after_sales" @click="router(scope.row.id)">
-                                            {{scope.row.after | getAfter}}
+                                        <div class="he-goods__after" v-if="scope.row.after_sales"
+                                             @click="router(scope.row.id)">
+                                            {{ scope.row.after | getAfter }}
                                             <he-icon class="he-goods__after__icon" type="le-icon-arrow-right"></he-icon>
                                         </div>
                                     </div>
                                     <div class="le_goods__goodsinfo">
-                                        <div class="he_goods__name">{{scope.row.goods_name}}</div>
-                                        <div class="he-goods__attr">{{scope.row.show_goods_param}}</div>
+                                        <div class="he_goods__name">{{ scope.row.goods_name }}</div>
+                                        <div class="he-goods__attr">{{ scope.row.show_goods_param }}</div>
                                     </div>
                                 </div>
                             </template>
@@ -348,15 +401,15 @@
                         <el-table-column label="单价/数量">
                             <template slot-scope="scope">
                                 <div class="he-price-number">
-                                    ￥{{scope.row.goods_price}}<br />
-                                    ×{{scope.row.goods_number}}
+                                    ￥{{ scope.row.goods_price }}<br/>
+                                    ×{{ scope.row.goods_number }}
                                 </div>
                             </template>
                         </el-table-column>
                         <el-table-column label="商品金额">
                             <template slot-scope="scope">
                                 <div class="he-total-amount">
-                                    ￥{{scope.row.total_amount}}
+                                    ￥{{ scope.row.total_amount }}
                                 </div>
                             </template>
                         </el-table-column>
@@ -365,32 +418,53 @@
                         <div>
                             <div>
                                 <span class="he-label">商品总金额:</span>
-                                <span class="he-money">￥{{Math.floor((detail.goods_amount*1 + detail.goods_reduced*1)*100)/100}}</span>
+                                <span
+                                    class="he-money">￥{{
+                                        Math.floor((detail.goods_amount * 1 + detail.goods_reduced * 1) * 100) / 100
+                                    }}</span>
                             </div>
                             <div>
                                 <span class="he-label">运费:</span>
-                                <span class="he-money">￥{{Math.floor((detail.freight_amount*1 + detail.freight_reduced*1)*100)/100}}</span>
+                                <span
+                                    class="he-money">￥{{
+                                        Math.floor((detail.freight_amount * 1 + detail.freight_reduced * 1) * 100) / 100
+                                    }}</span>
                             </div>
                             <div v-if="detail.freight_reduced !== '0.00'">
                                 <span class="he-label">运费改价:</span>
-                                <span class="he-money">{{detail.freight_reduced * 1 < 0 ? '+' : '-' }}￥{{detail.freight_reduced * 1 < 0 ? -(detail.freight_reduced * 1) : detail.freight_reduced * 1}}</span> </div> <div v-if="detail.goods_reduced !== '0.00'">
-                                        <span class="he-label">商品改价:</span>
-                                        <span class="he-money">{{detail.goods_reduced * 1 < 0 ? '+' : '-' }}￥{{detail.goods_reduced * 1 < 0 ? -(detail.goods_reduced * 1) : detail.goods_reduced * 1}}</span> </div> <div v-if="detail.status > 200">
-                                                <span class="he-label">实付金额:</span>
-                                                <span class="he-money he-amount-price">￥{{detail.pay_amount}}</span>
+                                <span class="he-money">{{
+                                        detail.freight_reduced * 1 < 0 ? '+' : '-'
+                                    }}￥{{
+                                        detail.freight_reduced * 1 < 0 ? -(detail.freight_reduced * 1) : detail.freight_reduced * 1
+                                    }}</span>
+                            </div>
+                            <div v-if="detail.goods_reduced !== '0.00'">
+                                <span class="he-label">商品改价:</span>
+                                <span class="he-money">{{
+                                        detail.goods_reduced * 1 < 0 ? '+' : '-'
+                                    }}￥{{
+                                        detail.goods_reduced * 1 < 0 ? -(detail.goods_reduced * 1) : detail.goods_reduced * 1
+                                    }}</span>
+                            </div>
+                            <div v-if="detail.status > 200">
+                                <span class="he-label">实付金额:</span>
+                                <span class="he-money he-amount-price">￥{{ detail.pay_amount }}</span>
                             </div>
                         </div>
                     </div>
-                </el-card>
+                </div>
             </el-col>
         </el-row>
     </div>
 </template>
 <script>
-import popconfirm from "@/components/popconfirm.vue";
+import popconfirm from "../../components/popconfirm.vue";
+import logisticsStep from "./components/logisticsStep";
+
 export default {
     components: {
-        popconfirm
+        popconfirm,
+        logisticsStep
     },
     name: "orderDetail",
     data() {
@@ -405,22 +479,36 @@ export default {
                     nickname: ''
                 }
             },
-            isAfterOver: false
+            isAfterOver: false,
+            logisticsList: []
         }
     },
     mounted() {
-        this.getNew()
+        this.getNew();
     },
     methods: {
-        getNew: function() {
+        getNew: function () {
             let id = this.$heshop.utils.getQueryVariable('id');
             this.getDetail(parseInt(id));
         },
-        getDetail: function(id) {
+        getDetail: function (id) {
             this.loading = true;
+            let _this = this;
             this.$heshop.order('get', id).then(res => {
                 this.loading = false;
                 this.detail = res;
+                if (res.status >= 202) {
+                    this.$heshop.express('post', {
+                        no: res.freight.freight_sn,
+                        mobile: res.buyer.mobile,
+                        name: res.freight.logistics_company
+                    }).then(function (res) {
+                        console.log(res);
+                        _this.logisticsList = res.list.reverse();
+                    }).catch(function (err) {
+
+                    });
+                }
                 this.show();
                 return true;
             }).catch(err => {
@@ -429,7 +517,7 @@ export default {
             });
         },
         cancelItem(e) {
-            this.$heshop.order('put', { id: e.id, behavior: 'cancel' }, null).then(() => {
+            this.$heshop.order('put', {id: e.id, behavior: 'cancel'}, null).then(() => {
                 this.getDetail(e.id);
                 this.$message.success('取消成功');
             }).catch(err => {
@@ -437,20 +525,20 @@ export default {
             });
         },
         confirmReceipt(e) {
-            this.$heshop.order('put', { id: e.id, behavior: 'received' }, null).then(() => {
+            this.$heshop.order('put', {id: e.id, behavior: 'received'}, null).then(() => {
                 this.getDetail(e.id);
                 this.$message.success('收货成功');
             }).catch(err => {
                 this.$message.error(err.data.message);
             });
         },
-        copyTrackingNumber: function() {
+        copyTrackingNumber: function () {
             let input = document.getElementById("copy-tracking-number");
             input.select();
             document.execCommand("copy");
             this.$message.success('复制成功');
         },
-        router: function(id) {
+        router: function (id) {
             this.$router.push({
                 path: '/order/afterDetail',
                 query: {
@@ -458,7 +546,7 @@ export default {
                 }
             });
         },
-        afterShow: function(item) {
+        afterShow: function (item) {
             let goods = item.goods;
             let status = false;
             for (let i = 0; i < goods.length; i++) {
@@ -483,17 +571,17 @@ export default {
         }
     },
     computed: {
-        isPay: function() {
-            return function(data) {
+        isPay: function () {
+            return function (data) {
                 return data === 201 || data === 202 || data === 203 || data === 204;
             }
         }
     },
     filters: {
-        getAddress: function(data) {
+        getAddress: function (data) {
             return `${data.province}${data.city}${data.district}${data.address}`;
         },
-        getPayType: function(type) {
+        getPayType: function (type) {
             switch (type) {
                 case 'wechat':
                     return '微信支付';
@@ -503,7 +591,7 @@ export default {
                     return '— —';
             }
         },
-        getTime: function(time) {
+        getTime: function (time) {
             time = new Date(time * 1000);
             let y = time.getFullYear();
             let m = time.getMonth() + 1 < 10 ? '0' + (time.getMonth() + 1) : time.getMonth() + 1;
@@ -513,7 +601,7 @@ export default {
             let s = time.getSeconds() < 10 ? '0' + time.getSeconds() : time.getSeconds();
             return `${y}-${m}-${d} ${h}:${mm}:${s}`;
         },
-        getTime2: function(time) {
+        getTime2: function (time) {
             let days = time - Date.parse(new Date()) / 1000;
             if (days > 0) {
                 let day = Math.floor(days / (24 * 60 * 60));
@@ -528,21 +616,21 @@ export default {
                 return '0秒';
             }
         },
-        getDay: function(time) {
+        getDay: function (time) {
             time = new Date(time * 1000);
             let y = time.getFullYear();
             let m = time.getMonth() + 1 < 10 ? '0' + (time.getMonth() + 1) : time.getMonth() + 1;
             let d = time.getDate() < 10 ? '0' + time.getDate() : time.getDate();
             return `${y}-${m}-${d}`;
         },
-        getHour: function(time) {
+        getHour: function (time) {
             time = new Date(time * 1000);
             let h = time.getHours() < 10 ? '0' + time.getHours() : time.getHours();
             let mm = time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes();
             let s = time.getSeconds() < 10 ? '0' + time.getSeconds() : time.getSeconds();
             return `${h}:${mm}:${s}`;
         },
-        orderStatus: function(status) {
+        orderStatus: function (status) {
             switch (status) {
                 case 100:
                     return '待付款';
@@ -562,7 +650,7 @@ export default {
                     return '已完成';
             }
         },
-        getAfter: function(after) {
+        getAfter: function (after) {
             if (after.status === 200) {
                 if (after.type === 0) {
                     return "已退款";
@@ -583,6 +671,8 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+@import "./orderDetail.less";
+
 .le-form-card {
     border-radius: 16px;
 }
@@ -625,7 +715,7 @@ export default {
     /deep/ .el-card__body {
         height: 100%;
 
-        >.is-align-middle.el-row--flex {
+        > .is-align-middle.el-row--flex {
             height: 100%;
         }
     }
@@ -783,7 +873,7 @@ export default {
 
 .he-do-info {
     height: 249px;
-    padding: 0px 20px;
+    padding: 32px 20px;
 
     .he-status {
         font-size: 20px;
@@ -877,7 +967,7 @@ export default {
 }
 
 .he-total-amount,
-/deep/.has-gutter .cell {
+/deep/ .has-gutter .cell {
     text-align: center;
 }
 
@@ -890,7 +980,7 @@ export default {
     text-align: center;
 }
 
-.he-note /deep/.el-card__body {
+.he-note {
     .he-note__edit {
         font-size: 16px !important;
         display: inline-block;
@@ -945,7 +1035,7 @@ export default {
         border-right: 1px solid #DCDFE6;
     }
 
-    /deep/.el-card__body {
+    /deep/ .el-card__body {
         padding: 24px 0;
     }
 
@@ -991,7 +1081,7 @@ export default {
     }
 }
 
-/deep/.el-table thead th {
+/deep/ .el-table thead th {
     height: 40px;
     padding: 0;
     margin: 0px;
@@ -1010,11 +1100,11 @@ export default {
     z-index: -10;
 }
 
-/deep/.is-always-shadow {
+/deep/ .is-always-shadow {
     box-shadow: none;
 }
 
-.le-matter /deep/.el-tabs--card>.el-tabs__content {
+.le-matter /deep/ .el-tabs--card > .el-tabs__content {
     box-shadow: none;
 }
 

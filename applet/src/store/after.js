@@ -7,16 +7,12 @@ const after = {
         }
     },
     mutations: {
-        cancelAfter: function(state, data) {
+        cancelAfter: function (state, data) {
             state.cancel_after = data;
         }
     },
-    getters: {
-
-    },
-    actions: {
-
-    }
+    getters: {},
+    actions: {}
 };
 
 export default after;

@@ -37,8 +37,8 @@ export default {
     },
     filters: {
         setleng: (value) => {
-            if (value.length > 9) {
-                return value.substring(0, 7) + "..."
+            if (value.length > 6) {
+                return value.substring(0, 4) + "..."
             } else {
                 return value
             }

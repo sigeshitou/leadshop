@@ -1,8 +1,7 @@
 <script>
 export default {
-    globalData: {
-    },
-    onLaunch: function(options) {
+    globalData: {},
+    onLaunch: function (options) {
         return new Promise(() => {
             let _this = this;
             // #ifdef H5
@@ -13,7 +12,7 @@ export default {
             this.$store.dispatch('setting/getTabBar');
         });
     },
-    onShow: function() {
+    onShow: function () {
         // 获取商城设置
         this.$store.dispatch('setting/getSetting');
         // 获取主题色
@@ -23,7 +22,7 @@ export default {
         this.$store.dispatch('user/authLogin');
         // #endif
     },
-    onHide: function() {
+    onHide: function () {
     }
 }
 </script>
@@ -37,4 +36,5 @@ uni-page-head {
     display: none;
 }
 // #endif
+
 </style>

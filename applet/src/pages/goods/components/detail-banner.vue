@@ -1,5 +1,5 @@
 <template>
-    <view class="he-swiper-wrap">
+    <view class="he-swiper-wrap" id="detail-banner">
         <swiper class="he-swiper-notice" autoplay vertical v-if="orderList.length && goodsSetting.order_list_roll">
             <swiper-item v-for="(item, index) in orderList" :key="index">
                 <view class="he-item flex align-center">

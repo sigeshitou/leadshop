@@ -28,5 +28,6 @@ export default {
     height: 480px;
     background: #000000;
     margin: 0 119px;
+    object-fit: contain;
 }
 </style>

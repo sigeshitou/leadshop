@@ -30,6 +30,7 @@ class OrderAfter extends CommonModels
     const user_note             = ['varchar' => 255, 'comment' => '用户备注'];
     const user_freight_info     = ['text' => 0, 'comment' => '用户物流信息JSON'];
     const refuse_reason         = ['varchar' => 255, 'comment' => '拒绝原因'];
+    const second_refuse_reason  = ['varchar' => 255, 'comment' => '第二次拒绝原因'];
     const merchant_note         = ['varchar' => 255, 'comment' => '商家备注'];
     const merchant_freight_info = ['text' => 0, 'comment' => '商家物流信息JSON'];
     const process               = ['text' => 0, 'comment' => '售后流程'];

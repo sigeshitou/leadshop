@@ -1,41 +1,33 @@
 <template>
     <div class="le-matter">
-        <el-row>
-            <el-col>
-                <el-breadcrumb separator-class="el-icon-arrow-right">
-                    <el-breadcrumb-item class="he-link" >
-                        <he-link href="setup/address">
-                            退货地址
-                        </he-link>
-                    </el-breadcrumb-item>
-                    <el-breadcrumb-item>{{form.id?'编辑地址':'新建地址'}}</el-breadcrumb-item>
-                </el-breadcrumb>
-            </el-col>
-        </el-row>
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+            <el-breadcrumb-item class="he-link" >
+                <he-link href="setup/address">
+                    退货地址
+                </he-link>
+            </el-breadcrumb-item>
+            <el-breadcrumb-item>{{form.id?'编辑地址':'新建地址'}}</el-breadcrumb-item>
+        </el-breadcrumb>
         <el-row class="le-line"></el-row>
-        <el-row>
-            <el-col>
-                <el-card class="le-form-card">
-                    <el-form ref="ruleForm" :model="form" label-width="176px" :rules="rules">
-                        <el-form-item label="收件人姓名" prop="name">
-                            <el-input v-model="form.name" placeholder="请输入收件人姓名"></el-input>
-                        </el-form-item>
-                        <el-form-item label="联系方式" prop="mobile">
-                            <el-input v-model="form.mobile" placeholder="请输入联系方式"></el-input>
-                        </el-form-item>
-                        <el-form-item label="联系地址" prop="addressList">
-                            <el-cascader
-                                v-model="form.addressList"
-                                :options="district"
-                                :props="{ expandTrigger: 'hover' }"></el-cascader>
-                        </el-form-item>
-                        <el-form-item label="详细地址" prop="address">
-                            <el-input type="textarea" placeholder="请输入详细地址" v-model="form.address"></el-input>
-                        </el-form-item>
-                    </el-form>
-                </el-card>
-            </el-col>
-        </el-row>
+        <div class="le-form-card">
+            <el-form ref="ruleForm" :model="form" label-width="176px" :rules="rules">
+                <el-form-item label="收件人姓名" prop="name">
+                    <el-input v-model="form.name" placeholder="请输入收件人姓名"></el-input>
+                </el-form-item>
+                <el-form-item label="联系方式" prop="mobile">
+                    <el-input v-model="form.mobile" placeholder="请输入联系方式"></el-input>
+                </el-form-item>
+                <el-form-item label="联系地址" prop="addressList">
+                    <el-cascader
+                        v-model="form.addressList"
+                        :options="district"
+                        :props="{ expandTrigger: 'hover' }"></el-cascader>
+                </el-form-item>
+                <el-form-item label="详细地址" prop="address">
+                    <el-input type="textarea" placeholder="请输入详细地址" v-model="form.address"></el-input>
+                </el-form-item>
+            </el-form>
+        </div>
         <div class="le-cardpin">
             <el-button type="primary" @click="save">保存</el-button>
         </div>
@@ -142,7 +134,7 @@ export default {
 .le-form-card {
     background: #FFFFFF;
     border-radius: 16px;
-    box-shadow: none !important;
+    padding: 20px;
 }
 /deep/ .el-textarea {
     width: 280px;

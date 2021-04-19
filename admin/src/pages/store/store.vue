@@ -75,7 +75,7 @@
                 </el-pagination>
             </div>
         </div>
-        <he-loading :show="load"></he-loading>
+        <he-loading :show="load" title="模板启用中，请稍后..."></he-loading>
     </div>
 </template>
 <script type="text/javascript">
@@ -98,9 +98,9 @@ export default {
 
             },
             firstPage: {},
-            origin: '',
             loading: true,
-            load: false
+            load: false,
+            origin: $_W.AppWEB
         };
     },
     /**
@@ -136,7 +136,6 @@ export default {
      * @return {[type]} [description]
      */
     created() {
-        this.origin = $_W.AppURL + '/h5/';
     },
     /**
      * 数据监听
@@ -240,7 +239,7 @@ export default {
                     _this.qrcode = res;
                     resolve()
                 }).catch((err) => {
-                    this.$message.error(err.data.message);
+                    _this.$message.error(err.data.message);
                     reject();
                 });
             });

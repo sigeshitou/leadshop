@@ -1,6 +1,6 @@
 <template>
     <view class="tabs">
-        <view class="tabs-header" :class="{'active':active}">
+        <view class="tabs-header" :style="{top: top + 'px',background:background}" :class="{'active':active}">
             <checkbox-group @change="checkboxChange">
                 <label class="tabs-header-icon" v-if="is_arrow">
                     <checkbox class="tabs-header-checkbox" value="cb" />
@@ -13,7 +13,7 @@
             <radio-group @change="radioChange" class="tabs-header-list" :class="{'tab-active':active}">
                 <label ref="imgBox" class="tabs-header-item" v-for="(item,index) in content.data" :key="index">
                     <radio class="tabs-header-radio" :value="`${index}`"></radio>
-                    <view class="tabs-header-title" :class="{'active':index === select}">{{item.title}}</view>
+                    <view class="tabs-header-title" :class="{'active':index === select}">{{ item.title }}</view>
                 </label>
             </radio-group>
         </view>
@@ -28,16 +28,28 @@
 </template>
 <script type="text/javascript">
 import Goods from '../goods/goods.vue'
+import { mapGetters } from "vuex";
+
 export default {
     components: {
         Goods
     },
     props: {
+        background: {
+            type: [Object, Array, String],
+            default: "#7f7f7f"
+        },
         facade: {
             type: [Object, Array]
         },
         content: {
             type: [Object, Array]
+        },
+        dataIndex: {
+            type: Number
+        },
+        pageIndex: {
+            type: Number
         }
     },
     data() {
@@ -70,21 +82,16 @@ export default {
                 'is_price': this.content.is_price,
                 'is_button': this.content.is_button
             }
+        },
+        ...mapGetters({
+            searchHeight: 'components/getSearchHeight',
+            searchIndex: 'components/getSearchIndex',
+            navbarHeight: 'setting/getNavBarHeight',
+            statusBarHeight: 'setting/statusBarHeight',
+        }),
+        top: function() {
+            return this.navbarHeight + this.statusBarHeight;
         }
-    },
-    /**
-     * 页面渲染前
-     * @return {[type]} [description]
-     */
-    created() {
-
-    },
-    /**
-     * 数据监听
-     * @type {Object}
-     */
-    watch: {
-
     },
     /**
      * 页面加载执行
@@ -117,10 +124,18 @@ export default {
             }).exec();
         },
         radioChange(evt) {
-            this.select = parseInt(evt.target.value)
+            let _this = this;
+            this.select = parseInt(evt.target.value);
+            this.$nextTick(function() {
+                _this.$store.dispatch('components/getSearch');
+            });
         },
         checkboxChange(evt) {
+            let _this = this;
             this.active = evt.target.value.length > 0;
+            this.$nextTick(function() {
+                _this.$store.dispatch('components/getSearch');
+            });
         }
     }
 };

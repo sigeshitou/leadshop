@@ -7,16 +7,23 @@
             <div class="apply-header__menu">
                 <MianBar></MianBar>
             </div>
-            <div class="apply-header__user" >
+            <div class="apply-header__user">
                 <ul>
+
                     <li>
                         <div class="user-name" @mouseover="visible = true">
-                            {{getStore.name}}
+                            {{ getStore.name }}
                         </div>
                     </li>
                     <li>
                         <div class="user-photo">
                             <img :src="getStore.logo">
+                        </div>
+                    </li>
+                    <li>
+                        <div class="le-update" @click="router">
+                            <i class="le-icon le-icon-youshengji" v-if="version"></i>
+                            <i v-else class="le-icon le-icon-wushengji"></i>
                         </div>
                     </li>
                 </ul>
@@ -32,7 +39,7 @@
             </div>
         </el-header>
         <el-main class="apply-main">
-            <router-view />
+            <router-view/>
         </el-main>
     </el-container>
 </template>
@@ -40,11 +47,12 @@
 import "@/pages.js";
 import MianBar from '@/components/mainbar/Main'
 
-import { createNamespacedHelpers } from "vuex";
-const { mapGetters } = createNamespacedHelpers('setting');
+import {createNamespacedHelpers} from "vuex";
+
+const {mapGetters} = createNamespacedHelpers('setting');
 
 export default {
-    components: { MianBar },
+    components: {MianBar},
     data() {
         return {
             visible: false,
@@ -58,7 +66,7 @@ export default {
     computed: {
         activeMenu() {
             const route = this.$route
-            const { meta, path } = route
+            const {meta, path} = route
             // if set path, the sidebar will highlight the path you set
             if (meta.activeMenu) {
                 return meta.activeMenu
@@ -66,7 +74,8 @@ export default {
             return path
         },
         ...mapGetters({
-            'getStore': 'getStore'
+            'getStore': 'getStore',
+            'version': 'getVersion'
         })
     },
     methods: {
@@ -95,19 +104,23 @@ export default {
          */
         handleLogout() {
             this.$heshop.logout().then(() => {
-                this.$router.push({ path: "/login/index" }).catch(error => {
+                this.$router.push({path: "/login/index"}).catch(error => {
                     console.error("路由跳转错误", error)
-                })
+                });
             })
         },
         resolvePath(routePath) {
             if (isExternal(routePath)) {
-                return routePath
+                return routePath;
             }
             if (isExternal(this.basePath)) {
                 return this.basePath
             }
-            return path.resolve(this.basePath, routePath)
+            return path.resolve(this.basePath, routePath);
+        },
+        router: function () {
+            const newRouter = this.$router.resolve({path: '/changelog'})
+            window.open(newRouter.href,'_blank');
         }
     }
 };
@@ -119,7 +132,7 @@ export default {
     width: 132px;
     height: 96px;
     background: #FFFFFF;
-    box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
     border-radius: 8px;
 }
 
@@ -136,5 +149,17 @@ export default {
 
 .le-icon {
     color: #A3A3A3;
+}
+
+.le-update {
+    margin: 17px 16px;
+    cursor: pointer;
+}
+.le-icon-youshengji {
+    font-size: 20px;
+    color: #623ceb;
+}
+.le-icon-wushengji {
+    font-size: 20px;
 }
 </style>

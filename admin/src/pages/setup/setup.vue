@@ -1,192 +1,156 @@
 <template>
     <div class="le-matter">
         <el-form ref="ruleForm" :model="ruleForm" label-width="217px" :rules="rules" status-icon>
-            <el-card class="le-form-card">
-                <el-row>
-                    <el-col class="el-row--flex is-align-middle">
-                        <span class="he-title-line"></span>
-                        <span class="he-title">基本设置</span>
-                    </el-col>
-                </el-row>
+            <div class="le-card">
+                <div class="el-row--flex is-align-middle">
+                    <span class="he-title-line"></span>
+                    <span class="he-title">基本设置</span>
+                </div>
                 <div class="le-line"></div>
                 <div class="le-line"></div>
-                <el-row>
-                    <el-col :span="24">
-                        <el-form-item label="经营状态" prop="pass">
-                            <el-radio-group v-model="ruleForm.basic_setting.run_status">
-                                <el-radio :label="1">营业</el-radio>
-                                <el-radio :label="0">打烊</el-radio>
-                            </el-radio-group>
-                            <div class="he-tips">设置打烊后，买家将无法支付订单，其他操作不受影响</div>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-            </el-card>
-            <div class="le-line"></div>
-            <el-card class="le-form-card">
-                <el-row>
-                    <el-col class="el-row--flex is-align-middle">
-                        <span class="he-title-line"></span>
-                        <span class="he-title">店铺设置</span>
-                    </el-col>
-                </el-row>
+                <el-form-item label="经营状态" prop="pass">
+                    <el-radio-group v-model="ruleForm.basic_setting.run_status">
+                        <el-radio :label="1">营业</el-radio>
+                        <el-radio :label="0">打烊</el-radio>
+                    </el-radio-group>
+                    <div class="he-tips">设置打烊后，买家将无法支付订单，其他操作不受影响</div>
+                </el-form-item>
+            </div>
+            <div class="le-card">
+                <div class="el-row--flex is-align-middle">
+                    <span class="he-title-line"></span>
+                    <span class="he-title">店铺设置</span>
+                </div>
                 <div class="le-line"></div>
                 <div class="le-line"></div>
-                <el-row>
-                    <el-col :span="24">
-                        <el-form-item label="店铺名称" prop="store_setting.name">
-                            <el-input placeholder="请输入店铺名称" maxlength="15" v-model="ruleForm.store_setting.name" show-word-limit></el-input>
-                        </el-form-item>
-                        <el-form-item label="店铺LOGO" prop="store_setting.logo">
-                            <div class="select-cover__120">
-                                <pictureDialog v-model="ruleForm.store_setting.logo" :limit="1">
-                                    <div slot="upload" class="select-cover__120-add">
-                                        <i class="le-icon le-icon-add select-cover__120-icon"></i>
-                                        <span class="select-cover__120-text">添加图片</span>
-                                    </div>
-                                    <div slot="preview" slot-scope="scope" class="select-cover__120-edit">
-                                        <el-image :src="scope.url" fit="cover"></el-image>
-                                        <div class="select-cover__120-tips">
-                                            <span>替换</span> | <span @click.stop="(e)=>ruleForm.store_setting.logo=''">删除</span>
-                                        </div>
-                                    </div>
-                                </pictureDialog>
+                <el-form-item label="店铺名称" prop="store_setting.name">
+                    <el-input placeholder="请输入店铺名称" maxlength="15" v-model="ruleForm.store_setting.name" show-word-limit></el-input>
+                </el-form-item>
+                <el-form-item label="店铺LOGO" prop="store_setting.logo">
+                    <div class="select-cover__120">
+                        <pictureDialog v-model="ruleForm.store_setting.logo" :limit="1">
+                            <div slot="upload" class="select-cover__120-add">
+                                <i class="le-icon le-icon-add select-cover__120-icon"></i>
+                                <span class="select-cover__120-text">添加图片</span>
                             </div>
-                            <div class="he-tips">
-                                <span @click="reset" class="le-reset">重置为默认</span>
-                                建议尺寸：800*800像素</div>
-                        </el-form-item>
-                        <el-form-item label="联系方式" prop="store_setting.phone">
-                            <el-input placeholder="请输入联系方式" maxlength="15" v-model="ruleForm.store_setting.phone"></el-input>
-                        </el-form-item>
-                        <el-form-item label="联系地址" prop="store_setting.addressList">
-                            <el-cascader :options="district" v-model="ruleForm.store_setting.addressList" placeholder="请选择省/市/区" :props="{ expandTrigger: 'hover' }"></el-cascader>
-                        </el-form-item>
-                        <el-form-item label="详细地址" prop="store_setting.address">
-                            <el-input placeholder="请输入详细地址" v-model="ruleForm.store_setting.address"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-            </el-card>
-            <div class="le-line"></div>
-            <el-card class="le-form-card">
-                <el-row>
-                    <el-col class="el-row--flex is-align-middle">
-                        <span class="he-title-line"></span>
-                        <span class="he-title">交易设置</span>
-                    </el-col>
-                </el-row>
-                <div class="le-line"></div>
-                <div class="le-line"></div>
-                <el-row>
-                    <el-col :span="24">
-                        <el-form-item label="待付款订单自动取消">
-                            <el-switch v-model="ruleForm.trade_setting.cancel_status"  :active-value="1" :inactive-value="0"></el-switch>
-                        </el-form-item>
-                        <el-form-item label="待付款订单取消时间" v-if="ruleForm.trade_setting.cancel_status === 1">
-                            <el-input v-model="ruleForm.trade_setting.cancel_time" @keyup.native="ruleForm.trade_setting.cancel_time = oninput(ruleForm.trade_setting.cancel_time)">
-                                <template slot="append">时</template>
-                            </el-input>
-                            <div class="he-tips">拍下订单在此时间段内未付款，订单将自动取消</div>
-                        </el-form-item>
-                        <el-form-item label="自动确认收货时间">
-                            <el-input v-model="ruleForm.trade_setting.received_time" @keyup.native="ruleForm.trade_setting.received_time = proving(ruleForm.trade_setting.received_time)">
-                                <template slot="append">天</template>
-                            </el-input>
-                            <div class="he-tips">从发货到自动确认收货时间</div>
-                        </el-form-item>
-                        <el-form-item label="待评价订单默认好评时间">
-                            <el-input v-model="ruleForm.trade_setting.evaluate_time" @keyup.native="ruleForm.trade_setting.evaluate_time = proving(ruleForm.trade_setting.evaluate_time)">
-                                <template slot="append">天</template>
-                            </el-input>
-                            <div class="he-tips">从确认收货时间开始计算</div>
-                        </el-form-item>
-                        <el-form-item label="售后时间">
-                            <el-input v-model="ruleForm.trade_setting.after_time" @keyup.native="ruleForm.trade_setting.after_time = proving(ruleForm.trade_setting.after_time)">
-                                <template slot="append">天</template>
-                            </el-input>
-                            <div class="he-tips">从确认收货开始计算，可申请售后的时间</div>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-            </el-card>
-            <div class="le-line"></div>
-            <el-card class="le-form-card">
-                <el-row>
-                    <el-col class="el-row--flex is-align-middle">
-                        <span class="he-title-line"></span>
-                        <span class="he-title">商品设置</span>
-                    </el-col>
-                </el-row>
-                <div class="le-line"></div>
-                <div class="le-line"></div>
-                <el-row>
-                    <el-col :span="24">
-                        <el-form-item label="商品推荐">
-                            <div>
-                                <el-radio v-model="ruleForm.goods_setting.recommend_status" :label="1">自动推荐</el-radio>
-                                <div class="he-tips">系统自动推荐购买量最高的20件商品</div>
+                            <div slot="preview" slot-scope="scope" class="select-cover__120-edit">
+                                <el-image :src="scope.url" fit="cover"></el-image>
+                                <div class="select-cover__120-tips">
+                                    <span>替换</span> | <span @click.stop="(e)=>ruleForm.store_setting.logo=''">删除</span>
+                                </div>
                             </div>
-                            <div>
-                                <el-radio v-model="ruleForm.goods_setting.recommend_status" :label="2">手动推荐
-                                    <el-button class="he-recommend-btn" :disabled="ruleForm.goods_setting.recommend_status !== 2" @click="openGoods" type="primary" plain>
-                                        <span>选择商品</span>
-                                    </el-button>
-                                </el-radio>
-                                <goods-select ref="goodsSelect" :is-tips="false" :select-style="{backgroundColor: '#ffffff'}" v-model="ruleForm.goods_setting.recommend_goods">
-                                    <span></span>
-                                </goods-select>
-                                <div class="he-tips">最多添加20件商品</div>
-                            </div>
-                        </el-form-item>
-                        <el-form-item label="商品推荐显示页面">
-                            <el-checkbox-group v-model="ruleForm.goods_setting.recommend_showpage">
-                                <el-checkbox label="goodsinfo">商品详情</el-checkbox>
-                                <el-checkbox label="pay_success">支付完成</el-checkbox>
-                                <el-checkbox label="personal_center">个人中心</el-checkbox>
-                                <el-checkbox label="orderinfo">订单详情</el-checkbox>
-                                <el-checkbox label="cart">购物车</el-checkbox>
-                            </el-checkbox-group>
-                        </el-form-item>
-                        <el-form-item label="商品详情页订单滚动">
-                            <el-switch v-model="ruleForm.goods_setting.order_list_roll" :active-value="1" :inactive-value="0"></el-switch>
-                            <el-popover placement="top" width="257" trigger="hover">
-                                <img class="he-example-img" src="./image/he-example.png" alt="">
-                                <el-button slot="reference" type="text" class="he-example">示例</el-button>
-                            </el-popover>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-            </el-card>
-            <div class="le-line"></div>
-            <el-card class="le-form-card">
-                <el-row>
-                    <el-col class="el-row--flex is-align-middle">
-                        <span class="he-title-line"></span>
-                        <span class="he-title">用户设置</span>
-                    </el-col>
-                </el-row>
+                        </pictureDialog>
+                    </div>
+                    <div class="he-tips">
+                        <span @click="reset" class="le-reset">重置为默认</span>
+                        建议尺寸：800*800像素</div>
+                </el-form-item>
+                <el-form-item label="联系方式" prop="store_setting.phone">
+                    <el-input placeholder="请输入联系方式" maxlength="15" v-model="ruleForm.store_setting.phone"></el-input>
+                </el-form-item>
+                <el-form-item label="联系地址" prop="store_setting.addressList">
+                    <el-cascader :options="district" v-model="ruleForm.store_setting.addressList" placeholder="请选择省/市/区" :props="{ expandTrigger: 'hover' }"></el-cascader>
+                </el-form-item>
+                <el-form-item label="详细地址" prop="store_setting.address">
+                    <el-input placeholder="请输入详细地址" v-model="ruleForm.store_setting.address"></el-input>
+                </el-form-item>
+            </div>
+            <div class="le-card">
+                <div class="el-row--flex is-align-middle">
+                    <span class="he-title-line"></span>
+                    <span class="he-title">交易设置</span>
+                </div>
                 <div class="le-line"></div>
                 <div class="le-line"></div>
-                <el-row>
-                    <el-col :span="24">
-                        <el-form-item label="手机号授权场景">
-                            <el-checkbox-group v-model="ruleForm.mobile_auth">
-                                <el-checkbox label="join_shopping_cart">加入购物车</el-checkbox>
-                                <el-checkbox label="paybuy">购买支付</el-checkbox>
-                            </el-checkbox-group>
-                        </el-form-item>
-                        <el-form-item label="头像昵称授权场景">
-                            <el-checkbox-group v-model="ruleForm.userinfo_auth">
-                                <el-checkbox label="join_shopping_cart">加入购物车</el-checkbox>
-                                <el-checkbox label="paybuy">购买支付</el-checkbox>
-                            </el-checkbox-group>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-            </el-card>
-            <div class="le-line"></div>
-            <div class="le-line"></div>
+                <el-form-item label="待付款订单自动取消">
+                    <el-switch v-model="ruleForm.trade_setting.cancel_status"  :active-value="1" :inactive-value="0"></el-switch>
+                </el-form-item>
+                <el-form-item label="待付款订单取消时间" v-if="ruleForm.trade_setting.cancel_status === 1">
+                    <el-input v-model="ruleForm.trade_setting.cancel_time" @keyup.native="ruleForm.trade_setting.cancel_time = oninput(ruleForm.trade_setting.cancel_time)">
+                        <template slot="append">时</template>
+                    </el-input>
+                    <div class="he-tips">拍下订单在此时间段内未付款，订单将自动取消</div>
+                </el-form-item>
+                <el-form-item label="自动确认收货时间">
+                    <el-input v-model="ruleForm.trade_setting.received_time" @keyup.native="ruleForm.trade_setting.received_time = proving(ruleForm.trade_setting.received_time)">
+                        <template slot="append">天</template>
+                    </el-input>
+                    <div class="he-tips">从发货到自动确认收货时间</div>
+                </el-form-item>
+                <el-form-item label="待评价订单默认好评时间">
+                    <el-input v-model="ruleForm.trade_setting.evaluate_time" @keyup.native="ruleForm.trade_setting.evaluate_time = proving(ruleForm.trade_setting.evaluate_time)">
+                        <template slot="append">天</template>
+                    </el-input>
+                    <div class="he-tips">从确认收货时间开始计算</div>
+                </el-form-item>
+                <el-form-item label="售后时间">
+                    <el-input v-model="ruleForm.trade_setting.after_time" @keyup.native="ruleForm.trade_setting.after_time = proving(ruleForm.trade_setting.after_time)">
+                        <template slot="append">天</template>
+                    </el-input>
+                    <div class="he-tips">从确认收货开始计算，可申请售后的时间</div>
+                </el-form-item>
+            </div>
+            <div class="le-card">
+                <div class="el-row--flex is-align-middle">
+                    <span class="he-title-line"></span>
+                    <span class="he-title">商品设置</span>
+                </div>
+                <div class="le-line"></div>
+                <div class="le-line"></div>
+                <el-form-item label="商品推荐">
+                    <div>
+                        <el-radio v-model="ruleForm.goods_setting.recommend_status" :label="1">自动推荐</el-radio>
+                        <div class="he-tips">系统自动推荐购买量最高的20件商品</div>
+                    </div>
+                    <div>
+                        <el-radio v-model="ruleForm.goods_setting.recommend_status" :label="2">手动推荐
+                            <el-button class="he-recommend-btn" :disabled="ruleForm.goods_setting.recommend_status !== 2" @click="openGoods" type="primary" plain>
+                                <span>选择商品</span>
+                            </el-button>
+                        </el-radio>
+                        <goods-select ref="goodsSelect" :is-tips="false" :select-style="{backgroundColor: '#ffffff'}" v-model="ruleForm.goods_setting.recommend_goods">
+                            <span></span>
+                        </goods-select>
+                        <div class="he-tips">最多添加20件商品</div>
+                    </div>
+                </el-form-item>
+                <el-form-item label="商品推荐显示页面">
+                    <el-checkbox-group v-model="ruleForm.goods_setting.recommend_showpage">
+                        <el-checkbox label="goodsinfo">商品详情</el-checkbox>
+                        <el-checkbox label="pay_success">支付完成</el-checkbox>
+                        <el-checkbox label="personal_center">个人中心</el-checkbox>
+                        <el-checkbox label="orderinfo">订单详情</el-checkbox>
+                        <el-checkbox label="cart">购物车</el-checkbox>
+                    </el-checkbox-group>
+                </el-form-item>
+                <el-form-item label="商品详情页订单滚动">
+                    <el-switch v-model="ruleForm.goods_setting.order_list_roll" :active-value="1" :inactive-value="0"></el-switch>
+                    <el-popover placement="top" width="257" trigger="hover">
+                        <img class="he-example-img" src="./image/he-example.png" alt="">
+                        <el-button slot="reference" type="text" class="he-example">示例</el-button>
+                    </el-popover>
+                </el-form-item>
+            </div>
+            <div class="le-card">
+                <div class="el-row--flex is-align-middle">
+                    <span class="he-title-line"></span>
+                    <span class="he-title">用户设置</span>
+                </div>
+                <div class="le-line"></div>
+                <div class="le-line"></div>
+                <el-form-item label="手机号授权场景">
+                    <el-checkbox-group v-model="ruleForm.mobile_auth">
+                        <el-checkbox label="join_shopping_cart">加入购物车</el-checkbox>
+                        <el-checkbox label="paybuy">购买支付</el-checkbox>
+                    </el-checkbox-group>
+                </el-form-item>
+                <el-form-item label="头像昵称授权场景">
+                    <el-checkbox-group v-model="ruleForm.userinfo_auth">
+                        <el-checkbox label="join_shopping_cart">加入购物车</el-checkbox>
+                        <el-checkbox label="paybuy">购买支付</el-checkbox>
+                    </el-checkbox-group>
+                </el-form-item>
+            </div>
         </el-form>
         <div class="le-cardpin">
             <el-button type="primary" @click="save">保存</el-button>
@@ -344,7 +308,6 @@ export default {
                 }
                 data.userinfo_auth = new_userinfo_auth;
                 data.basic_setting.restore_time = +data.basic_setting.restore_time;
-                // data.basic_setting.restore_status =1;
                 this.ruleForm = data;
             }).catch(error => {
                 console.error(error);
@@ -366,7 +329,6 @@ export default {
                     store_setting.province = store_setting.addressList[0];
                     store_setting.city = store_setting.addressList[1];
                     store_setting.district = store_setting.addressList[2];
-                    // store_setting.logo = store_setting.logo;
                     let trade_setting = JSON.parse(JSON.stringify(this.ruleForm.trade_setting));
                     let pay_way = {
                         wechat: {
@@ -513,6 +475,7 @@ export default {
 };
 </script>
 <style lang="less" scoped="true">
+@import "./setup.less";
 .he-title-line {
     width: 4px;
     height: 16px;
@@ -536,11 +499,6 @@ export default {
     margin-left: 12px;
 }
 
-.le-form-card {
-    background: #FFFFFF;
-    border-radius: 16px;
-    box-shadow: none !important;
-}
 
 .le-matter /deep/.el-form-item .el-form-item__content .el-date-editor .el-input__inner {
     padding-left: 30px;

@@ -2,9 +2,7 @@
     <div class="le-matter" v-loading="loading">
         <el-breadcrumb class="he-link-text" separator-class="el-icon-arrow-right">
             <el-breadcrumb-item class="he-link">
-                <he-link href="order/after">
-                    售后订单
-                </he-link>
+                <he-link href="order/after">售后订单</he-link>
             </el-breadcrumb-item>
             <el-breadcrumb-item>
                 订单详情
@@ -51,13 +49,18 @@
                         <div :class="{'le-item__active': type === 1}" @click="type = 1" class="le-menu__item">
                             售后说明
                         </div>
-                        <div :class="{'le-item__active': type === 2}" @click="type = 2" class="le-menu__item">
-                            拒绝理由
+                        <div :class="{'le-item__active': type === 2}" @click="type = 2" class="le-menu__item"
+                             v-if="detail.status === 101 || detail.status === 102 || detail.status === 201">
+                            拒绝理由{{ detail.status === 201 ? '（第一次）' : '' }}
+                        </div>
+                        <div v-if="detail.status === 201" :class="{'le-item__active': type === 3}" @click="type = 3"
+                             class="le-menu__item">
+                            拒绝理由（第二次）
                         </div>
                     </div>
                     <div class="le-content">
                         <template v-if="type === 1">
-                            <div class="le-content__note">
+                            <div class="le-content__note" style="word-break:break-all;">
                                 {{ detail.user_note }}
                             </div>
                             <div v-if="detail.images">
@@ -68,112 +71,132 @@
                         <div class="le-content__note" v-if="type === 2">
                             {{ detail.refuse_reason }}
                         </div>
+                        <div class="le-content__note" v-if="type === 3">
+                            {{ detail.second_refuse_reason }}
+                        </div>
                     </div>
                 </div>
             </el-col>
         </el-row>
-        <template v-if="detail.user_freight_info">
-            <el-row class="le-line">
+        <template
+            v-if="detail.status == 122 || detail.status == 132 || ((detail.type == 2 || detail.type == 1) && detail.status == 200)">
+            <el-row class="le-buyer-return-flow le-card he-info he-user-freight">
+                <el-col :span="6" class="he-form__line">
+                    <div class="he-title">
+                        买家退货物流
+                    </div>
+                    <div class="he-info__content">
+                        <div class="he-info__item">
+                            <span class="he-label">
+                                发货方式:
+                            </span>
+                            <span class="he-value">自己联系快递</span>
+                        </div>
+                        <div class="he-info__item">
+                            <span class="he-label">
+                                物流公司:
+                            </span>
+                            <span class="he-value">
+                                {{ detail.user_freight_info.logistics_company }}
+                            </span>
+                        </div>
+                        <div class="he-info__item">
+                            <span class="he-label">
+                                快递单号:
+                            </span>
+                            <span class="he-value">
+                                {{ detail.user_freight_info.freight_sn }}
+                            </span>
+                        </div>
+                        <div class="he-info__item">
+                            <span class="he-label">
+                                退货时间:
+                            </span>
+                            <span class="he-value">
+                                {{ detail.user_freight_info.time }}
+                            </span>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="detail.user_freight_info.images.length > 0 ? 14 : 18"
+                        class="he-info__box  le-logistics-details"
+                        :class="detail.user_freight_info.images.length > 0 ? 'he-form__line' : ''">
+                    <div class="he-title">
+                        物流详情
+                    </div>
+                    <div class="he-info__content">
+                        <div style="padding: 0;" class="le-desc" v-if="buyerFlow.length === 0">
+                            抱歉！未查到此运单物流信息，请确认运单号码是否正确，或联系客服
+                        </div>
+                        <logistics-step :list="buyerFlow" v-else></logistics-step>
+                    </div>
+                </el-col>
+                <el-col :span="4" class="he-info__box" v-if="detail.user_freight_info.images.length > 0">
+                    <div class="he-title">
+                        快递凭证
+                    </div>
+                    <div class="he-info__content" style="width: 178px">
+                        <img class="le-logistics__img" @click="preview(detail.user_freight_info.images)" :key="index"
+                             v-for="(item, index) in detail.user_freight_info.images" :src="item" alt="">
+                    </div>
+                </el-col>
             </el-row>
-            <div class="he-info flex">
-                <el-card class="le-form-card flex-sub" style="height: 159px;">
-                    <el-row class="el-row--flex">
-                        <el-col :span="8" class="he-info__box he-form__line">
-                            <div class="he-title">
-                                {{ detail.type === 2 ? '买家发货物流' : '退货物流' }}
-                            </div>
-                            <div class="he-info__content">
-                                <div class="he-info__item">
-                                    <span class="he-label">
-                                        物流公司:
-                                    </span>
-                                    <span class="he-value">
-                                        {{ detail.user_freight_info.logistics_company }}
-                                    </span>
-                                </div>
-                                <div class="he-info__item">
-                                    <span class="he-label">
-                                        快递单号:
-                                    </span>
-                                    <span class="he-value">
-                                        {{ detail.user_freight_info.freight_sn }}
-                                    </span>
-                                    <el-button @click="copyTrackingNumber('copy-tracking-number-1')" class="he-button"
-                                               type="text">
-                                        复制
-                                    </el-button>
-                                    <input :value="detail.user_freight_info.freight_sn" class="copy-tracking-number"
-                                           id="copy-tracking-number-1">
-                                    </input>
-                                </div>
-                                <div class="he-info__item">
-                                    <span class="he-label">
-                                        退货时间:
-                                    </span>
-                                    <span class="he-value">
-                                        {{ detail.user_freight_info.time }}
-                                    </span>
-                                </div>
-                            </div>
-                        </el-col>
-                        <el-col :span="16" class="he-info__box he-form__line">
-                            <div class="he-title">
-                                快递凭证
-                            </div>
-                            <div class="he-info__content">
-                                <img :key="index" :src="item" @click="preview(detail.user_freight_info.images)" alt=""
-                                     class="he-courier-certificate"
-                                     v-for="(item, index) in detail.user_freight_info.images"/>
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-card>
-                <el-card class="le-form-card" style="width: 416px;height: 159px;margin-left: 24px"
-                         v-if="detail.merchant_freight_info">
-                    <el-row class="el-row--flex ">
-                        <el-col class="he-info__box he-form__line">
-                            <div class="he-title">
-                                卖家换货物流
-                            </div>
-                            <div class="he-info__content">
-                                <div class="he-info__item">
-                                    <span class="he-label">
-                                        物流公司:
-                                    </span>
-                                    <span class="he-value">
-                                        {{ detail.merchant_freight_info.logistics_company }}
-                                    </span>
-                                </div>
-                                <div class="he-info__item">
-                                    <span class="he-label">
-                                        快递单号:
-                                    </span>
-                                    <span class="he-value">
-                                        {{ detail.merchant_freight_info.freight_sn }}
-                                    </span>
-                                    <el-button @click="copyTrackingNumber('copy-tracking-number-0')" class="he-button"
-                                               type="text">
-                                        复制
-                                    </el-button>
-                                    <input :value="detail.merchant_freight_info.freight_sn" class="copy-tracking-number"
-                                           id="copy-tracking-number-0"/>
-                                </div>
-                                <div class="he-info__item">
-                                    <span class="he-label">
-                                        退货时间:
-                                    </span>
-                                    <span class="he-value">
-                                        {{ detail.merchant_freight_info.time }}
-                                    </span>
-                                </div>
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-card>
-            </div>
         </template>
-        <el-row class="le-line">
-        </el-row>
+        <template v-if="detail.type == 2 && detail.status == 200">
+            <el-row class="le-buyer-return-flow le-card he-info">
+                <el-col :span="6" class="" :class="detail.merchant_freight_info.type == 1 ? 'he-form__line' : ''">
+                    <div class="he-title">
+                        卖家换货物流
+                    </div>
+                    <div class="he-info__content" :style="{height: detail.merchant_freight_info.type == 1 ? '200px' : ''}">
+                        <div class="he-info__item">
+                            <span class="he-label">
+                                发货方式:
+                            </span>
+                            <span class="he-value">{{ detail.merchant_freight_info.type === 1 ? '自己联系快递' : '无需物流' }}</span>
+                        </div>
+                        <div style="display: inline-block;" v-if="detail.merchant_freight_info.type === 1">
+                            <div class="he-info__item">
+                            <span class="he-label">
+                                物流公司:
+                            </span>
+                                <span class="he-value">
+                                {{ detail.merchant_freight_info.logistics_company }}
+                            </span>
+                            </div>
+                            <div class="he-info__item">
+                            <span class="he-label">
+                                快递单号:
+                            </span>
+                                <span class="he-value">
+                                {{ detail.merchant_freight_info.freight_sn }}
+                            </span>
+                            </div>
+                            <div class="he-info__item">
+                            <span class="he-label">
+                                换货时间:
+                            </span>
+                                <span class="he-value">
+                                {{ detail.exchange_time | getTime }}
+                            </span>
+                            </div>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="18" class="he-info__box  le-logistics-details" v-if="detail.merchant_freight_info.type == 1">
+                    <div class="he-title">
+                        物流详情
+                    </div>
+                    <div class="he-info__content">
+                        <div style="padding: 0;" class="le-desc" v-if="exchangeFlow.length === 0">
+                            抱歉！未查到此运单物流信息，请确认运单号码是否正确，或联系客服
+                        </div>
+                        <logistics-step v-else :list="exchangeFlow"></logistics-step>
+                    </div>
+                </el-col>
+            </el-row>
+        </template>
+        <el-row class="le-line"></el-row>
         <el-row class="he-info">
             <el-col>
                 <el-card class="le-form-card">
@@ -229,7 +252,7 @@
                                     <span class="he-label">
                                         问题描述:
                                     </span>
-                                    <span class="he-value">
+                                    <span class="he-value" style="word-break:break-all;">
                                         {{ detail.user_note }}
                                     </span>
                                 </div>
@@ -272,9 +295,10 @@
                                         已发货
                                     </span>
                                     <span :hide_cancel="true" :id="detail.id +'_logistics_information'"
-                                          :width="detail.order.freight && detail.order.freight.type ===1?415:283"
-                                          class="he-logistics" module="order" sure_btn="我知道了" title="物流信息" top="35vh"
-                                          type="text" v-popup.logisticsInformation="detail.order">
+                                          :width="detail.order.freight.type === 1 ? 740 : 285"
+                                          class="he-logistics" module="order" title="物流信息" top="35vh"
+                                          type="text"
+                                          v-popup.logisticsInformation="{...detail, freight: detail.order.freight}">
                                         物流信息
                                     </span>
                                 </div>
@@ -366,29 +390,29 @@
              v-if="detail.status === 100 || detail.status === 102 || detail.status === 122 || detail.status === 111 || detail.status === 132">
             <template v-if="detail.status === 100 || detail.status === 102">
                 <el-button action="onReload" class="he-click" module="order" sure_btn="拒绝售后" title="售后申请" top="30vh"
-                           v-popup.refusetosell="{item: detail}" width="704">
+                           v-popup.refuseToSell="{item: detail}" width="704">
                     拒绝
                 </el-button>
                 <el-button class="he-click" module="order" sure_btn="同意售后" title="售后申请" top="30vh" type="primary"
-                           v-if="detail.type === 0" v-popup.agreeaftersale="{item: detail}" width="344">
+                           v-if="detail.type === 0" v-popup.agreeAfterSale="{item: detail}" width="344">
                     同意
                 </el-button>
                 <el-button class="he-click" module="order" sure_btn="同意并发送退货地址" title="售后申请" top="30vh" type="primary"
-                           v-if="detail.type === 1 || detail.type === 2" v-popup.receiverefund="{item: detail}"
+                           v-if="detail.type === 1 || detail.type === 2" v-popup.receiveRefund="{item: detail}"
                            width="707">
                     同意
                 </el-button>
             </template>
             <el-button class="he-click" module="order" sure_btn="确认收货并退款" top="30vh" type="primary"
-                       v-popup.onlyrefund="{ item: detail}" v-show="detail.status === 122" width="600">
+                       v-popup.onlyRefund="{ item: detail}" v-show="detail.status === 122" width="600">
                 收货并退款
             </el-button>
             <el-button class="he-click" module="order" sure_btn="确定退款" title="退款" top="30vh" type="primary"
-                       v-popup.onlyrefund="{ item: detail}" v-show="detail.status === 111" width="600">
+                       v-popup.onlyRefund="{ item: detail}" v-show="detail.status === 111" width="600">
                 退款
             </el-button>
             <el-button action="receiveExchange" class="he-click" module="order" title="确认收货并发货" top="30vh"
-                       type="primary" v-popup.receiveexchange="detail" v-show="detail.status === 132" width="524">
+                       type="primary" v-popup.receiveExchange="detail" v-show="detail.status === 132" width="524">
                 收货并换货
             </el-button>
         </div>
@@ -398,6 +422,7 @@
 </template>
 <script>
 import preview from "@/components/preview/index.vue";
+import logisticsStep from "./components/logisticsStep";
 
 export default {
     name: "afterDetail",
@@ -418,7 +443,9 @@ export default {
                 merchant_freight_info: {}
             },
             type: 1,
-            previewList: []
+            previewList: [],
+            buyerFlow: [],
+            exchangeFlow: []
         }
     },
     mounted() {
@@ -431,11 +458,39 @@ export default {
         }
     },
     methods: {
+        receiveExchange: function () {
+            let id = this.$heshop.utils.getQueryVariable('id');
+            this.getDetail(parseInt(id));
+        },
         getDetail: function (id, behavior = '') {
             this.loading = true;
+            let _this = this;
             this.$heshop.orderafter('get', id, {behavior}).then(res => {
                 this.loading = false;
                 this.detail = res;
+                if (res.status == 122 || res.status == 132 || ((res.type == 2 || res.type == 1) && res.status == 200)) {
+                    this.$heshop.express('post', {
+                        no: res.user_freight_info.freight_sn,
+                        mobile: res.return_address.mobile,
+                        name: res.user_freight_info.logistics_company
+                    }).then(function (res) {
+                        _this.buyerFlow = res.list.reverse();
+                    }).catch(function (err) {
+                        console.log(err);
+                    });
+                }
+                // 换货 订单完成 有物流
+                if (res.type == 2 && res.status == 200 && res.merchant_freight_info.type == 1) {
+                    this.$heshop.express('post', {
+                        no: res.merchant_freight_info.freight_sn,
+                        mobile: res.return_address.mobile,
+                        name: res.merchant_freight_info.logistics_company
+                    }).then(function (res) {
+                        _this.exchangeFlow = res.list.reverse();
+                    }).catch(function (err) {
+                        console.log(err);
+                    });
+                }
             }).catch(err => {
                 this.loading = false;
                 this.$message.error(err.data.message);
@@ -558,7 +613,8 @@ export default {
         },
     },
     components: {
-        preview
+        preview,
+        logisticsStep
     }
 };
 </script>
@@ -823,7 +879,6 @@ export default {
         .he-timeline-item__wrapper {
             position: relative;
             padding-left: 20px;
-            /*top: -3px;*/
 
             .he-content {
                 font-size: 14px;

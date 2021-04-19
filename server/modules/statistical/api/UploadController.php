@@ -16,7 +16,7 @@ class UploadController extends BasicController
      * @param  [type] $event [description]
      * @return [type]        [description]
      */
-    public static function save_log($event)
+    public static function saveLog($event)
     {
         $data                                  = $event->user_upload;
         $model = M('statistical', 'UserUploadLog', true);

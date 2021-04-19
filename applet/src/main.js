@@ -70,7 +70,6 @@ const app = new Vue({
             "/pages/page/index",
             "/pages/goods/detail",
             "/pages/user/index",
-            "/pages/cart/index",
             "/pages/categories/index",
             "/pages/goods/list",
             "/pages/goods/evaluation",

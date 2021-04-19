@@ -2,21 +2,21 @@
 namespace leadmall\api;
 
 use app\forms\install\InstallForm;
-use leadmall\Map;
 use basics\api\BasicsController as BasicsModules;
-
+use leadmall\Map;
 
 class InstallController extends BasicsModules implements Map
 {
-    public function actionIndex(){
-        return file_exists(\Yii::$app->basePath . '/install.lock');
+    public function actionIndex()
+    {
+        $result = file_exists(\Yii::$app->basePath . '/install.lock');
+        return ['check' => $result, 'version' => app_version()];
     }
-
 
     public function actionCreate()
     {
         if (file_exists(\Yii::$app->basePath . '/install.lock')) {
-        	Error('禁止访问');
+            Error('禁止访问');
         }
 
         if (\Yii::$app->request->isPost) {

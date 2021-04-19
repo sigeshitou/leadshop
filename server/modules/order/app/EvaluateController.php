@@ -232,8 +232,8 @@ class EvaluateController extends BasicController
                         'user',
                     ])
                     ->where($where)
+                    ->groupBy(['id'])
                     ->orderBy(['status' => SORT_DESC, 'created_time' => SORT_DESC])
-                    ->distinct()
                     ->asArray(),
                 'pagination' => ['pageSize' => $pageSize, 'validatePage' => false],
             ]

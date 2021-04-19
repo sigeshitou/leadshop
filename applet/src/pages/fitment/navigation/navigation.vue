@@ -2,30 +2,35 @@
     <view class="navigation" :style="{
                         'background-color': facade.background_color
                 }">
-        <view class="navigation-text" :class="{'one':facade.nav_style==1}" v-if="content.style==2 && facade.nav_style==1">
+        <view class="navigation-text" :class="{'one':facade.nav_style==1}"
+              v-if="content.style==2 && facade.nav_style==1">
             <view class="navigation-text-item" v-for="(item,index) in navigation" :key="index" :style="{width:width}">
                 <text class="navigation-text-item__title" @click="navigateToDetail(item.link)" :style="{
                         color: facade.text_color
                 }">
-                    {{item.title}}
+                    {{ item.title }}
                 </text>
             </view>
         </view>
         <swiper v-if="content.style==2 && facade.nav_style==2" @change="onCurrent" :style="{
             height:swiperHeight
         }">
-            <swiper-item class="navigation-text" :class="{'one':facade.nav_style==1,'two':facade.nav_style==2}" v-if="content.style==2" v-for="(i,n ) in number" :key="i">
-                <view class="navigation-text-item" v-for="item,index in getNavigateList(n)" :key="index" :style="{width:width}">
+            <swiper-item class="navigation-text" :class="{'one':facade.nav_style==1,'two':facade.nav_style==2}"
+                         v-if="content.style==2" v-for="(i,n) in number" :key="i">
+                <view class="navigation-text-item" v-for="(item,index) in getNavigateList(n)" :key="index"
+                      :style="{width:width}">
                     <text class="navigation-text-item__title" @click="getNavigateToDetail(n,index)" :style="{
                         color: facade.text_color
                 }">
-                        {{item.title}}
+                        {{ item.title }}
                     </text>
                 </view>
             </swiper-item>
         </swiper>
-        <view class="navigation-image" :class="{'one':facade.nav_style==1}" v-if="content.style==1 && facade.nav_style==1">
-            <view class="navigation-image-item" v-for="(item,index) in navigation" :key="index" :style="{width:width}" @click="navigateToDetail(item.link)">
+        <view class="navigation-image" :class="{'one':facade.nav_style==1}"
+              v-if="content.style==1 && facade.nav_style==1">
+            <view class="navigation-image-item" v-for="(item,index) in navigation" :key="index" :style="{width:width}"
+                  @click="navigateToDetail(item.link)">
                 <view class="navigation-image-item__cover" :style="{
                                           'background-image': 'url('+getCover(item.url)+')'
                                     }">
@@ -33,7 +38,7 @@
                 <view class="navigation-image-item__title" :style="{
                         color: facade.text_color
                 }">
-                    {{item.title}}
+                    {{ item.title }}
                 </view>
             </view>
         </view>
@@ -41,7 +46,8 @@
             height:swiperHeight
         }">
             <swiper-item class="navigation-image two" v-for="(i,n) in number" :key="i">
-                <view class="navigation-image-item" v-for="(item,index) in getNavigateList(n)" :key="index" :style="{width:width}" @click="getNavigateToDetail(n,index)">
+                <view class="navigation-image-item" v-for="(item,index) in getNavigateList(n)" :key="index"
+                      :style="{width:width}" @click="getNavigateToDetail(n,index)">
                     <view class="navigation-image-item__cover" :style="{
                                           'background-image': 'url('+getCover(item.url)+')'
                                     }">
@@ -49,19 +55,21 @@
                     <view class="navigation-image-item__title" :style="{
                         color: facade.text_color
                 }">
-                        {{item.title}}
+                        {{ item.title }}
                     </view>
                 </view>
             </swiper-item>
         </swiper>
         <view class="navigation-indicator" v-if="facade.nav_style==2">
-            <pointer :current="current" :number="number" :margin="margin" :color="facade.active_color" :type="facade.indicator_style" align="center" v-if="number>1"></pointer>
+            <pointer :current="current" :number="number" :margin="margin" :color="facade.active_color"
+                     :type="facade.indicator_style" align="center" v-if="number>1"></pointer>
         </view>
     </view>
 </template>
+
 <script type="text/javascript">
-import pointer from '@/components/pointer.vue'
-import MPageNavigate from "../../../libs/function/MPageNavigate";
+import pointer from '../../../components/pointer.vue'
+
 export default {
     components: {
         pointer
@@ -79,12 +87,14 @@ export default {
             margin: 10,
             current: 0,
             navigateList: [],
-            navigation: [{
-                id: 1,
-                title: "商品名称",
-                url: "",
-                link: {},
-            }]
+            navigation: [
+                {
+                    id: 1,
+                    title: "商品名称",
+                    url: "",
+                    link: {},
+                }
+            ]
         };
     },
     /**
@@ -131,26 +141,19 @@ export default {
         }
     },
     /**
-     * 页面渲染前
-     * @return {[type]} [description]
-     */
-    created() {
-
-    },
-    /**
      * 数据监听
      * @type {Object}
      */
     watch: {
         content: {
             deep: true,
-            handler: function(newV, oldV) {
+            handler: function () {
                 this.handleCheck();
             }
         },
         facade: {
             deep: true,
-            handler: function(newV, oldV) {
+            handler: function () {
                 this.handleCheck();
             }
         }
@@ -180,7 +183,7 @@ export default {
             let data = this.content.data.slice(page, size);
             return JSON.parse(JSON.stringify(data));
         },
-        /** 
+        /**
          * 解决小程序端不支持直接获取数据
          * @param  {[type]} n     [description]
          * @param  {[type]} index [description]
@@ -210,11 +213,10 @@ export default {
             }
         },
         getCover(cover = "") {
-            let url = "https://img.yzcdn.cn/upload_files/2018/01/22/FnlHRufXMtUI_AbAEP0tux_nDL1T.png!large.webp";
             if (cover) {
                 return cover;
             }
-            return url;
+            return "https://img.yzcdn.cn/upload_files/2018/01/22/FnlHRufXMtUI_AbAEP0tux_nDL1T.png!large.webp";
         }
     }
 };

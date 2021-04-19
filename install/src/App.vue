@@ -76,7 +76,7 @@
                         安装成功！进入管理后台
                     </div>
                     <div class="le-version">
-                        版本号1.0.0
+                        版本号{{version}}
                     </div>
                     <button class="le-btn le-three-btn" @click="goHome">
                         进入管理后台
@@ -105,8 +105,8 @@ export default {
         return {
             origin:'http://www.test.com',
             form: {
-                db_prefix:'',
-                db_host:'',
+                db_prefix:'le_',
+                db_host:'localhost',
                 db_port:'3306',
                 db_username:'',
                 db_password:'',
@@ -115,7 +115,8 @@ export default {
                 admin_password:''
             },
             password_check:'',
-            step: 0
+            step: 0,
+            version:'----'
         }
     },
     async mounted() {
@@ -128,13 +129,14 @@ export default {
                 method:'get',
                 url:this.origin+'/api/leadmall/install'
             }).then(res=>{
-                if (res.data) {
+                this.version = res.data.version;
+                if (res.data.check) {
                     this.step = 2;
                 } else {
                     this.step = 0;
                 }
             }).catch(err=>{
-                alert(err.response.data.message);
+                alert('服务器配置错误');
             })
         },
         onPost(){

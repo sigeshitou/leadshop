@@ -189,8 +189,8 @@ class ExportController extends BasicController
                 'freight as freight',
             ])
             ->where($where)
+            ->groupBy(['goods.id'])
             ->asArray()
-            ->distinct()
             ->all();
 
         $tHeader     = [];

@@ -90,7 +90,11 @@ export default {
          * @return {[type]} [description]
          */
         handleClick() {
-            this.dialogVisible = true;
+            if (this.value.length >= this.limit) {
+                return;
+            } else {
+                this.dialogVisible = true;
+            }
         },
         /**
          * 处理关闭事件
@@ -133,7 +137,7 @@ export default {
         }
 
         return <div class="goods-dialog">
-            <div {...defaultData}>{trigger}</div>
+            <div class="goods-dialog-title" {...defaultData}>{trigger}</div>
             <el-dialog {...dialogData}>
                     <Table></Table>
                 <template slot="footer">

@@ -15,7 +15,7 @@ export default {
         }
     },
     methods: {
-        drop($event) {
+        drop() {
             this.$store.dispatch('pages/pushPagesComs');
         }
     }

@@ -31,7 +31,7 @@
             <span class="le-label__require" slot="label">商品轮播图</span>
             <vuedraggable v-model="value.slideshow">
                 <div class="le-label__require-item" :class="{'le-label__require-image':index===0}"
-                     v-for="(item,index) in value.slideshow" :key="index">
+                     v-for="(item, index) in value.slideshow" :key="index">
                     <div class="select-cover__120">
                         <pictureDialog v-model="value.slideshow[index]" :limit="1">
                             <div slot="upload" class="select-cover__120-add">
@@ -51,7 +51,7 @@
             </vuedraggable>
             <div class="le-label__require-item" v-if="value.slideshow.length<9">
                 <div class="select-cover__120">
-                    <pictureDialog @confirm="arrayConcat" :limit="9-value.slideshow.length">
+                    <pictureDialog @confirm="arrayConcat" :limit="9-value.slideshow.length" :max="9">
                         <div slot="upload" class="select-cover__120-add">
                             <i class="le-icon le-icon-add select-cover__120-icon"></i>
                             <span class="select-cover__120-text">添加图片</span>
@@ -68,7 +68,18 @@
         <el-form-item label="是否添加视频">
             <el-switch v-model="value.is_video" :active-value="1" :inactive-value="0"></el-switch>
         </el-form-item>
-        <el-form-item v-if="value.is_video">
+        <el-form-item label="视频来源" v-if="value.is_video">
+            <el-radio-group v-model="value.video.type" >
+                <el-radio :label="1">素材库</el-radio>
+                <el-radio :label="2">网络</el-radio>
+            </el-radio-group>
+        </el-form-item>
+        <el-form-item v-if="value.is_video && value.video.type === 2" >
+            <span class="le-label__require" slot="label">主视频地址</span>
+            <el-input class="le-video__input" v-model="value.video.url" placeholder="复制视频地址到这里"></el-input>
+            <p class="he-tips" style="padding-left: 0">支持视频源地址和腾讯视频平台的网络视频</p>
+        </el-form-item>
+        <el-form-item v-if="value.is_video && value.video.type === 1">
             <span class="le-label__require" slot="label">主视频</span>
             <div class="select-cover__120">
                 <videoDialog v-model="value.video">
@@ -218,6 +229,7 @@ export default {
     watch: {
         "value.slideshow": {
             handler(newVal, oldVal) {
+              console.log(newVal);
                 if (typeof this.$refs.form != 'undefined' && newVal != oldVal) {
                     setTimeout(() => {
                         this.$refs.form.validateField('slideshow');
@@ -339,5 +351,8 @@ export default {
 .he-upload {
     width: 120px;
     height: 120px;
+}
+.le-video__input.el-input {
+    width: 500px !important;
 }
 </style>

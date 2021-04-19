@@ -26,18 +26,18 @@ const setting = {
         theme(state, data) {
             state.theme_color = data;
         },
-        tabBar: function(state, data) {
+        tabBar: function (state, data) {
             state.tab_bar = data;
         },
-        addressJson: function(state, data) {
+        addressJson: function (state, data) {
             state.addressJson = data;
         }
     },
     getters: {
-        storeSetting: function(state) {
+        storeSetting: function (state) {
             return state.setting.setting_collection && state.setting.setting_collection.store_setting;
         },
-        goodsSetting: function(state) {
+        goodsSetting: function (state) {
             return state.setting.setting_collection && state.setting.setting_collection.goods_setting;
         },
         tradeSetting: function (state) {
@@ -46,10 +46,10 @@ const setting = {
         getLocation: function (state) {
             return state.location;
         },
-        getPlatform: function(state) {
+        getPlatform: function (state) {
             return state.sys.platform;
         },
-        getBasicSetting: function(state) {
+        getBasicSetting: function (state) {
             return state.setting.setting_collection && state.setting.setting_collection.basic_setting;
         },
         getTheme: function (state) {
@@ -58,10 +58,10 @@ const setting = {
         getTabBar: function (state) {
             return state.tab_bar.data;
         },
-        statusBarHeight: function(state) {
+        statusBarHeight: function (state) {
             return state.sys.statusBarHeight;
         },
-        getNavBarHeight: function(state) {
+        getNavBarHeight: function (state) {
             // #ifdef  H5
             return 44;
             // #endif
@@ -69,26 +69,29 @@ const setting = {
             return state.sys.platform === 'ios' ? 44 : 48;
             // #endif
         },
-        addressJson: function(state) {
+        addressJson: function (state) {
             return state.addressJson;
+        },
+        isProductsFeatured: function (state) {
+            return state.setting.setting_collection.goods_setting.recommend_showpage.goodsinfo.value;
         }
     },
     actions: {
-        getSetting: function({commit}) {
+        getSetting: function ({commit}) {
             let $heshop = this._vm.$heshop;
             let $storageKey = this._vm.$storageKey;
             if (uni.getStorageSync($storageKey.setting)) {
                 commit('setting', uni.getStorageSync($storageKey.setting));
             } else {
-                $heshop.setting('get').then(function(res) {
+                $heshop.setting('get').then(function (res) {
                     commit('setting', res);
                     uni.setStorageSync($storageKey.setting, res);
-                }).catch(function(err) {
+                }).catch(function (err) {
                     console.error(err);
                 });
             }
         },
-        resetting: function({dispatch}) {
+        resetting: function ({dispatch}) {
             let $storageKey = this._vm.$storageKey;
             uni.removeStorageSync($storageKey.setting);
             dispatch('getSetting');
@@ -103,12 +106,12 @@ const setting = {
         },
         getSys: function ({commit}) {
             uni.getSystemInfo({
-                success: function(res) {
+                success: function (res) {
                     commit('setSys', res);
                 }
             });
         },
-        getTheme: function({commit}) {
+        getTheme: function ({commit}) {
             let $heshop = this._vm.$heshop;
             let $storageKey = this._vm.$storageKey;
             if (uni.getStorageSync($storageKey.theme_color)) {
@@ -116,10 +119,10 @@ const setting = {
             } else {
                 $heshop.fitment('post', {
                     keyword: 'themeColor'
-                }).then(function(res) {
+                }).then(function (res) {
                     commit('theme', res.content);
                     uni.setStorageSync($storageKey.theme_color, res.content);
-                }).catch(function(err) {
+                }).catch(function (err) {
                     console.error(err);
                 });
             }
@@ -132,16 +135,16 @@ const setting = {
             } else {
                 $heshop.fitment('post', {
                     keyword: 'tabbar'
-                }).then(function(res) {
+                }).then(function (res) {
                     let data = JSON.parse(res.content);
                     commit('tabBar', data);
                     uni.setStorageSync($storageKey.tab_bar, data);
-                }).catch(function(err) {
+                }).catch(function (err) {
                     console.error(err);
                 });
             }
         },
-        getAddress: function({commit}) {
+        getAddress: function ({commit}) {
             let $heshop = this._vm.$heshop;
             let $storageKey = this._vm.$storageKey;
             if (uni.getStorageSync($storageKey.address_json)) {
@@ -150,10 +153,10 @@ const setting = {
                 $heshop.search('post', {include: 'setting'}, {
                     keyword: 'addressjson',
                     content_key: ''
-                }).then(function(res) {
+                }).then(function (res) {
                     commit('addressJson', res);
                     uni.setStorageSync($storageKey.address_json, res);
-                }).catch(function(err) {
+                }).catch(function (err) {
                     console.error(err);
                 });
             }

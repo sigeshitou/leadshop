@@ -1,9 +1,9 @@
 <template>
     <div class="hyperlink-select">
-        <popup @confirm="handleConfirm" :forbidden="forbidden">
+        <popup @confirm="handleConfirm" :forbidden="forbidden" :original="selectData">
             <div class="classify-select-tag" v-if="selectData.name" @click="stop">
                 <Tag @close="handleClose" :closable="!isHome">
-                    {{selectData.name}}
+                    {{getTipsInfo(selectData)}}
                 </Tag>
                 <el-button type="text" :disabled="isHome">修改</el-button>
             </div>
@@ -83,6 +83,38 @@ export default {
 
     },
     methods: {
+        getTipsInfo(item) {
+            if (item.extend) {
+                if (item.index == 2) {
+                    if (item.param.name) {
+                        if (item.param.name.length > 4) {
+                            return item.param.name.slice(0, 4) + "...";
+                        } else {
+                            return item.param.name;
+                        }
+                    }
+                }
+                if (item.index == 3) {
+                    if (item.param.address) {
+                        if (item.param.address.length > 4) {
+                            return item.param.address.slice(0, 4) + "...";
+                        } else {
+                            return item.param.address;
+                        }
+                    }
+                }
+                if (item.index == 7) {
+                    if (item.param.title) {
+                        if (item.param.title.length > 4) {
+                            return item.param.title.slice(0, 4) + "...";
+                        } else {
+                            return item.param.title;
+                        }
+                    }
+                }
+            }
+            return item.name;
+        },
         handleClose() {
             this.selectData = {};
         },

@@ -12,6 +12,9 @@
                 <input class="tabs-header-radio" type="radio" :value="index" v-model="select">
                 <div class="tabs-header-title">{{item.title}}</div>
             </label>
+            <label class="tabs-header-item " v-if="content.data.length===0">
+                <div class="tabs-header-title active">选项卡</div>
+            </label>
         </div>
         <div class="tabs-content">
             <div class="tabs-content-item">

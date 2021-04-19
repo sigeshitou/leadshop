@@ -10,13 +10,15 @@
             ></detail-top>
             <view class="he-detail">
                 <view class="he-order-detail">
-                    <detail-logistics v-if="detail.status >= 202" :freight="detail.freight"></detail-logistics>
+                    <detail-logistics v-if="detail.status >= 202" :mobile="detail.buyer.mobile" :freight-obj="freight"
+                                      :freight="detail.freight"></detail-logistics>
                     <detail-receipt :consignee-info="detail.buyer"></detail-receipt>
                     <detail-product-info :goods="detail.goods" :status="detail.status"></detail-product-info>
                     <detail-price
                         :goods-amount="detail.goods_amount"
                         :freight-amount="detail.freight_amount"
                         :pay-amount="detail.pay_amount"
+                        :status="detail.status"
                     ></detail-price>
                     <detail-order-info
                         :order-sn="detail.order_sn"
@@ -55,9 +57,8 @@ import detailPrice from "./components/detail-price.vue";
 import detailBottomOperating from "./components/detail-bottom-operating.vue";
 import detailOrderInfo from "./components/detail-order-info.vue";
 import detailLogistics from "./components/detail-logistics.vue";
-import heProductsFeatured from "@/components/he-products-featured.vue";
-import heLoading from "@/components/he-loading.vue";
-
+import heProductsFeatured from "../../components/he-products-featured.vue";
+import heLoading from "../../components/he-loading.vue";
 import {mapGetters} from "vuex";
 
 export default {
@@ -79,11 +80,17 @@ export default {
                 goods: [],
                 buyer: {},
             },
-            loading: true
+            loading: true,
+            freight: {
+                status: 0,
+                message: '',
+                desc: '',
+                datetime: ''
+            }
         }
     },
     computed: {
-        isBottom: function() {
+        isBottom: function () {
             let {status, is_evaluate} = this.detail;
             return status === 100 || status === 202 || (status === 203 && is_evaluate === 0);
         },
@@ -92,18 +99,43 @@ export default {
         }),
     },
     methods: {
-        getDetail: function(id) {
+        getDetail: function (id) {
             let _this = this;
             this.$heshop.order('get', id).then(function (res) {
                 _this.detail = res;
+                if (res.status >= 202 && res.freight.type === 1) {
+                    _this.loading = true;
+                    let {freight_sn, mobile, logistics_company} = res.freight;
+                    _this.$heshop.express('post', {
+                        no: freight_sn,
+                        mobile: mobile,
+                        name: logistics_company
+                    }).then(function (response) {
+                        if (response.state >= 1) {
+                            _this.freight = response.list[response.list.length - 1];
+                        } else {
+                            _this.freight.message = response.message;
+                        }
+                        _this.freight.no = freight_sn;
+                        _this.freight.mobile = res.buyer.mobile;
+                        _this.freight.name = logistics_company;
+                        _this.freight.state = response.state;
+                    }).catch(function (err) {
+                        console.log(err);
+                        _this.freight.status = err.status;
+                    });
+                }
                 _this.loading = false;
-            }).catch(function(err) {
+            }).catch(function (err) {
                 console.error(err);
                 _this.$toError();
             });
         }
     },
     onLoad(options) {
+        // #ifdef H5
+        this.$wechat.init();
+        // #endif
         options.id ? this.getDetail(parseInt(options.id)) : this.$toError();
     },
     onShow() {
@@ -121,11 +153,13 @@ export default {
 .he-page-content {
     overflow: hidden;
 }
+
 .he-detail {
     position: relative;
     z-index: 1;
     margin-top: 186px;
-    /deep/.he-copy {
+
+    /deep/ .he-copy {
         height: 34px;
         width: 66px;
         text-align: center;
@@ -141,9 +175,11 @@ export default {
         margin-left: 12px;
     }
 }
+
 .he-order-detail {
     padding: 20px;
 }
+
 .he-bottom-height {
     height: 96px;
 }
