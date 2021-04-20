@@ -1,5 +1,8 @@
-## V1.0.1更新图
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0419/182156_a19002ce_7426632.png "v1.0.1_副本.png")
+## 本周更新计划【20210420-20210423】
+ **[点击查看本周更新计划](https://forum.leadshop.vip/thread/63)** 
+
+## 更新历史
+ **[点击查看V1.0.1更新内容](https://forum.leadshop.vip/thread/57)** 
 
 qq交流群号：849894135
 
