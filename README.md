@@ -4,9 +4,13 @@
 ## 更新历史
  **[点击查看V1.0.1更新内容](https://forum.leadshop.vip/thread/57)** 
 
-qq交流群号：849894135
+ **Leadshop微信交流群** 
 
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0416/143640_aa669bf7_7426632.png "kaiyuanqun.png")
+![微信交流群](https://images.gitee.com/uploads/images/2021/0423/141626_6e2da520_7426632.png "微信交流群.png")
+
+
+ **qq交流群号：849894135** 
+
 ## 运行环境
 
 # Leadshop微商城
