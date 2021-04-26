@@ -259,9 +259,10 @@ class WechatPay
      * @param null $no_credit 是否禁止信用
      * @return bool|string
      */
-    public function getPrepayId($openid, $body, $out_trade_no, $total_fee, $notify_url, $trade_type = "JSAPI", $goods_tag = null, $fee_type = 'CNY', $no_credit = null)
+    public function getPrepayId($openid, $body, $out_trade_no, $total_fee, $notify_url, $attach = '', $trade_type = "JSAPI", $goods_tag = null, $fee_type = 'CNY', $no_credit = null)
     {
         $postdata = array(
+            "attach"           => $attach,
             "body"             => $body,
             "out_trade_no"     => $out_trade_no,
             "fee_type"         => $fee_type,

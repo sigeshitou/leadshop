@@ -20,7 +20,7 @@ class DownloadController extends BasicController
         }
         $apiRoot = \Yii::$app->request->hostInfo
             . rtrim(\Yii::$app->request->baseUrl, '/');
-        $apiRoot = str_replace('http://', 'https://', $apiRoot);
+        $apiRoot = str_replace('http://', 'https://', $apiRoot) . '/index.php';
         $AppID = \Yii::$app->params['AppID'];
         $data = Fitment::find()->where(['AppID' => $AppID, 'keyword' => 'themeColor'])->select('keyword,content')->asArray()->one();
         if ($data) {
@@ -34,8 +34,7 @@ module.exports  = {
     "acid": "3",
     "multiid": "0",
     "version": "2",
-    "AppURL": "{$apiRoot}",
-    "siteroot":"",
+    "siteroot":"{$apiRoot}",
     "theme": "{$theme}", // red_theme purple_theme blue_theme green_theme orange_theme golden_theme
     "design_method": "3"
 }

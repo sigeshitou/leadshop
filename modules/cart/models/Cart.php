@@ -61,7 +61,7 @@ class Cart extends CommonModels
     {
         $scenarios           = parent::scenarios();
         $scenarios['create'] = ['goods_id', 'UID', 'goods_param', 'goods_number', 'goods_name', 'goods_image', 'show_goods_param'];
-        $scenarios['update'] = ['goods_param', 'goods_number','show_goods_param'];
+        $scenarios['update'] = ['goods_param', 'goods_number', 'goods_name', 'goods_image', 'show_goods_param'];
         return $scenarios;
     }
 
@@ -76,7 +76,7 @@ class Cart extends CommonModels
 
     public function getGoodsinfo()
     {
-        return $this->hasOne('goods\models\Goods', ['id' => 'goods_id'])->where(['is_deleted' => 0])->with('param')->select('id,is_sale,min_number');
+        return $this->hasOne('goods\models\Goods', ['id' => 'goods_id'])->where(['is_deleted' => 0])->with('param')->select('id,is_sale,min_number,limit_buy_value,limit_buy_status');
     }
 
 }

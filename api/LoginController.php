@@ -25,6 +25,7 @@ class LoginController extends AccountModules implements Map
     {
         $actions = parent::actions();
         unset($actions['create']);
+        unset($actions['update']);
         return $actions;
     }
 
@@ -36,5 +37,4 @@ class LoginController extends AccountModules implements Map
     {
         return $this->actionLogin();
     }
-
 }

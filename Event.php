@@ -16,4 +16,11 @@ class Event extends BasicEvent
     public $order_goods        = []; //订单商品,用于修改库存和清空购物车
     public $cancel_order_goods = []; //取消订单商品,用于库存返还
     public $pay_order_sn       = null; //支付订单编号
+    public $pay_uid            = null; //支付用户
+    public $sms                = [
+        'type'   => '',
+        'mobile' => '',
+        'params' => [],
+    ]; //短信参数
+    public $order_after       = null; //售后事件
 }

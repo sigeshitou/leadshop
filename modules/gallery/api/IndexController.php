@@ -287,10 +287,10 @@ class IndexController extends BasicController
 
             $file              = $upload->image_base64($content);
             $data['size']      = $file['size'];
-            // $data['url']       = URL_STRING . $file['url'];
+            $data['url']       = URL_STRING . $file['url'];
             $thumbnail         = $upload->image_compress($file['url']);
             $data['thumbnail'] = URL_STRING . $thumbnail;
-            $data['url']       = URL_STRING . $thumbnail;
+
 
         } elseif ($type == 2) {
 

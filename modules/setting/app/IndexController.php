@@ -78,6 +78,9 @@ class IndexController extends BasicController
         if ($keyword == 'addressjson') {
             $json_string = file_get_contents(__DIR__.'/address.json');
             return to_array($json_string);
+        } elseif ($keyword == 'expressjson') {
+            $json_string = file_get_contents(__DIR__.'/express.json');
+            return to_array($json_string);
         }
         $merchant_id = 1;
         $AppID       = Yii::$app->params['AppID'];

@@ -1,6 +1,6 @@
 <?php
 /**
- * 售后订单控制器
+ * 订单导出控制器
  * @link http://www.heshop.com/
  * @copyright Copyright (c) 2020 HeShop Software LLC
  * @license http://www.heshop.com/license/
@@ -185,7 +185,9 @@ class ExportController extends BasicController
             ->alias('goods')
             ->joinWith([
                 'buyer as buyer',
-                'order as order',
+                'order as order'=>function($query){
+                    $query->with('user');
+                },
                 'freight as freight',
             ])
             ->where($where)

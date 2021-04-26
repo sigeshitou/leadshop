@@ -1,7 +1,14 @@
 <?php
+/**
+ * @copyright ©2020 浙江禾成云计算有限公司
+ * @link      : http://www.zjhejiang.com
+ * Created by PhpStorm.
+ * User: Andy - 阿德 569937993@qq.com
+ * Date: 2021/1/18
+ * Time: 11:21
+ */
 
 namespace app\components\core;
-
 
 use yii\base\BaseObject;
 

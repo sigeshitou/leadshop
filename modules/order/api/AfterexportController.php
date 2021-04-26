@@ -1,6 +1,6 @@
 <?php
 /**
- * 售后订单控制器
+ * 售后订单导出控制器
  * @link http://www.heshop.com/
  * @copyright Copyright (c) 2020 HeShop Software LLC
  * @license http://www.heshop.com/license/

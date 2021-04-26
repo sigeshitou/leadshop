@@ -55,7 +55,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function rules()
     {
         return [
-            ['mobile', 'unique', 'message' => '{attribute}已经存在'],
+            [['mobile'], 'safe', 'message' => '{attribute}不能为空'],
             [['AppID', 'avatar', 'realname', 'nickname'], 'string', 'message' => '{attribute}必须是字符串'],
             [['gender'], 'integer', 'message' => '{attribute}必须是整数'],
         ];
@@ -163,5 +163,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function getOauth()
     {
         return $this->hasOne(Oauth::className(), ['UID' => 'id']);
+    }
+
+    public function getLabellog(){
+        return $this->hasMany(LabelLog::className(), ['UID' => 'id'])->select('id,UID,label_id');
     }
 }

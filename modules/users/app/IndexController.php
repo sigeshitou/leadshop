@@ -8,7 +8,6 @@
 namespace users\app;
 
 use app\datamodel\ThirdWxapp;
-use app\datamodel\WechatPlatform;
 use app\forms\ExtMpForm;
 use framework\common\BasicController;
 use Yii;
@@ -117,7 +116,7 @@ class IndexController extends BasicController
                 return $this->bindMobile();
                 break;
             default:
-                throw new ForbiddenHttpException('未定义操作');
+                Error('未定义操作');
                 break;
         }
     }
@@ -132,7 +131,7 @@ class IndexController extends BasicController
 
         $model = M('users', 'User')::findOne($UID);
         if (empty($model)) {
-            throw new ForbiddenHttpException('用户不存在');
+            Error('用户不存在');
         }
 
         $model->mobile = null;
@@ -149,13 +148,24 @@ class IndexController extends BasicController
 
         $model = M('users', 'User')::findOne($UID);
         if (empty($model)) {
-            throw new ForbiddenHttpException('用户不存在');
+            Error('用户不存在');
         }
 
         $mobile = $this->getMobile();
 
         if (!$mobile) {
             Error('手机号获取失败');
+        }
+
+        $check = M('users','User')::find()->where(['and',['mobile'=>$mobile],['<>','id',$UID]])->with(['oauth'=>function($query){
+            $query->select('UID,type');
+        }])->asArray()->all();
+        if (!empty($check)) {
+            foreach ($check as $value) {
+                if ($value['oauth']['type'] === $model->oauth->type) {
+                    Error('手机号已存在');
+                }
+            }
         }
 
         $data = ['mobile' => $mobile];
@@ -167,7 +177,7 @@ class IndexController extends BasicController
             if ($res) {
                 return $model;
             } else {
-                throw new ForbiddenHttpException('保存失败');
+                Error('保存失败');
             }
 
         }
@@ -185,7 +195,7 @@ class IndexController extends BasicController
                 $time       = time() - 600;
                 $check_code = M('sms', 'SmsLog')::find()->where(['and', ['mobile' => $mobile, 'type' => 1], ['>=', 'created_time', $time]])->orderBy(['created_time' => SORT_DESC])->one();
                 if ($check_code) {
-                    if ($check_code == $code) {
+                    if ($check_code->code == $code) {
                         return $mobile;
                     } else {
                         Error('验证码错误');
@@ -197,24 +207,11 @@ class IndexController extends BasicController
                 break;
 
             default:
-                //默认小程序绑定手机
-                $third = ThirdWxapp::findOne(['AppID' => \Yii::$app->params['AppID'], 'is_deleted' => 0]);
-                if ($third) {
-                    $platform = WechatPlatform::getPlatform();
-                    $mp       = ExtMpForm::instance('Serviceapplet', $third, [
-                        'appid'        => $third->authorizer_appid,
-                        'access_token' => $platform->component_access_token,
-                    ]);
-                    if (!$mp) {
-                        Error($mp->errMsg);
-                    }
-                } else {
-                    //SDK实例对象
-                    $mp = &load_wechat('Applet', [
-                        'appid'     => Yii::$app->params['apply']['weapp']['AppID'], // 填写高级调用功能的app id, 请在微信开发模式后台查询
-                        'appsecret' => Yii::$app->params['apply']['weapp']['AppSecret'], // 填写高级调用功能的密钥
-                    ]);
-                }
+                //SDK实例对象
+                $mp = &load_wechat('Applet', [
+                    'appid'     => Yii::$app->params['apply']['weapp']['AppID'], // 填写高级调用功能的app id, 请在微信开发模式后台查询
+                    'appsecret' => Yii::$app->params['apply']['weapp']['AppSecret'], // 填写高级调用功能的密钥
+                ]);
 
                 // 执行接口操作
                 $mobile = $mp->getMobile($post['code'], $post['encryptedData'], $post['iv']);

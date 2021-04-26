@@ -58,7 +58,7 @@ class QrcodeController extends BasicsModules implements Map
         if (SHOP_ENVIRONMENT == 'we7') {
             $wechat_url = WE7_URL . '#/' . $url;
         } else {
-            $wechat_url = $host . '/h5/' . $url;
+            $wechat_url = $host . '/index.php?r=wechat#/' . $url;
         }
         \QRcode::png($wechat_url, false, QR_ECLEVEL_L, 4);
         $wechat_img = ob_get_contents(); //获取缓冲区内容

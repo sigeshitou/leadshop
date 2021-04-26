@@ -3,17 +3,13 @@
  * @copyright ©2020 浙江禾成云计算有限公司
  * @link      : http://www.zjhejiang.com
  * Created by PhpStorm.
- * User: Andy - Wangjie
+ * User: Andy - 阿德
  * Date: 2021/1/25
  * Time: 15:36
  */
 
 namespace users\app;
 
-use app\datamodel\Mp;
-use app\datamodel\ThirdWxapp;
-use app\datamodel\WechatPlatform;
-use app\forms\ExtMpForm;
 use users\models\LoginUserInfo;
 
 class WechatController extends LoginController
@@ -59,11 +55,6 @@ class WechatController extends LoginController
             'scope' => $get['scope'],
             'state' => \Yii::$app->params['AppID'],
         ];
-        $third = ThirdWxapp::findOne(['AppID' => \Yii::$app->params['AppID'], 'is_deleted' => 0]);
-        if ($third) {
-            $platform = WechatPlatform::getPlatform();
-            $args['component_appid'] = $platform->appid;
-        }
         $params = '';
         foreach ($args as $key => $item) {
             $params .= $key . '=' . $item . '&';
@@ -91,26 +82,14 @@ class WechatController extends LoginController
     public function actionWechat()
     {
         $post = \Yii::$app->request->post();
-        $third = ThirdWxapp::findOne(['AppID' => \Yii::$app->params['AppID'], 'is_deleted' => 0]);
-        if ($third) {
-            $platform = WechatPlatform::getPlatform();
-            $mp = ExtMpForm::instance('Serviceoauth', $third, [
-                'appid' => $third->authorizer_appid,
-                'access_token' => $platform->component_access_token
-            ]);
-            if (!$mp) {
-                Error($mp->errMsg);
-            }
-        } else {
-            $mpConfig = \Yii::$app->params['apply'][\Yii::$app->params['AppType']] ?? null;
-            if (!$mpConfig || !$mpConfig['AppID'] || !$mpConfig['AppSecret']) {
-                throw new \Exception('渠道参数不完整。');
-            }
-            $mp = &load_wechat('Oauth', [
-                'appid'          => $mpConfig['AppID'], // 填写高级调用功能的app id, 请在微信开发模式后台查询
-                'appsecret'      => $mpConfig['AppSecret'], // 填写高级调用功能的密钥
-            ]);
+        $mpConfig = \Yii::$app->params['apply'][\Yii::$app->params['AppType']] ?? null;
+        if (!$mpConfig || !$mpConfig['AppID'] || !$mpConfig['AppSecret']) {
+            throw new \Exception('渠道参数不完整。');
         }
+        $mp = &load_wechat('Oauth', [
+            'appid'          => $mpConfig['AppID'], // 填写高级调用功能的app id, 请在微信开发模式后台查询
+            'appsecret'      => $mpConfig['AppSecret'], // 填写高级调用功能的密钥
+        ]);
         $access = $mp->getOauthAccessToken($post['code']);
         if ($access === false) {
             Error($mp->errMsg);

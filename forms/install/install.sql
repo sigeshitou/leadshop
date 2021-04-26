@@ -827,6 +827,36 @@ CREATE TABLE `heshop_initialize_prefix_user_export`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
+CREATE TABLE `heshop_initialize_prefix_user_label`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '标签名称',
+  `type` tinyint(1) NOT NULL DEFAULT 1 COMMENT '标签类型 1手动 2自动',
+  `status` tinyint(1) NOT NULL DEFAULT 1 COMMENT '启用状态 0不启用  1启用',
+  `conditions_status` tinyint(1) NOT NULL DEFAULT 1 COMMENT '达标条件  1满足所有  2任意一个',
+  `conditions_setting` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '条件设置',
+  `filter_user` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '过滤的用户',
+  `merchant_id` bigint(10) NOT NULL COMMENT '店铺ID',
+  `AppID` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '应用ID',
+  `created_time` bigint(10) NULL DEFAULT 0 COMMENT '创建时间',
+  `updated_time` bigint(10) NULL DEFAULT 0 COMMENT '更新时间',
+  `deleted_time` bigint(10) NULL DEFAULT 0 COMMENT '删除时间',
+  `is_deleted` tinyint(100) NOT NULL DEFAULT 0 COMMENT '是否删除',
+  `users_number` int(10) NULL DEFAULT 0 COMMENT '拥有用户数量',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+
+CREATE TABLE `heshop_initialize_prefix_user_label_log`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `UID` bigint(20) NOT NULL COMMENT '用户ID',
+  `label_id` bigint(10) NOT NULL COMMENT '标签ID',
+  `created_time` bigint(10) NULL DEFAULT 0 COMMENT '创建时间',
+  `updated_time` bigint(10) NULL DEFAULT 0 COMMENT '更新时间',
+  `deleted_time` bigint(10) NULL DEFAULT 0 COMMENT '删除时间',
+  `is_deleted` tinyint(100) NOT NULL DEFAULT 0 COMMENT '是否删除',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `用户ID`(`UID`) USING BTREE,
+  INDEX `标签ID`(`label_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 CREATE TABLE `heshop_initialize_prefix_user_oauth`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自动编号',

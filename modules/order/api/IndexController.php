@@ -7,6 +7,7 @@
  */
 namespace order\api;
 
+use app\components\subscribe\OrderSendMessage;
 use framework\common\BasicController;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -515,6 +516,35 @@ class IndexController extends BasicController
             if ($freight_model->validate()) {
                 if ($freight_model->save()) {
                     $transaction->commit(); //事务执行
+
+                    $this->module->event->sms = [
+                        'type' => 'order_send',
+                        'mobile' => [$model->user->mobile],
+                        'params' => [
+                            'code' =>  substr($model->order_sn,-4)
+                        ]
+                    ];
+                    $this->module->trigger('send_sms');
+
+                    if ($freight_model->type == 1) {
+                        $message = new OrderSendMessage([
+                            'expressName' => $freight_model->logistics_company,
+                            'expressNo' => $freight_model->freight_sn,
+                            'address' => $model->buyer->address,
+                            'orderNo' => $model->order_sn
+                        ]);
+                    } else {
+                        $message = new OrderSendMessage([
+                            'expressName' => '无物流',
+                            'expressNo' => '--',
+                            'address' => $model->buyer->address,
+                            'orderNo' => $model->order_sn
+                        ]);
+                    }
+                    \Yii::$app->subscribe
+                        ->setUser($model->UID)
+                        ->setPage('pages/order/detail?id=' . $model->id)
+                        ->send($message);
                     return ['status' => $model->status];
                 } else {
                     $transaction->rollBack(); //事务回滚

@@ -344,6 +344,7 @@ class IndexController extends BasicController
             $model->pay_time = time();
             if ($model->save()) {
                 $this->module->event->pay_order_sn = $order_sn;
+                $this->module->event->pay_uid      = $model->UID;
                 $this->module->trigger('pay_order');
                 $this->module->event->user_statistical = ['UID' => $model->UID, 'buy_number' => 1, 'buy_amount' => $model->pay_amount, 'last_buy_time' => time()];
                 $this->module->trigger('user_statistical');
@@ -605,7 +606,7 @@ class IndexController extends BasicController
                             ->joinWith([
                                 'order as order',
                             ])
-                            ->where(['and', ['>', 'order.status', 200], ['order.UID' => $UID, 'goods.goods_id' => $value['id']]])
+                            ->where(['and', ['>', 'order.status', 200],['>=','order.created_time',$limit_time], ['order.UID' => $UID, 'goods.goods_id' => $value['id']]])
                             ->SUM('goods.goods_number');
                         //算上当前购买量后的购买总数
                         if (($goods_number + $goods_data_number_count[$v['goods_id']]) > $value['limit_buy_value']) {

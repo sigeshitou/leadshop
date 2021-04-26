@@ -20,6 +20,7 @@ return [
     '@setting/api'        => '@leadmall/modules/setting/api',
     '@statistical/api'    => '@leadmall/modules/statistical/api',
     '@sms/api'            => '@leadmall/modules/sms/api',
+    '@subscribe/api'      => '@leadmall/modules/subscribe/api',
 
     '@demo/app'           => '@leadmall/modules/demo/app',
     '@basics/app'         => '@leadmall/modules/basics/app',
@@ -35,6 +36,7 @@ return [
     '@statistical/app'    => '@leadmall/modules/statistical/app',
     '@sms/app'            => '@leadmall/modules/sms/app',
     '@mp/app'             => '@leadmall/modules/mp/app',
+    '@subscribe/app'      => '@leadmall/modules/subscribe/app',
 
     '@demo/models'        => '@leadmall/modules/demo/models',
     '@basics/models'      => '@leadmall/modules/basics/models',
@@ -49,4 +51,5 @@ return [
     '@setting/models'     => '@leadmall/modules/setting/models',
     '@statistical/models' => '@leadmall/modules/statistical/models',
     '@sms/models'         => '@leadmall/modules/sms/models',
+    '@subscribe/models'   => '@leadmall/modules/subscribe/models',
 ];

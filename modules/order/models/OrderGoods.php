@@ -83,7 +83,7 @@ class OrderGoods extends CommonModels
      */
     public function getOrder()
     {
-        return $this->hasOne('order\models\Order', ['order_sn' => 'order_sn'])->with('user');
+        return $this->hasOne('order\models\Order', ['order_sn' => 'order_sn']);
     }
 
     /**
@@ -110,7 +110,16 @@ class OrderGoods extends CommonModels
      */
     public function getAfter()
     {
-        return $this->hasOne('order\models\OrderAfter', ['order_goods_id' => 'id'])->select('order_goods_id,type,status');
+        return $this->hasOne('order\models\OrderAfter', ['order_goods_id' => 'id'])->select('order_goods_id,type,status,return_number');
+    }
+
+    /**
+     * 物流信息
+     * @return [type] [description]
+     */
+    public function getGoods()
+    {
+        return $this->hasOne('goods\models\Goods', ['id' => 'goods_id'])->select('id,group');
     }
 
 }

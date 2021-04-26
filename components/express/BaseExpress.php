@@ -1,8 +1,15 @@
 <?php
+/**
+ * @copyright ©2020 浙江禾成云计算有限公司
+ * @link      : http://www.zjhejiang.com
+ * Created by PhpStorm.
+ * User: Andy - 阿德 569937993@qq.com
+ * Date: 2021/1/18
+ * Time: 11:21
+ */
 
 
 namespace app\components\express;
-
 
 use app\components\core\HttpRequest;
 use yii\base\BaseObject;
@@ -34,7 +41,7 @@ abstract class BaseExpress extends BaseObject
 
     protected function getConfig()
     {
-        $config = M('setting', 'Setting')::find()->where(['keyword' => 'express_setting', 'merchant_id' => 1, 'AppID' => '98c08c25f8136d590c'])->select('content')->asArray()->one();
+        $config = M('setting', 'Setting')::find()->where(['keyword' => 'express_setting', 'merchant_id' => 1, 'AppID' => \Yii::$app->params['AppID']])->select('content')->asArray()->one();
         if ($config) {
             return json_decode($config['content'], true);
         }

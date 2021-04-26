@@ -114,7 +114,6 @@ class AssetBundle extends BaseObject
      */
     public $publishOptions = [];
 
-
     /**
      * Registers this asset bundle with a view.
      * @param View $view the view to be registered with
@@ -151,7 +150,7 @@ class AssetBundle extends BaseObject
         $manager = $view->getAssetManager();
         foreach ($this->js as $js) {
             if (is_array($js)) {
-                $file = array_shift($js);
+                $file    = array_shift($js);
                 $options = ArrayHelper::merge($this->jsOptions, $js);
                 $view->registerJsFile($manager->getActualAssetUrl($this, $file), $options);
             } else {
@@ -162,7 +161,7 @@ class AssetBundle extends BaseObject
         }
         foreach ($this->css as $css) {
             if (is_array($css)) {
-                $file = array_shift($css);
+                $file    = array_shift($css);
                 $options = ArrayHelper::merge($this->cssOptions, $css);
                 $view->registerCssFile($manager->getActualAssetUrl($this, $file), $options);
             } else {

@@ -200,7 +200,6 @@ class AssetManager extends Component
 
     private $_dummyBundles = [];
 
-
     /**
      * Initializes the component.
      * @throws InvalidConfigException if [[basePath]] does not exist.
@@ -211,7 +210,7 @@ class AssetManager extends Component
         $this->basePath = Yii::getAlias($this->basePath);
 
         $this->basePath = realpath($this->basePath);
-        $this->baseUrl = rtrim(Yii::getAlias($this->baseUrl), '/');
+        $this->baseUrl  = rtrim(Yii::getAlias($this->baseUrl), '/');
     }
 
     private $_isBasePathPermissionChecked;
@@ -231,7 +230,7 @@ class AssetManager extends Component
         if (!is_dir($this->basePath)) {
             throw new InvalidConfigException("The directory does not exist: {$this->basePath}");
         }
-        
+
         if (!is_writable($this->basePath)) {
             throw new InvalidConfigException("The directory is not writable by the Web process: {$this->basePath}");
         }
@@ -300,10 +299,10 @@ class AssetManager extends Component
     protected function loadDummyBundle($name)
     {
         if (!isset($this->_dummyBundles[$name])) {
-            $bundle = Yii::createObject(['class' => $name]);
+            $bundle             = Yii::createObject(['class' => $name]);
             $bundle->sourcePath = null;
-            $bundle->js = [];
-            $bundle->css = [];
+            $bundle->js         = [];
+            $bundle->css        = [];
 
             $this->_dummyBundles[$name] = $bundle;
         }
@@ -320,7 +319,7 @@ class AssetManager extends Component
      */
     public function getAssetUrl($bundle, $asset)
     {
-        $assetUrl = $this->getActualAssetUrl($bundle, $asset);
+        $assetUrl  = $this->getActualAssetUrl($bundle, $asset);
         $assetPath = $this->getAssetPath($bundle, $asset);
 
         if ($this->appendTimestamp && $assetPath && ($timestamp = @filemtime($assetPath)) > 0) {
@@ -478,10 +477,10 @@ class AssetManager extends Component
     {
         $this->checkBasePathPermission();
 
-        $dir = $this->hash($src);
+        $dir      = $this->hash($src);
         $fileName = basename($src);
-        $dstDir = $this->basePath . DIRECTORY_SEPARATOR . $dir;
-        $dstFile = $dstDir . DIRECTORY_SEPARATOR . $fileName;
+        $dstDir   = $this->basePath . DIRECTORY_SEPARATOR . $dir;
+        $dstFile  = $dstDir . DIRECTORY_SEPARATOR . $fileName;
 
         if (!is_dir($dstDir)) {
             FileHelper::createDirectory($dstDir, $this->dirMode, true);
@@ -489,7 +488,8 @@ class AssetManager extends Component
 
         if ($this->linkAssets) {
             if (!is_file($dstFile)) {
-                try { // fix #6226 symlinking multi threaded
+                try {
+                    // fix #6226 symlinking multi threaded
                     symlink($src, $dstFile);
                 } catch (\Exception $e) {
                     if (!is_file($dstFile)) {
@@ -535,12 +535,13 @@ class AssetManager extends Component
     {
         $this->checkBasePathPermission();
 
-        $dir = $this->hash($src);
+        $dir    = $this->hash($src);
         $dstDir = $this->basePath . DIRECTORY_SEPARATOR . $dir;
         if ($this->linkAssets) {
             if (!is_dir($dstDir)) {
                 FileHelper::createDirectory(dirname($dstDir), $this->dirMode, true);
-                try { // fix #6226 symlinking multi threaded
+                try {
+                    // fix #6226 symlinking multi threaded
                     symlink($src, $dstDir);
                 } catch (\Exception $e) {
                     if (!is_dir($dstDir)) {
@@ -552,8 +553,8 @@ class AssetManager extends Component
             $opts = array_merge(
                 $options,
                 [
-                    'dirMode' => $this->dirMode,
-                    'fileMode' => $this->fileMode,
+                    'dirMode'              => $this->dirMode,
+                    'fileMode'             => $this->fileMode,
                     'copyEmptyDirectories' => false,
                 ]
             );
@@ -644,10 +645,10 @@ class AssetManager extends Component
     {
         if (($actualAsset = $this->resolveAsset($bundle, $asset)) !== false) {
             if (strncmp($actualAsset, '@web/', 5) === 0) {
-                $asset = substr($actualAsset, 5);
+                $asset   = substr($actualAsset, 5);
                 $baseUrl = Yii::getAlias('@web');
             } else {
-                $asset = Yii::getAlias($actualAsset);
+                $asset   = Yii::getAlias($actualAsset);
                 $baseUrl = $this->baseUrl;
             }
         } else {

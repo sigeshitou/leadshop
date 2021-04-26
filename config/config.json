@@ -29,6 +29,7 @@
         "leadmall/app/login/index",
         "leadmall/app/login/view",
         "leadmall/app/jssdk/index",
+        "leadmall/app/subscribe/index",
         "leadmall/api/demo/index",
         "leadmall/api/plugin/index",
         "leadmall/api/plugin/view",

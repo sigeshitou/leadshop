@@ -223,4 +223,25 @@ class AccountController extends BasicController
         return (string) $token;
     }
 
+    public function changePwd()
+    {
+        $pass = Yii::$app->request->post('old_password');
+        $newPass1 = Yii::$app->request->post('new_password1');
+        $newPass2 = Yii::$app->request->post('new_password2');
+        if (!$pass || !$newPass1 || !$newPass2) {
+            Error('请填写表单');
+        }
+        if ($newPass1 != $newPass2) {
+            Error('两次新密码不一致');
+        }
+        $admin = $this->modelClass::find()->where(['mobile' => Yii::$app->user->identity->mobile, 'password' => MD5($pass)])->one();
+        if (!$admin) {
+            Error('旧密码错误');
+        }
+        $admin->password = md5($newPass2);
+        if ($admin->save()) {
+            return true;
+        }
+        return false;
+    }
 }

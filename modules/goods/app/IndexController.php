@@ -149,7 +149,7 @@ class IndexController extends BasicController
             $data = array_column($data, null, 'id');
             $list = [];
             foreach ($goods_id as $id) {
-                if ($data[$id]) {
+                if (isset($data[$id])) {
                     array_push($list, $data[$id]);
                 }
             }
@@ -287,7 +287,6 @@ class IndexController extends BasicController
         $result['freight']['freight_rules'] = $result['freight'] ? to_array($result['freight']['freight_rules']) : null;
         $result['package']['free_area']     = $result['package'] ? to_array($result['package']['free_area']) : null;
         $freight                            = 0;
-        yii::error($address);
         if (isset($address['province']) && isset($address['city']) && isset($address['district'])) {
 
             if ($result['ft_type'] === 1) {

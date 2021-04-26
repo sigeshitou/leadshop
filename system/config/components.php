@@ -71,6 +71,9 @@ $components = [
         ],
         'cloud'        => [
             'class' => \app\components\cloud\Cloud::class,
+        ],
+        'subscribe'    => [
+            'class' => \app\components\subscribe\Subscribe::class,
         ]
     ],
 ];

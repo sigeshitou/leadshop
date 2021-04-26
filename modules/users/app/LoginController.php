@@ -3,7 +3,7 @@
  * @copyright ©2020 浙江禾成云计算有限公司
  * @link      : http://www.zjhejiang.com
  * Created by PhpStorm.
- * User: Andy - Wangjie
+ * User: Andy - 阿德
  * Date: 2021/1/27
  * Time: 9:41
  */
@@ -56,7 +56,7 @@ abstract class LoginController extends BasicController
         }
         $oauth->oauthID = $userInfo->openId;
         $oauth->UID     = $user->id;
-        $oauth->unionID = $userInfo->unionId;
+        $oauth->unionID = $userInfo->unionId ?? '';
         $oauth->type    = \Yii::$app->params['AppType'];
         $oauth->format  = to_json($userInfo);
         if (!$oauth->save()) {

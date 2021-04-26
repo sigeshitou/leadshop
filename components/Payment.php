@@ -3,16 +3,13 @@
  * @copyright ©2020 浙江禾成云计算有限公司
  * @link      : http://www.zjhejiang.com
  * Created by PhpStorm.
- * User: Andy - Wangjie
+ * User: Andy - 阿德 569937993@qq.com
  * Date: 2021/1/18
  * Time: 11:21
  */
 
 namespace app\components;
 
-use Alipay\EasySDK\Kernel\Factory;
-use Alipay\EasySDK\Kernel\Util\ResponseChecker;
-use app\forms\CommonAlipay;
 use app\forms\CommonWechat;
 use framework\wechat\Lib\Tools;
 use order\models\Order;
@@ -57,13 +54,11 @@ class Payment extends Component
             $this->paymentOrder->orderNo,
             $this->paymentOrder->amount * 100,
             $this->paymentOrder->notify,
+            $this->paymentOrder->attach,
             $this->option['trade_type'] ?? 'JSAPI'
         );
         if ($res === false) {
             Error($pay->errMsg);
-        }
-        if (isset($this->option['is_qmpaas']) && $this->option['is_qmpaas']) {
-            return $res;
         }
         $appPayData = [
             'appId'     => $pay->appid,
@@ -76,42 +71,11 @@ class Payment extends Component
         return $appPayData;
     }
 
-    /**
-     * 支付宝支付
-     */
-    public function alipay()
-    {
-        //1. 设置参数（全局只需设置一次）
-        Factory::setOptions((new CommonAlipay())->getConfig($this->option));
-        try {
-            //2. 发起API调用（以支付能力下的统一收单交易创建接口为例）
-            $result = Factory::payment()->page()
-                ->pay($this->paymentOrder->title,
-                    $this->paymentOrder->orderNo,
-                    $this->paymentOrder->amount,
-                    $this->paymentOrder->return_url);
-            $responseChecker = new ResponseChecker();
-            //3. 处理响应或异常
-            if ($responseChecker->success($result)) {
-                echo $result->body;
-                echo "调用成功" . PHP_EOL;
-            } else {
-                echo "调用失败，原因：" . $result->msg . "，" . $result->subMsg . PHP_EOL;
-            }
-        } catch (\Exception $e) {
-            echo "调用失败，" . $e->getMessage() . PHP_EOL;
-        }
-    }
-
     public function notify($class, $AppID)
     {
         $wechat        = new CommonWechat();
         $wechat->AppID = $AppID;
-        if ($AppID) {
-            $pay = $wechat->getWechatPay();
-        } else {
-            $pay = $wechat->getWechatPay(['is_qmpaas' => true]);
-        }
+        $pay = $wechat->getWechatPay();
         if (!$pay) {
             throw new \Exception('请联系管理员配置支付信息');
         }
@@ -132,19 +96,6 @@ class Payment extends Component
                     \Yii::$app->response->format = Response::FORMAT_XML;
                     echo $content;
                 }
-            }
-        }
-    }
-
-    public function alipayNofity($class, $option)
-    {
-        Factory::setOptions((new CommonAlipay())->getConfig($option));
-        $passed = Factory::payment()->common()->verifyNotify(\Yii::$app->request->post());
-        if ($passed) {
-            $res = $class->alipaid(\Yii::$app->request->post());
-            if ($res) {
-                echo "success";
-                return;
             }
         }
     }

@@ -42,6 +42,10 @@ class SearchController extends BasicsModules implements Map
             'module'     => 'users',
             'controller' => 'index',
         ],
+        'label'         => [
+            'module'     => 'users',
+            'controller' => 'label',
+        ],
     ];
 
     /**
@@ -59,7 +63,8 @@ class SearchController extends BasicsModules implements Map
     public function actionCreate()
     {
         $include = Yii::$app->request->get('include', '');
-        $module  = $this->modules[$include] ?? false;
+
+        $module = $this->modules[$include] ?? false;
         if (!$module) {
             Error('未定义操作');
         }

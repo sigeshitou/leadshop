@@ -30,12 +30,19 @@ class IndexController extends BasicController
         $post['UID'] = Yii::$app->user->identity->id;
         $check       = M()::find()->where(['goods_id' => $post['goods_id'], 'goods_param' => $post['goods_param'], 'UID' => $post['UID']])->one();
 
+        $info = M('goods', 'Goods')::find()->where(['id' => $post['goods_id']])->select('id,name,slideshow,limit_buy_status,limit_buy_value')->with('param')->asArray()->one();
+        if ($info['limit_buy_status'] === 1) {
+            $owned_number = M()::find()->where(['goods_id' => $post['goods_id'], 'UID' => $post['UID']])->SUM('goods_number');
+            if (($owned_number + $post['goods_number']) > $info['limit_buy_value']) {
+                Error('添加数超过限购数量');
+            }
+        }
+
         if ($check) {
             //存在则数量累加
             $check->goods_number += $post['goods_number'];
             return $check->save();
         } else {
-            $info = M('goods', 'Goods')::find()->where(['id' => $post['goods_id']])->select('id,name,slideshow')->with('param')->asArray()->one();
 
             $param_data       = to_array($info['param']['param_data']);
             $slideshow        = to_array($info['slideshow']); //轮播图
@@ -89,11 +96,13 @@ class IndexController extends BasicController
             'failure' => [], //失效的
         ];
         foreach ($data as $v) {
-            $price          = 0;
-            $goods_sn       = '';
-            $stocks         = 0;
-            $failure_reason = ''; //param规格不存在  is_sale下架  delete商品不存在  stocks库存不足
-            $min_number     = 1;
+            $price            = 0;
+            $goods_sn         = '';
+            $stocks           = 0;
+            $failure_reason   = ''; //param规格不存在  is_sale下架  delete商品不存在  stocks库存不足
+            $min_number       = 1;
+            $limit_buy_status = 0;
+            $limit_buy_value  = null;
             if (empty($v['goodsinfo'])) {
                 $failure_reason = 'delete';
             } else {
@@ -109,20 +118,24 @@ class IndexController extends BasicController
                         $failure_reason = 'stocks';
                     }
                 } else {
-                    $price      = $goods_data[$v['goods_param']]['price'];
-                    $goods_sn   = $goods_data[$v['goods_param']]['goods_sn'];
-                    $stocks     = $goods_data[$v['goods_param']]['stocks'];
-                    $min_number = $info['min_number'];
+                    $price            = $goods_data[$v['goods_param']]['price'];
+                    $goods_sn         = $goods_data[$v['goods_param']]['goods_sn'];
+                    $stocks           = $goods_data[$v['goods_param']]['stocks'];
+                    $min_number       = $info['min_number'];
+                    $limit_buy_status = $info['limit_buy_status'];
+                    $limit_buy_value  = $info['limit_buy_value'];
                 }
             }
 
-            $v['failure_reason'] = $failure_reason;
-            $v['price']          = $price;
-            $v['goods_sn']       = $goods_sn;
-            $v['stocks']         = $stocks;
-            $v['min_number']     = $min_number;
-            $v['is_select']      = 0;
-            $v['show']           = false;
+            $v['failure_reason']   = $failure_reason;
+            $v['price']            = $price;
+            $v['goods_sn']         = $goods_sn;
+            $v['stocks']           = $stocks;
+            $v['min_number']       = $min_number;
+            $v['limit_buy_status'] = $limit_buy_status;
+            $v['limit_buy_value']  = $limit_buy_value;
+            $v['is_select']        = 0;
+            $v['show']             = false;
             unset($v['goodsinfo']);
 
             if ($v['failure_reason']) {
@@ -170,6 +183,14 @@ class IndexController extends BasicController
 
         $check = M()::find()->where(['and', ['<>', 'id', $id], ['goods_id' => $model->goods_id, 'goods_param' => $post['goods_param'], 'UID' => $model->UID]])->one();
 
+        $info = M('goods', 'Goods')::find()->where(['id' => $model->goods_id])->select('id,name,slideshow,limit_buy_status,limit_buy_value')->with('param')->asArray()->one();
+        if ($info['limit_buy_status'] === 1) {
+            $owned_number = M()::find()->where(['and',['goods_id' => $model->goods_id, 'UID' => $model->UID],['<>','id',$id]])->SUM('goods_number');
+            if (($owned_number + $post['goods_number']) > $info['limit_buy_value']) {
+                Error('添加数超过限购数量');
+            }
+        }
+
         if ($check) {
             //存在则数量累加到之前存在的,并且删除本条数据
             $check->goods_number += $post['goods_number'];
@@ -186,17 +207,25 @@ class IndexController extends BasicController
 
         } else {
             if (isset($post['goods_param'])) {
-                $show_param_arr   = explode(' ', $model->show_goods_param);
-                $param_arr        = explode('_', $post['goods_param']);
-                $show_goods_param = [];
-                foreach ($param_arr as $k => $v) {
-                    $show_value = $show_param_arr[$k];
-                    $serach     = strstr($show_value, '：');
-                    $replace    = '：' . $v;
-                    $show_value = str_replace($serach, $replace, $show_value);
-                    array_push($show_goods_param, $show_value);
+                $param_data       = to_array($info['param']['param_data']);
+                $slideshow        = to_array($info['slideshow']); //轮播图
+                $first_param_info = array_column($param_data[0]['value'], null, 'value'); //第一个规格信息
+                $first_param      = explode('_', $post['goods_param'])[0]; //第一个规格
+                $goods_image      = $param_data[0]['image_status'] && $first_param_info[$first_param]['image'] ? $first_param_info[$first_param]['image'] : $slideshow[0]; //存在规格图片则使用,不存在使用第一张轮播图
+
+                $show_goods_param = '';
+                $goods_param      = explode('_', $post['goods_param']);
+                foreach ($param_data as $key => $param_info) {
+                    if ($param_info['name']) {
+                        $show_goods_param .= $param_info['name'] . '：' . $goods_param[$key] . ' ';
+                    } else {
+                        $show_goods_param .= $goods_param[$key] . ' ';
+                    }
+
                 }
-                $post['show_goods_param'] = implode(' ', $show_goods_param);
+                $post['goods_name']       = $info['name'];
+                $post['goods_image']      = $goods_image;
+                $post['show_goods_param'] = $show_goods_param;
             }
             $model->setScenario('update');
             $model->setAttributes($post);

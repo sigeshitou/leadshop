@@ -172,10 +172,13 @@ class Tools
      * @param array|string $data
      * @return bool|mixed
      */
-    public static function httpPost($url, $data)
+    public static function httpPost($url, $data, $header = false)
     {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
+        if ($header) {
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($data)));
+        }
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);

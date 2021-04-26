@@ -85,7 +85,7 @@ class Upload
      * @param  integer $height     压缩后高度  为0时随宽度等比例
      * @return [type]              [description]
      */
-    public function image_compress($image_url, $width = 200, $height = 0)
+    public function image_compress($image_url, $width = 800, $height = 0, $prefix = '')
     {
 
         $image_info = getimagesize(self::$root_path . '/web' . $image_url);
@@ -110,7 +110,11 @@ class Upload
             throw new ForbiddenHttpException('出错');
         }
         //压缩图保存路径
-        $path       = $this->get_url('image');
+        if ($prefix) {
+            $path = $this->get_url('image/' . $prefix); //获取当日目录
+        } else {
+            $path = $this->get_url('image'); //获取当日目录
+        }
         $image_name = explode('.', ltrim(strrchr($image_url, '/'), '/'));
         $new_file   = '/' . $path . '/' . $image_name[0] . '_small' . '.' . $image_name[1];
         $result     = Image::thumbnail(self::$root_path . '/web' . $image_url, $img_w, $img_h,
@@ -169,7 +173,7 @@ class Upload
     public function get_url($type = 'image')
     {
         $new_url = "upload/{$type}/" . date('Y/m/d', time());
-        if (to_mkdir('web/'.$new_url)) {
+        if (to_mkdir('web/' . $new_url)) {
             return $new_url;
         } else {
             throw new ForbiddenHttpException('创建文件夹失败');

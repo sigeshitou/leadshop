@@ -143,7 +143,7 @@ class OrderAfter extends CommonModels
      */
     public function getOrder()
     {
-        return $this->hasOne('order\models\Order', ['order_sn' => 'order_sn'])->select('id,order_sn,pay_type,status')->with('freight');
+        return $this->hasOne('order\models\Order', ['order_sn' => 'order_sn'])->select('id,order_sn,pay_type,status,pay_amount')->with('freight');
     }
 
 }

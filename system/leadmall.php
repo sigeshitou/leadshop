@@ -3,8 +3,8 @@
 /**
  * @Author: qinuoyun
  * @Date:   2020-09-09 15:12:15
- * @Last Modified by:   wiki
- * @Last Modified time: 2021-03-11 11:07:06
+ * @Last Modified by:   qinuoyun
+ * @Last Modified time: 2021-04-23 14:18:47
  */
 
 namespace framework;
@@ -19,6 +19,12 @@ class leadmall
 
     static $storage = [];
 
+    /**
+     * 处理路由模式 1 = 伪静态模式 2 = 传统路由模式
+     * @var integer
+     */
+    public $pattern = 2;
+
     public function __construct($config = '', $type = "app")
     {
         if ($config) {
@@ -29,36 +35,50 @@ class leadmall
                     require (__DIR__ . '/config/components.php'),
                     $config
                 );
+                $root_base = dirname(__DIR__);
+                //判断店铺文件是否存在
+                if (!file_exists($root_base . '/stores/98c08c25f8136d590c.json')) {
+                    $default = file_get_contents($root_base . '/stores/default.json');
+                    if ($default) {
+                        file_put_contents($root_base . '/stores/98c08c25f8136d590c.json', $default);
+                    }
+                }
                 //读取路由
                 $pathinfo = $this->getPathInfo();
-                if (!file_exists('../install.lock') && $pathinfo['action'] != 'install') {
-                    header("Location: " . $_SERVER['HTTP_REFERER'] . '/install');exit;
-                }
-                //默认跳转至后台
-                if ($pathinfo['type'] === null && $pathinfo['name'] === null && $pathinfo['action'] === null) {
-                    header("Location: " . $_SERVER['HTTP_REFERER'] . '/leadshop/panel/index');exit;
-                }
                 if ($pathinfo['type'] && in_array($pathinfo['type'], ['app', 'api']) && $pathinfo['name'] && $pathinfo['action']) {
                     //处理路由兼容性
                     $this->setRouter();
                     //改写路由规则
-                    $config['components']['urlManager'] = $this->getUrlManager($pathinfo['type']);
+                    if ($this->pattern == 2) {
+                        unset($config['components']['urlManager']);
+                    } else {
+                        $config['components']['urlManager'] = $this->getUrlManager($pathinfo['type']);
+                    }
                     //合并自定义命名空间
                     $config['components']['user'] = $this->getEnableUser($pathinfo['type']);
                     //设置特殊字段
                     $config['id'] = $pathinfo['type'];
                     //设置店铺信息
                     $config['params'] = array_merge($config['params'], $this->storeInformation($pathinfo['type']));
+
+                    // P($_GET);
+                    // exit();
                 } else {
+                    //改写路由规则
+                    if ($this->pattern == 2) {
+                        unset($config['components']['urlManager']);
+                    }
                     //设置特殊字段
                     $config['id'] = "web";
                 }
             } else {
+
                 $config = \yii\helpers\ArrayHelper::merge(
                     require (__DIR__ . '/config/common.php'),
                     $config
                 );
             }
+
             if (YII_ENV_DEV) {
                 // Yii2 Debug模块
                 $config['bootstrap'][]      = 'debug';
@@ -80,7 +100,7 @@ class leadmall
      */
     public function setRouter()
     {
-        $url        = explode("/", trim($this->getRequestUri(), "/"));
+        $url        = explode("/", trim($this->getRouterUrl(), "/"));
         $type       = (isset($url[0]) && $url[0]) ? $url[0] : null;
         $name       = (isset($url[1]) && $url[1]) ? $url[1] : null;
         $controller = (isset($url[2]) && $url[2]) ? $url[2] : null;
@@ -99,9 +119,15 @@ class leadmall
             $action = "create";
         }
         if ($_SERVER['REQUEST_METHOD'] == strtoupper("put")) {
+            if ($parameter) {
+                $_GET['id'] = $parameter;
+            }
             $action = "update";
         }
         if ($_SERVER['REQUEST_METHOD'] == strtoupper("delete")) {
+            if ($parameter) {
+                $_GET['id'] = $parameter;
+            }
             $action = "delete";
         }
         $array     = [$name, $type, $controller, $action];
@@ -191,7 +217,7 @@ class leadmall
      */
     public function getPathInfo()
     {
-        $url    = explode("/", trim($this->getRequestUri(), "/"));
+        $url    = explode("/", trim($this->getRouterUrl(), "/"));
         $type   = (isset($url[0]) && $url[0]) ? $url[0] : null;
         $name   = (isset($url[1]) && $url[1]) ? $url[1] : null;
         $action = (isset($url[2]) && $url[2]) ? $url[2] : null;
@@ -203,16 +229,30 @@ class leadmall
     }
 
     /**
-     * 获取应用名称
-     * @return [type] [description]
+     * 获取上传露露
      */
-    public function getIndustryName()
+    public function getRouterUrl()
     {
-        $url = explode("/", trim($this->getRequestUri(), "/"));
-        if (isset($url[1]) && $url[1]) {
-            return $url[1];
+        //开始读取URL地址
+        if (isset($_SERVER['HTTP_X_REWRITE_URL'])) {
+            // check this first so IIS will catch
+            $requestUri = $_SERVER['HTTP_X_REWRITE_URL'];
+        } elseif (isset($_SERVER['REDIRECT_URL'])) {
+            // Check if using mod_rewrite
+            $requestUri = $_SERVER['REDIRECT_URL'];
+        } elseif (isset($_SERVER['REQUEST_URI'])) {
+            $requestUri = $_SERVER['REQUEST_URI'];
+        } elseif (isset($_SERVER['ORIG_PATH_INFO'])) {
+            // IIS 5.0, PHP as CGI
+            $requestUri = $_SERVER['ORIG_PATH_INFO'];
+            if (!empty($_SERVER['QUERY_STRING'])) {
+                $requestUri .= '?' . $_SERVER['QUERY_STRING'];
+            }
+        }
+        if (@$_GET['q']) {
+            return "/" . ltrim($_GET['q'], "/");
         } else {
-            return null;
+            return $requestUri;
         }
     }
 
@@ -222,6 +262,9 @@ class leadmall
      */
     public function getRequestUri()
     {
+        //处理
+        $this->pattern = 1;
+        //开始读取URL地址
         if (isset($_SERVER['HTTP_X_REWRITE_URL'])) {
             // check this first so IIS will catch
             $requestUri = $_SERVER['HTTP_X_REWRITE_URL'];
@@ -238,6 +281,7 @@ class leadmall
             }
         }
         if (@$_GET['r']) {
+            $this->pattern = 2;
             if (strpos($_GET['r'], "/") === 0) {
                 $_GET['r'] = substr($_GET['r'], 1);
             }
@@ -245,7 +289,6 @@ class leadmall
         } else {
             return $requestUri;
         }
-
     }
 
     /**

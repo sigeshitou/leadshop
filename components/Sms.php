@@ -3,15 +3,13 @@
  * @copyright ©2020 浙江禾成云计算有限公司
  * @link      : http://www.zjhejiang.com
  * Created by PhpStorm.
- * User: Andy - Wangjie
+ * User: Andy - 阿德
  * Date: 2021/1/29
  * Time: 10:32
  */
 
 namespace app\components;
 
-use app\datamodel\Option;
-use app\forms\CommonOption;
 use GuzzleHttp\Exception\ClientException;
 use Overtrue\EasySms\EasySms;
 use Overtrue\EasySms\Exceptions\GatewayErrorException;
@@ -40,30 +38,11 @@ class Sms extends Component
         }
         switch ($module) {
             case static::MODULE_ADMIN:
-                $option = CommonOption::get(Option::NAME_SMS, 0, Option::GROUP_ADMIN);
-                if ($option) {
-                    $config    = $option['aliyun'];
-                    $moduleSms = $this->getSms(
-                        [
-                            'aliyun' => [
-                                'access_key_id'     => isset($config['access_key_id']) ? $config['access_key_id'] : '',
-                                'access_key_secret' => isset($config['access_key_secret']) ?
-                                    $config['access_key_secret'] : '',
-                                'sign_name'         => isset($config['sign']) ? $config['sign'] : '',
-                            ],
-                        ]
-                    );
-                } else {
-                    throw new \Exception('短信信息尚未配置。');
-                }
-                $this->moduleSmsList[$module] = $moduleSms;
                 break;
             case static::MODULE_INDUSTRY:
-                $merchantId  = isset($params['merchant_id']) ? $params['merchant_id'] : 0;
-                $option = CommonOption::get(Option::NAME_SMS, \Yii::$app->params['AppID'], Option::GROUP_INDUSTRY, null, $merchantId);
-                // if ($option) {
-                if (true) {
-                    $smsConfig = \Yii::$app->params['appSms']['aliyun'];
+                 $option = $params;
+                 if ($option) {
+                    $smsConfig = \Yii::$app->params['appSms']['aliyun'] ?? [];
                     $moduleSms = $this->getSms(
                         [
                             'aliyun' => [

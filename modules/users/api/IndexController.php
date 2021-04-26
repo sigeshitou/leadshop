@@ -11,7 +11,6 @@ namespace users\api;
 use framework\common\BasicController;
 use Yii;
 use yii\data\ActiveDataProvider;
-use yii\web\ForbiddenHttpException;
 
 class IndexController extends BasicController
 {
@@ -22,6 +21,8 @@ class IndexController extends BasicController
      */
     public function actions()
     {
+        M('users', 'Label')::findOne(['id'=>1]);
+        M('users', 'LabelLog')::findOne(['id'=>1]);
         $actions = parent::actions();
         unset($actions['index']);
         unset($actions['view']);
@@ -68,37 +69,37 @@ class IndexController extends BasicController
             'order_amount_yesteday'   => [
                 'wxapp'  => $wxapp['order_amount_yesteday'],
                 'wechat' => $wechat['order_amount_yesteday'],
-                'all'    => $wxapp['order_amount_yesteday'] + $wechat['order_amount_yesteday'],
+                'all'    => round($wxapp['order_amount_yesteday'] + $wechat['order_amount_yesteday'], 2),
             ],
             //今日订单金额统计
             'order_amount_today'      => [
                 'wxapp'  => $wxapp['order_amount_today'],
                 'wechat' => $wechat['order_amount_today'],
-                'all'    => $wxapp['order_amount_today'] + $wechat['order_amount_today'],
+                'all'    => round($wxapp['order_amount_today'] + $wechat['order_amount_today'], 2),
             ],
             //昨日订单金额统计
             'pay_amount_yesteday'     => [
                 'wxapp'  => $wxapp['pay_amount_yesteday'],
                 'wechat' => $wechat['pay_amount_yesteday'],
-                'all'    => $wxapp['pay_amount_yesteday'] + $wechat['pay_amount_yesteday'],
+                'all'    => round($wxapp['pay_amount_yesteday'] + $wechat['pay_amount_yesteday'], 2),
             ],
             //今日订单金额统计
             'pay_amount_today'        => [
                 'wxapp'  => $wxapp['pay_amount_today'],
                 'wechat' => $wechat['pay_amount_today'],
-                'all'    => $wxapp['pay_amount_today'] + $wechat['pay_amount_today'],
+                'all'    => round($wxapp['pay_amount_today'] + $wechat['pay_amount_today'], 2),
             ],
             //昨日客单价
             'average_amount_yesteday' => [
                 'wxapp'  => $wxapp['average_amount_yesteday'],
                 'wechat' => $wechat['average_amount_yesteday'],
-                'all'    => $wxapp['average_amount_yesteday'] + $wechat['average_amount_yesteday'],
+                'all'    => round($wxapp['average_amount_yesteday'] + $wechat['average_amount_yesteday'], 2),
             ],
             //今日客单价
             'average_amount_today'    => [
                 'wxapp'  => $wxapp['average_amount_today'],
                 'wechat' => $wechat['average_amount_today'],
-                'all'    => $wxapp['average_amount_today'] + $wechat['average_amount_today'],
+                'all'    => round($wxapp['average_amount_today'] + $wechat['average_amount_today'], 2),
             ],
         ];
 
@@ -195,6 +196,15 @@ class IndexController extends BasicController
 
         $AppID = Yii::$app->params['AppID'];
         $where = ['user.AppID' => $AppID];
+        $with  = [
+            'statistical as statistical',
+            'oauth as oauth',
+            'labellog as labellog' => function ($q) {
+                $q->with(['label' => function ($query) {
+                    $query->select('id,name');
+                }]);
+            },
+        ];
 
         //关键词搜索
         $search = $keyword['search'] ?? false;
@@ -206,6 +216,12 @@ class IndexController extends BasicController
         $source = $keyword['source'] ?? false;
         if ($source) {
             $where = ['and', $where, ['oauth.type' => $source]];
+        }
+
+        //用户标签筛选
+        $label = $keyword['label'] ?? false;
+        if (!empty($label) && is_array($label)) {
+            $where = ['and', $where, ['labellog.label_id' => $label]];
         }
 
         //购买次数区间
@@ -268,10 +284,7 @@ class IndexController extends BasicController
             [
                 'query'      => M('users', 'User')::find()
                     ->alias('user')
-                    ->joinWith([
-                        'statistical as statistical',
-                        'oauth as oauth',
-                    ])
+                    ->joinWith($with)
                     ->where($where)
                     ->groupBy(['user.id'])
                     ->orderBy($orderBy)
@@ -301,6 +314,11 @@ class IndexController extends BasicController
             ->with([
                 'statistical',
                 'oauth',
+                'labellog' => function ($query) {
+                    $query->where(['is_deleted' => 0])->with(['label' => function ($query) {
+                        $query->select('id,name');
+                    }]);
+                },
             ])
             ->asArray()
             ->one();
@@ -314,7 +332,14 @@ class IndexController extends BasicController
         $result['after_number']  = ['all' => 0, 'wxapp' => 0, 'wechat' => 0];
         $result['return_amount'] = ['all' => 0, 'wxapp' => 0, 'wechat' => 0];
 
-        $order = M('order', 'Order')::find()->where(['and', ['>', 'status', 200], ['UID' => $id]])->asArray()->all();
+        if ($result['mobile']) {
+            $bind_user = M('users', 'User')::find()->where(['mobile' => $result['mobile']])->select('id')->asArray()->all();
+            $bind_user = array_column($bind_user, 'id');
+        } else {
+            $bind_user = $id;
+        }
+
+        $order = M('order', 'Order')::find()->where(['and', ['>', 'status', 200], ['UID' => $bind_user]])->asArray()->all();
         foreach ($order as $o_v) {
             $result['pay_number']['all']++;
             $result['pay_amount']['all'] = round(($result['pay_amount']['all'] + $o_v['pay_amount']), 2);
@@ -327,7 +352,7 @@ class IndexController extends BasicController
             }
 
         }
-        $order_after = M('order', 'OrderAfter')::find()->where(['UID' => $id, 'is_deleted' => 0])->asArray()->all();
+        $order_after = M('order', 'OrderAfter')::find()->where(['UID' => $bind_user, 'is_deleted' => 0])->asArray()->all();
         foreach ($order_after as $o_a_v) {
             $result['after_number']['all']++;
             $result['return_amount']['all'] = round(($result['return_amount']['all'] + $o_a_v['actual_refund']), 2);
@@ -357,7 +382,7 @@ class IndexController extends BasicController
                 return $this->setting();
                 break;
             default:
-                throw new ForbiddenHttpException('未定义操作');
+                Error('未定义操作');
                 break;
         }
     }
@@ -373,12 +398,22 @@ class IndexController extends BasicController
 
         $model = M('users', 'User')::findOne($id);
         if (empty($model)) {
-            throw new ForbiddenHttpException('用户不存在');
+            Error('用户不存在');
         }
 
         if ($post['mobile']) {
             if (!preg_match("/^1[34578]\d{9}$/", $post['mobile'])) {
                 Error('请填写正确手机号');
+            }
+        }
+        $check = M('users', 'User')::find()->where(['and', ['mobile' => $post['mobile']], ['<>', 'id', $id]])->with(['oauth' => function ($query) {
+            $query->select('UID,type');
+        }])->asArray()->all();
+        if (!empty($check)) {
+            foreach ($check as $value) {
+                if ($value['oauth']['type'] === $model->oauth->type) {
+                    Error('手机号已存在');
+                }
             }
         }
 
@@ -389,7 +424,7 @@ class IndexController extends BasicController
             if ($res) {
                 return $model;
             } else {
-                throw new ForbiddenHttpException('保存失败');
+                Error('保存失败');
             }
 
         }

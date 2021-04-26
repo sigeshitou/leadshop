@@ -9,7 +9,6 @@ namespace leadmall\api;
 
 use basics\api\BasicsController as BasicsModules;
 use leadmall\Map;
-use Yii;
 
 class DemoController extends BasicsModules implements Map
 {
@@ -20,7 +19,7 @@ class DemoController extends BasicsModules implements Map
      */
     public function actionIndex()
     {
-        return ["uid" => Yii::$app->user->identity];
+        return 1111;
     }
 
 }

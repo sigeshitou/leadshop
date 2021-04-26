@@ -8,6 +8,7 @@
 namespace order\app;
 
 use framework\common\BasicController;
+use setting\models\Setting;
 use Yii;
 use yii\data\ActiveDataProvider;
 
@@ -188,6 +189,18 @@ class AfterController extends BasicController
                 if ($o_g_res) {
                     $transaction->commit(); //事务执行
                     $status = $model->status ? $model->status : 100;
+
+                    $setting = Setting::findOne(['AppID' => Yii::$app->params['AppID'], 'merchant_id' => 1, 'keyword' => 'sms_setting', 'is_deleted' => 0]);
+                    if ($setting && $setting['content']) {
+                        $mobiles = json_decode($setting['content'], true);
+                        $this->module->event->sms = [
+                            'type' => 'order_refund',
+                            'mobile' => $mobiles['mobile_list'] ?? [],
+                            'params' => []
+                        ];
+                        $this->module->trigger('send_sms');
+                    }
+
                     return ['status' => $status];
                 } else {
                     $transaction->rollBack(); //事务回滚

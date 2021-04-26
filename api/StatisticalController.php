@@ -66,7 +66,7 @@ class StatisticalController extends BasicsModules implements Map
 
         $unpaid        = M('order', 'Order')::find()->where(['and', $where, ['status' => 100, 'is_deleted' => 0]])->count();
         $unsent        = M('order', 'Order')::find()->where(['and', $where, ['status' => 201, 'is_deleted' => 0]])->count();
-        $order_after   = M('order', 'OrderAfter')::find()->where($where)->count();
+        $order_after   = M('order', 'OrderAfter')::find()->where(['and',$where,['<','status',200]])->count();
         $user_number   = M('users', 'User')::find()->where($where)->count();
         $income_amount = M('order', 'Order')::find()->where(['and', $where, ['>', 'status', 200]])->sum('pay_amount');
         $out_amount    = M('order', 'OrderAfter')::find()->where(['and', $where, ['status' => 200], ['<>', 'type', 2]])->sum('actual_refund');

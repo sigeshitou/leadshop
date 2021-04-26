@@ -3,7 +3,7 @@
  * @copyright ©2020 浙江禾成云计算有限公司
  * @link      : http://www.zjhejiang.com
  * Created by PhpStorm.
- * User: Andy - Wangjie
+ * User: Andy - 阿德
  * Date: 2021/1/15
  * Time: 9:11
  */
@@ -11,7 +11,6 @@
 namespace app\forms;
 
 use app\datamodel\Option;
-use app\datamodel\ThirdWxapp;
 use yii\base\BaseObject;
 
 class CommonWechat extends BaseObject
@@ -36,11 +35,6 @@ class CommonWechat extends BaseObject
             throw new \Exception('请传入AppID');
         }
         if ($this->wechat) {
-            return $this->wechat;
-        }
-        $third = ThirdWxapp::findOne(['AppID' => $this->AppID, 'is_deleted' => 0]);
-        if ($third) {
-            $this->wechat = ExtMpForm::instance('AccessToken', $third);
             return $this->wechat;
         }
         $mpConfig = \Yii::$app->params['apply'][\Yii::$app->params['AppType']] ?? null;
@@ -75,14 +69,7 @@ class CommonWechat extends BaseObject
         if ($this->xWechatPay) {
             return $this->xWechatPay;
         }
-        if (isset($option['is_qmpaas']) && $option['is_qmpaas'] == true) {
-            $form = CommonOption::get(Option::PAY_SETTING, 0, Option::GROUP_ADMIN, []);
-            if (empty($form) || empty($form['wechat'])) {
-                Error('未配置支付信息');
-            }
-            $payType = $form['wechat'];
-            $payType['isService'] = false;
-        } elseif ($option) {
+        if ($option) {
             $payType['appid'] = $option['appid'];
             $payType['mchid'] = $option['mchid'];
             $payType['key'] = $option['key'];
@@ -95,7 +82,6 @@ class CommonWechat extends BaseObject
             } else {
                 $payType = \Yii::$app->params['appPay'][$appType] ?? null;
             }
-            
         }
         if ($payType && $payType['appid'] && $payType['mchid'] && $payType['key']) {
             if ($payType['isService']) {

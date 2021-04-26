@@ -46,6 +46,9 @@ class Module extends BasicModule
         $this->on('cancel_order', ["\goods\app\IndexController", 'addStocks']); //取消订单返还库存
 
         $this->on('pay_order', ["\goods\app\IndexController", 'addSales']); //付款增加商品销售额
+        $this->on('pay_order', ["\users\api\LabellogController", 'giveLabel']); //付款判断用户是否有新的标签
+        
+        $this->on('send_sms', ["\sms\app\IndexController", 'sendSms']); //发送短信
         
     }
 }
