@@ -3,7 +3,7 @@
  * @Author: qinuoyun
  * @Date:   2020-08-20 13:46:09
  * @Last Modified by:   qinuoyun
- * @Last Modified time: 2021-04-26 10:37:37
+ * @Last Modified time: 2021-04-26 15:39:46
  */
 namespace framework\common;
 
@@ -43,6 +43,13 @@ class AppAsset extends AssetBundle
                 return "admin";
             };
         }
+
+        if ($this->type == 'ins') {
+            $this->sourcePath           = '@app/views/install';
+            $AssetManager->hashCallback = function ($value = '') {
+                return "install";
+            };
+        }
         return $AssetManager;
     }
 
@@ -55,6 +62,11 @@ class AppAsset extends AssetBundle
         if ($this->type == 'vue') {
             $this->getVueInit('admin');
         }
+
+        if ($this->type == 'ins') {
+            $this->getInsInit('install');
+        }
+
         //返回父级信息
         parent::init();
     }
@@ -88,6 +100,27 @@ class AppAsset extends AssetBundle
     }
 
     public function getVueInit()
+    {
+        $dir_css = Yii::$app->basePath . '/views/' . $this->industry . '/css';
+        $dir_js  = Yii::$app->basePath . '/views/' . $this->industry . '/js';
+        //读取对应的数据信息
+        $list_css = read_all_dir($dir_css, Yii::$app->basePath . "/views/" . $this->industry . "/");
+        $list_js  = read_all_dir($dir_js, Yii::$app->basePath . "/views/" . $this->industry . "/");
+
+        //返回要执行的资源列表
+        $this->css = $list_css['file'];
+        $this->js  = $list_js['file'];
+
+        $this->publishOptions = [
+            'only' => [
+                "{$this->industry}/css/*",
+                "{$this->industry}/fonts/*",
+                "{$this->industry}/js/*",
+            ],
+        ];
+    }
+
+    public function getInsInit()
     {
         $dir_css = Yii::$app->basePath . '/views/' . $this->industry . '/css';
         $dir_js  = Yii::$app->basePath . '/views/' . $this->industry . '/js';

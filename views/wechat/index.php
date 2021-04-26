@@ -15,7 +15,7 @@
         "uniacid": "3",
         "acid": "3",
         "multiid": "0",
-        "version": "2",
+        "version": "1.1.0",
         "AppURL": origin+"/index.php",
         "siteroot": origin+"/index.php",
         "design_method": "3",

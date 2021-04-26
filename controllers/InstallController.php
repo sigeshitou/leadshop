@@ -4,7 +4,6 @@ namespace app\controllers;
 
 use app\forms\ImageTools;
 use framework\common\AppAsset;
-use setting\models\Setting;
 use Yii;
 use yii\web\Controller;
 
@@ -28,7 +27,7 @@ class InstallController extends Controller
         $industry = "install";
         $alias    = 'install';
 
-        $AppAsset = $this->compiling($industry, $alias, 'vue');
+        $AppAsset = $this->compiling($industry, $alias, 'ins');
 
         $param = ["AppAsset" => $AppAsset, 'industry' => $industry, 'alias' => $alias];
         return $this->render('index', $param);
@@ -40,7 +39,7 @@ class InstallController extends Controller
      * @param  string $alias [description]
      * @return [type]        [description]
      */
-    public function compiling($name = '', $alias = '', $type = 'vue')
+    public function compiling($name = '', $alias = '', $type = 'ins')
     {
         $view     = \Yii::$app->view;
         $config   = array('industry' => $name, 'alias' => $alias, 'type' => $type);
