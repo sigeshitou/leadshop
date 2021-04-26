@@ -63,7 +63,7 @@ class PosterController extends BasicsModules implements Map
                         'text'      => '¥',
                         'left'      => 64,
                         'top'       => 806,
-                        'fontPath'  => realpath('../system/static/msyh.ttf'), //字体文件
+                        'fontPath'  => realpath('../system/static/PingFang.ttf'), //字体文件
                         'fontSize'  => 28, //字号
                         'fontColor' => '230,11,48', //字体颜色
                         'angle'     => 0,

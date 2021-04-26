@@ -3,7 +3,7 @@
  * @Author: qinuoyun
  * @Date:   2020-08-20 13:46:09
  * @Last Modified by:   qinuoyun
- * @Last Modified time: 2021-04-16 11:36:51
+ * @Last Modified time: 2021-04-26 16:34:21
  */
 namespace framework\common;
 
@@ -79,6 +79,13 @@ class BasicController extends StoreController
         }
 
         Yii::error($optional);
+
+        //解决微擎兼容问题
+        if (!Yii::$app->request->getHeaders()->get('Authorization') && Yii::$app->request->getHeaders()->get('token')) {
+            $token = Yii::$app->request->getHeaders()->get('token');
+            Yii::$app->request->getHeaders()->set("Authorization", $token);
+        }
+
         $behaviors['authenticator'] = [
             'class'       => CompositeAuth::className(),
             'authMethods' => [
