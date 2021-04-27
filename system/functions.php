@@ -4,7 +4,7 @@
  * @Author: qinuoyun
  * @Date:   2020-09-09 15:12:15
  * @Last Modified by:   qinuoyun
- * @Last Modified time: 2021-04-26 10:23:20
+ * @Last Modified time: 2021-04-27 11:54:36
  */
 
 if (!function_exists('import')) {
@@ -681,7 +681,7 @@ if (!function_exists('str2url')) {
     {
         $value_str = to_json($value);
         $url       = \Yii::$app->request->hostInfo;
-        $value_str = str_replace(URL_STRING, $url, $value_str);
+        $value_str = str_replace(URL_STRING, $url . WE7_ROOT, $value_str);
         $new_value = to_array($value_str);
         return $new_value;
     }
@@ -697,7 +697,7 @@ if (!function_exists('url2str')) {
     {
         $value_str = to_json($value);
         $url       = \Yii::$app->request->hostInfo;
-        $value_str = str_replace($url, URL_STRING, $value_str);
+        $value_str = str_replace($url . WE7_ROOT, URL_STRING, $value_str);
         $new_value = to_array($value_str);
         return $new_value;
     }

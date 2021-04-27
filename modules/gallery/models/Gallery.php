@@ -108,10 +108,9 @@ class Gallery extends CommonModels
     {
         if ($insert) {
             $url             = Yii::$app->request->hostInfo;
-            $this->url       = str_replace(URL_STRING, $url, $this->url);
-            $this->thumbnail = str_replace(URL_STRING, $url, $this->thumbnail);
+            $this->url       = str_replace(URL_STRING, $url . WE7_ROOT, $this->url);
+            $this->thumbnail = str_replace(URL_STRING, $url . WE7_ROOT, $this->thumbnail);
         }
-
     }
 
 }
