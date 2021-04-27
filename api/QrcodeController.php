@@ -60,6 +60,7 @@ class QrcodeController extends BasicsModules implements Map
         } else {
             $wechat_url = $host . '/index.php?r=wechat#/' . $url;
         }
+
         \QRcode::png($wechat_url, false, QR_ECLEVEL_L, 4);
         $wechat_img = ob_get_contents(); //获取缓冲区内容
         ob_end_clean(); //清除缓冲区内容
