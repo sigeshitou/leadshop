@@ -7,10 +7,9 @@
 **[点击查看V1.0.1更新内容](https://forum.leadshop.vip/thread/57)** 
 
  
- **Leadshop微信交流群** 
+ **进leadshop官方微信交流群，请加管理员微信** 
 
-![微信交流群](https://images.gitee.com/uploads/images/2021/0423/141626_6e2da520_7426632.png "微信交流群.png")
-
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0428/181854_e657e0ca_7426632.png "企业微信截图_bba934e3-b8fa-4939-84cf-e684af9d67a2.png")
 
  **qq交流群号：849894135** 
 
