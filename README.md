@@ -1,5 +1,5 @@
 ## 本周更新计划【20210420-20210423】
- **[点击查看本周更新计划](https://forum.leadshop.vip/thread/63)** 
+ **[点击查看本周更新计划](https://forum.leadshop.vip/thread/146)** 
 
 ## 更新历史
 **[点击查看V1.1.4更新内容](https://forum.leadshop.vip/thread/99)** 
