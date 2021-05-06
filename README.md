@@ -9,7 +9,7 @@
  
  **官方微信交流群** 
 
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0429/092000_a806f0ca_7426632.png "2群.png")
+![输入图片说明](https://leadshop-1302407761.cos.ap-shanghai.myqcloud.com/public/attachments/2021/05/06/LEVUJ05OQTI8nMZBu4PBz673UUedpuOm6NLVl4UQ.png)
 
 
  **qq交流群号：849894135** 
