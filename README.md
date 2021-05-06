@@ -9,7 +9,7 @@
  
  **Leadshop微信交流群** 
 
-![微信交流群](https://images.gitee.com/uploads/images/2021/0423/141626_6e2da520_7426632.png "微信交流群.png")
+![微信交流群](https://images.gitee.com/uploads/images/2021/0429/092000_a806f0ca_7426632.png "微信交流群.png")
 
 
  **qq交流群号：849894135** 
